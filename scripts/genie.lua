@@ -10,7 +10,7 @@ solution "IA"
     "x64",
     "Native"
   }
-  --windowstargetplatformversion "10.0.17134.0"
+  windowstargetplatformversion "10.0.17134.0"
   language "C++"
 
   PROJ_DIR = path.getabsolute("..")

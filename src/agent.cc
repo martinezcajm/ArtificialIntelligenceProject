@@ -1,44 +1,32 @@
 #include "agent.h"
-//#include <algorithm>
-//#include <math.h>
 #include <cmath>
-//#include <numeric>
-//#define RAND_MAX 1
 
 Agent::Agent()
 {
-  move_type_ = kMovRandom;
-  x_ = 0;
-  y_ = 100;
-  target_x_ = 0;
-  target_y_ = 0;
-  velocity_x_ = 0;
-  velocity_y_ = 0;
+  move_type_ = kMovDeterminist;
+  position_ = Float2(0, 100);
+  target_ = Float2(0, 0);
+  velocity_ = Float2(0, 0);
 
   determinist_idx_ = 0;
 
-  determinist_positions_[0].x_ = 0.0f;
-  determinist_positions_[0].y_ = 0.0f;
-  determinist_positions_[1].x_ = 1000.0f;
-  determinist_positions_[1].y_ = 0.0f;
+  determinist_targets_[0] = Float2(0, 0);
+  determinist_targets_[1] = Float2(1000.0f, 0.0f);
+
 
   next_movement_total_ = 0;
   accumulated_movement_ = 0;
 }
 
-Agent::Agent(const MovementType mov_type, const float x, const float y) : move_type_(mov_type), x_(x), y_(y)
+Agent::Agent(const MovementType mov_type, const float x, const float y) : move_type_(mov_type)
 {
-  target_x_ = 0;
-  target_y_ = 0;
-  velocity_x_ = 0;
-  velocity_y_ = 0;
+  position_ = Float2(x, y);
+  target_ = Float2(0, 0);
+  velocity_ = Float2(0, 0);
 
   determinist_idx_ = 0;
-
-  determinist_positions_[0].x_ = 0.0f;
-  determinist_positions_[0].y_ = 0.0f;
-  determinist_positions_[1].x_ = 1000.0f;
-  determinist_positions_[1].y_ = 0.0f;
+  determinist_targets_[0] = Float2(0, 0);
+  determinist_targets_[1] = Float2(1000.0f, 0.0f);
 }
 
 
@@ -55,12 +43,12 @@ void Agent::changeMovementType(const MovementType move_type)
 
 float Agent::x() const
 {
-  return x_;
+  return position_.x;
 }
 
 float Agent::y() const
 {
-  return y_;
+  return position_.y;
 }
 
 
@@ -94,11 +82,10 @@ void Agent::updateMind(const int32_t dt)
 
 void Agent::move(const int32_t dt)
 {
-  const float ex = velocity_x_ * dt;
-  const float ey = velocity_y_ *dt;
-  x_ = x_ + ex;
-  y_ = y_ + ey;
-  accumulated_movement_ = accumulated_movement_ + abs(ex) + abs(ey);
+  //displacement
+  Float2 e = velocity_ * dt;
+  position_ += e;
+  accumulated_movement_ = accumulated_movement_ + e.Length();
 
 }
 
@@ -109,22 +96,19 @@ bool Agent::positionReached() const
 
 void Agent::setNextPosition(float new_target_x, float new_target_y)
 {
-  target_x_ = new_target_x;
-  target_y_ = new_target_y;
+  target_ = Float2(new_target_x, new_target_y);
 
   accumulated_movement_ = 0;
-  next_movement_total_ = vectorMagnitude(target_x_ - x_, target_y_ - y_);
+  Float2 aux_vector = target_ - position_;
+  next_movement_total_ = aux_vector.Length();
 }
 
 void Agent::calculateVelocity()
 {
-  float vel_x = target_x_ - x_;
-  float vel_y = target_y_ - y_;
-  float vector_magnitude = vectorMagnitude(vel_x, vel_y);
-  vel_x = vel_x / vector_magnitude;
-  vel_y = vel_y / vector_magnitude;
-  velocity_x_ = vel_x*kSpeed;
-  velocity_y_ = vel_y*kSpeed;
+  Float2 vel = target_ - position_;
+  float length = vel.Length();
+  vel /= length;
+  velocity_ = vel * kSpeed;
 }
 
 void Agent::MOV_Determinist()
@@ -132,7 +116,7 @@ void Agent::MOV_Determinist()
   if (!positionReached()) return;
 
   determinist_idx_ = (determinist_idx_ + 1) % determinist_size_;
-  setNextPosition(determinist_positions_[determinist_idx_].x_, determinist_positions_[determinist_idx_].y_);
+  setNextPosition(determinist_targets_[determinist_idx_].x, determinist_targets_[determinist_idx_].y);
 }
 
 void Agent::MOV_Random()
