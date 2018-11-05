@@ -7,7 +7,7 @@ Agent::Agent()
 {
   move_type_ = kMovDeterminist;
   x_ = 0;
-  y_ = 0;
+  y_ = 100;
   target_x_ = 0;
   target_y_ = 0;
   velocity_x_ = 0;
@@ -96,7 +96,7 @@ void Agent::move(const int32_t dt)
   const float ey = velocity_y_ *dt;
   x_ = x_ + ex;
   y_ = y_ + ey;
-  accumulated_movement_ = accumulated_movement_ + ex + ey;
+  accumulated_movement_ = accumulated_movement_ + abs(ex) + abs(ey);
 
 }
 
