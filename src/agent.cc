@@ -1,11 +1,13 @@
 #include "agent.h"
-#include <algorithm>
-#include <math.h>
-#include <numeric>
+//#include <algorithm>
+//#include <math.h>
+#include <cmath>
+//#include <numeric>
+//#define RAND_MAX 1
 
 Agent::Agent()
 {
-  move_type_ = kMovDeterminist;
+  move_type_ = kMovRandom;
   x_ = 0;
   y_ = 100;
   target_x_ = 0;
@@ -135,8 +137,20 @@ void Agent::MOV_Determinist()
 
 void Agent::MOV_Random()
 {
+  if (!positionReached()) return;
   static float const boundary_x_left = 0.0f;
   static float const boundary_x_right = 1280.0f;
+  static float const boundary_y_left = 0.0f;
+  static float const boundary_y_right = 720.0f;
+
+  //float rand_px = rand() % 1280;
+  //float rand_py = rand() % 720;
+  float rand_px = rand() / float(RAND_MAX);
+  float rand_py = rand() / float(RAND_MAX);
+  rand_px = rand_px * boundary_x_right + boundary_x_left;
+  rand_py = rand_py * boundary_y_right + boundary_y_left;
+
+  setNextPosition(rand_px, rand_py);
 }
 
 void Agent::MOV_Tracking()

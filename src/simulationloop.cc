@@ -5,7 +5,8 @@
 #include <ESAT/sprite.h>
 #include <cstdint>
 #include <cmath>
-#include <stdio.h>
+//#include <stdio.h>
+#include <cstdio>
 #include <agent.h>
 
 typedef enum
