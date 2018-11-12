@@ -5,7 +5,6 @@
 #include <ESAT/sprite.h>
 #include <cstdint>
 #include <cmath>
-//#include <stdio.h>
 #include <cstdio>
 #include <agent.h>
 
@@ -25,7 +24,9 @@ struct GameState{
 	bool quit_game_;
   bool should_game_end_;
   ESAT::SpriteHandle agent_spr_;
+  ESAT::SpriteHandle player_spr_;
   Agent *test_agent_;
+  Agent *player_test_;
 }game_state_;
 
 
@@ -40,7 +41,9 @@ void Init() {
 	ESAT::WindowInit(1280, 720);
 
   game_state_.agent_spr_ = ESAT::SpriteFromFile("../data/agent.png");
-  game_state_.test_agent_ = new Agent();
+  game_state_.player_spr_ = ESAT::SpriteFromFile("../data/player.png");
+  game_state_.test_agent_ = new Agent(MovementType::kMovRandom, 0,0);
+  game_state_.player_test_ = new Agent(MovementType::kMovStatic, 500,500);
 }
 
 void Draw() {
@@ -48,16 +51,12 @@ void Draw() {
   ESAT::DrawClear(0, 0, 0);
   ESAT::DrawSetFillColor(255, 0, 0);
   ESAT::DrawSetStrokeColor(0, 0, 255);
-  //static float advance = 0;
-  for (int i = 0; i < 1; i++) {
-      for (int i = 0; i < 1; i++) {
-          //ESAT::DrawLine(advance, advance, advance+50, advance+50);
-          ESAT::DrawSprite(game_state_.agent_spr_, game_state_.test_agent_->x(),
-           game_state_.test_agent_->y());
-      }
-  }
-  /*advance += 5;
-  if (advance > 720) advance = 0;*/
+
+  ESAT::DrawSprite(game_state_.agent_spr_, game_state_.test_agent_->x(),
+   game_state_.test_agent_->y());
+  ESAT::DrawSprite(game_state_.player_spr_, game_state_.player_test_->x(),
+    game_state_.player_test_->y());
+
   ESAT::DrawEnd();
 	ESAT::WindowFrame();
 }
@@ -107,7 +106,7 @@ int ESAT::main(int argc, char **argv) {
     frames++;  
     double loop_actual_time = Time();
     if (loop_actual_time > loop_last_time + 1000) {        
-        printf("\n %i FPS: ", frames);
+        //printf("\n %i FPS: ", frames);
         frames = 0;
         loop_last_time = loop_actual_time;
     }

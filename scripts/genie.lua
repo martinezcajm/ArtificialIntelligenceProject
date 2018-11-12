@@ -28,7 +28,8 @@ solution "IA"
 	}
 
     files {
-      path.join(PROJ_DIR, "src/*.cc")
+      path.join(PROJ_DIR, "src/*.cc"),
+	  path.join(PROJ_DIR, "include/*.h")
     }
    
     configuration "windows"

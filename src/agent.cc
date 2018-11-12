@@ -4,7 +4,7 @@
 Agent::Agent()
 {
   move_type_ = kMovDeterminist;
-  position_ = Float2(0, 100);
+  position_ = Float2(0, 0);
   target_ = Float2(0, 0);
   velocity_ = Float2(0, 0);
 
@@ -14,8 +14,8 @@ Agent::Agent()
   determinist_targets_[1] = Float2(1000.0f, 0.0f);
 
 
-  next_movement_total_ = 0;
-  accumulated_movement_ = 0;
+  //next_movement_total_ = 0;
+  //accumulated_movement_ = 0;
 }
 
 Agent::Agent(const MovementType mov_type, const float x, const float y) : move_type_(mov_type)
@@ -23,6 +23,8 @@ Agent::Agent(const MovementType mov_type, const float x, const float y) : move_t
   position_ = Float2(x, y);
   target_ = Float2(0, 0);
   velocity_ = Float2(0, 0);
+
+  player_position_ = Float2(500, 500);
 
   determinist_idx_ = 0;
   determinist_targets_[0] = Float2(0, 0);
@@ -54,6 +56,8 @@ float Agent::y() const
 
 void Agent::updateBody(const int32_t dt)
 {
+  if (isPlayerAtSight()) changeMovementType(kMovTracking);
+  else changeMovementType(kMovRandom);
   switch(move_type_)
   {
   case MovementType::kMovDeterminist:
@@ -68,6 +72,8 @@ void Agent::updateBody(const int32_t dt)
   case MovementType::kMovPattern:
     MOV_Pattern();
     break;
+  case MovementType::kMovStatic:
+    target_ = position_;
   default:
     break;
   }
@@ -85,22 +91,31 @@ void Agent::move(const int32_t dt)
   //displacement
   Float2 e = velocity_ * dt;
   position_ += e;
-  accumulated_movement_ = accumulated_movement_ + e.Length();
+  //accumulated_movement_ = accumulated_movement_ + e.Length();
 
 }
 
 bool Agent::positionReached() const
 {
-  return abs(accumulated_movement_) >= next_movement_total_;
+  Float2 aux_vector = target_ - position_;
+  return aux_vector.Length() < kEpsilon;
+  //return abs(accumulated_movement_) >= next_movement_total_;
+}
+
+bool Agent::isPlayerAtSight() const
+{
+  Float2 vec_distance = player_position_ - position_;
+  float distance = vec_distance.Length();
+  return (player_position_ - position_).Length() < vision_range_;
 }
 
 void Agent::setNextPosition(float new_target_x, float new_target_y)
 {
   target_ = Float2(new_target_x, new_target_y);
 
-  accumulated_movement_ = 0;
-  Float2 aux_vector = target_ - position_;
-  next_movement_total_ = aux_vector.Length();
+  //accumulated_movement_ = 0;
+  //Float2 aux_vector = target_ - position_;
+  //next_movement_total_ = aux_vector.Length();
 }
 
 void Agent::calculateVelocity()
@@ -139,7 +154,10 @@ void Agent::MOV_Random()
 
 void Agent::MOV_Tracking()
 {
-  
+  if(isPlayerAtSight())
+  {
+    target_ = player_position_;
+  }
 }
 
 void Agent::MOV_Pattern()
