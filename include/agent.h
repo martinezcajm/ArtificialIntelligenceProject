@@ -10,8 +10,17 @@ typedef enum
   kMovTracking = 2,
   kMovPattern = 3,
   kMovStatic = 4,
-  PADDING = 255
+  kmtPADDING = 255
 } MovementType;
+
+typedef enum
+{
+  kPatRight = 0,
+  kPatLeft = 1,
+  kPatDown = 2,
+  kPatUp = 3,
+  kpmPADDING = 255
+}PatternMovement;
 
 class Agent
 {
@@ -23,11 +32,13 @@ public:
   float x() const;
   float y() const;
 private:
+  float pattern_step_ = 50;
   const float kEpsilon = 10;
   static const int determinist_size_ = 2;
   int determinist_idx_;
   Float2 determinist_targets_[determinist_size_];
   MovementType move_type_;
+  PatternMovement actual_pattern_;
   //float next_movement_total_;
   //float accumulated_movement_;
 

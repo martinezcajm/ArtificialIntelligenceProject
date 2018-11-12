@@ -42,7 +42,7 @@ void Init() {
 
   game_state_.agent_spr_ = ESAT::SpriteFromFile("../data/agent.png");
   game_state_.player_spr_ = ESAT::SpriteFromFile("../data/player.png");
-  game_state_.test_agent_ = new Agent(MovementType::kMovRandom, 0,0);
+  game_state_.test_agent_ = new Agent(MovementType::kMovPattern, 0,0);
   game_state_.player_test_ = new Agent(MovementType::kMovStatic, 500,500);
 }
 

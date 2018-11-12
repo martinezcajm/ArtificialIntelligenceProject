@@ -25,6 +25,7 @@ Agent::Agent(const MovementType mov_type, const float x, const float y) : move_t
   velocity_ = Float2(0, 0);
 
   player_position_ = Float2(500, 500);
+  actual_pattern_ = kPatRight;
 
   determinist_idx_ = 0;
   determinist_targets_[0] = Float2(0, 0);
@@ -57,7 +58,6 @@ float Agent::y() const
 void Agent::updateBody(const int32_t dt)
 {
   if (isPlayerAtSight()) changeMovementType(kMovTracking);
-  else changeMovementType(kMovRandom);
   switch(move_type_)
   {
   case MovementType::kMovDeterminist:
@@ -162,7 +162,46 @@ void Agent::MOV_Tracking()
 
 void Agent::MOV_Pattern()
 {
-
+  if (!positionReached())return;
+  static int cycles = 0;
+  switch(actual_pattern_)
+  {
+  case kPatRight:
+    target_ = Float2(position_.x + pattern_step_, position_.y);
+    if(cycles == 2)
+    {
+      cycles = 0;
+      actual_pattern_ = kPatDown;
+    }
+    break;
+  case kPatLeft:
+    target_ = Float2(position_.x - pattern_step_, position_.y);
+    if (cycles == 2)
+    {
+      cycles = 0;
+      actual_pattern_ = kPatUp;
+    }
+    break;
+  case kPatUp:
+    target_ = Float2(position_.x, position_.y - pattern_step_);
+    if (cycles == 2)
+    {
+      cycles = 0;
+      actual_pattern_ = kPatRight;
+    }
+    break;
+  case kPatDown:
+    target_ = Float2(position_.x, position_.y + pattern_step_);
+    if (cycles == 2)
+    {
+      cycles = 0;
+      actual_pattern_ = kPatLeft;
+    }
+    break;
+  default:
+    break;
+  }
+  cycles++;
 }
 
 float Agent::vectorMagnitude(float x, float y) const
