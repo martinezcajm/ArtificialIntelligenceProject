@@ -53,6 +53,7 @@ float Agent::y() const
 
 void Agent::updateBody(const float dt)
 {
+  //UpdateSensors(); podemos pasarle el delta time para no actualizar en cada frame
   if (isPlayerAtSight()) changeMovementType(MovementType::k_MovTracking);
   switch (move_type_)
   {
@@ -73,6 +74,8 @@ void Agent::updateBody(const float dt)
   default:
     break;
   }
+  //TODO Es posible que haya que hacer este calculo de velocidad en los movimientos
+  //Ya que el tracking nos puede interesar que mantenga el objetivo (orientacion) durante un tiempo
   calculateVelocity();
   move(dt);
 }
@@ -138,11 +141,14 @@ void Agent::calculateVelocity()
 void Agent::MOV_Determinist()
 {
   if (!positionReached()) return;
+  //TODO target_reached_ = true conectar mente con cuerpo
 
   determinist_idx_ = (determinist_idx_ + 1) % determinist_size_;
   setNextPosition(determinist_targets_[determinist_idx_].x, determinist_targets_[determinist_idx_].y);
 }
 
+//TODO cada n unidades de tiempo (n puede ser constante o aleatoria) usar dt para esto
+//TODO esto sobretodo es importante para el tracking
 void Agent::MOV_Random()
 {
   if (!positionReached()) return;
@@ -161,6 +167,8 @@ void Agent::MOV_Random()
   setNextPosition(rand_px, rand_py);
 }
 
+//TODO cada n unidades de tiempo (n puede ser constante o aleatoria) usar dt para esto
+//TODO sobretodo interesante para evitar que la persecucion quede muy robotica (como un misil teledirigido)
 void Agent::MOV_Tracking()
 {
   if (!positionReached()) return;
