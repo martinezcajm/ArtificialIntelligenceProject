@@ -1,31 +1,27 @@
 #include "agent.h"
 #include <cmath>
+#include <gamestate.h>
 
 Agent::Agent()
 {
-  move_type_ = kMovDeterminist;
+  move_type_ = MovementType::k_MovDeterminist;
   position_ = Float2(0, 0);
-  target_ = Float2(0, 0);
+  target_position_ = Float2(0, 0);
   velocity_ = Float2(0, 0);
 
   determinist_idx_ = 0;
 
   determinist_targets_[0] = Float2(0, 0);
   determinist_targets_[1] = Float2(1000.0f, 0.0f);
-
-
-  //next_movement_total_ = 0;
-  //accumulated_movement_ = 0;
 }
 
 Agent::Agent(const MovementType mov_type, const float x, const float y) : move_type_(mov_type)
 {
   position_ = Float2(x, y);
-  target_ = Float2(0, 0);
+  target_position_ = Float2(0, 0);
   velocity_ = Float2(0, 0);
 
-  player_position_ = Float2(500, 500);
-  actual_pattern_ = kPatRight;
+  actual_pattern_ = PatternMovement::k_PatRight;
 
   determinist_idx_ = 0;
   determinist_targets_[0] = Float2(0, 0);
@@ -33,7 +29,7 @@ Agent::Agent(const MovementType mov_type, const float x, const float y) : move_t
 }
 
 
-void Agent::update(const int32_t dt)
+void Agent::update(const float dt)
 {
   updateMind(dt);
   updateBody(dt);
@@ -55,25 +51,25 @@ float Agent::y() const
 }
 
 
-void Agent::updateBody(const int32_t dt)
+void Agent::updateBody(const float dt)
 {
-  if (isPlayerAtSight()) changeMovementType(kMovTracking);
-  switch(move_type_)
+  if (isPlayerAtSight()) changeMovementType(MovementType::k_MovTracking);
+  switch (move_type_)
   {
-  case MovementType::kMovDeterminist:
+  case MovementType::k_MovDeterminist:
     MOV_Determinist();
     break;
-  case MovementType::kMovRandom:
+  case MovementType::k_MovRandom:
     MOV_Random();
     break;
-  case MovementType::kMovTracking:
+  case MovementType::k_MovTracking:
     MOV_Tracking();
     break;
-  case MovementType::kMovPattern:
+  case MovementType::k_MovPattern:
     MOV_Pattern();
     break;
-  case MovementType::kMovStatic:
-    target_ = position_;
+  case MovementType::k_MovStop:
+    MOV_Stop();
   default:
     break;
   }
@@ -81,12 +77,12 @@ void Agent::updateBody(const int32_t dt)
   move(dt);
 }
 
-void Agent::updateMind(const int32_t dt)
+void Agent::updateMind(const float dt)
 {
-  
+  if (move_type_ == MovementType::k_MovTracking) target_position_ = GameState::instance().player_->position_;
 }
 
-void Agent::move(const int32_t dt)
+void Agent::move(const float dt)
 {
   //displacement
   Float2 e = velocity_ * dt;
@@ -97,33 +93,46 @@ void Agent::move(const int32_t dt)
 
 bool Agent::positionReached() const
 {
-  Float2 aux_vector = target_ - position_;
+  Float2 aux_vector = target_position_ - position_;
   return aux_vector.Length() < kEpsilon;
   //return abs(accumulated_movement_) >= next_movement_total_;
 }
 
 bool Agent::isPlayerAtSight() const
 {
-  Float2 vec_distance = player_position_ - position_;
+  Float2 player_position = GameState::instance().player_->position_;
+  Float2 vec_distance = player_position - position_;
   float distance = vec_distance.Length();
-  return (player_position_ - position_).Length() < vision_range_;
+  return (player_position - position_).Length() < vision_range_;
 }
 
 void Agent::setNextPosition(float new_target_x, float new_target_y)
 {
-  target_ = Float2(new_target_x, new_target_y);
+  target_position_ = Float2(new_target_x, new_target_y);
 
   //accumulated_movement_ = 0;
   //Float2 aux_vector = target_ - position_;
   //next_movement_total_ = aux_vector.Length();
 }
 
+void Agent::setOrientation(const Float2& destination)
+{
+  velocity_ = destination - position_;
+  velocity_ /= velocity_.Length();
+  //Float2 vel = target_position_ - position_;
+  //float length = vel.Length();
+  //vel /= length;
+}
+
 void Agent::calculateVelocity()
 {
-  Float2 vel = target_ - position_;
-  float length = vel.Length();
-  vel /= length;
-  velocity_ = vel * kSpeed;
+  //Float2 vel = target_position_ - position_;
+  //float length = vel.Length();
+  //vel /= length;
+  ////quitar ultima linea
+  //velocity_ = vel * kSpeed;
+  setOrientation(target_position_);
+  velocity_ *= kSpeed;
 }
 
 void Agent::MOV_Determinist()
@@ -154,48 +163,46 @@ void Agent::MOV_Random()
 
 void Agent::MOV_Tracking()
 {
-  if(isPlayerAtSight())
-  {
-    target_ = player_position_;
-  }
+  if (!positionReached()) return;
+  setNextPosition(target_position_.x, target_position_.y);
 }
 
 void Agent::MOV_Pattern()
 {
   if (!positionReached())return;
   static int cycles = 0;
-  switch(actual_pattern_)
+  switch (actual_pattern_)
   {
-  case kPatRight:
-    target_ = Float2(position_.x + pattern_step_, position_.y);
-    if(cycles == 2)
-    {
-      cycles = 0;
-      actual_pattern_ = kPatDown;
-    }
-    break;
-  case kPatLeft:
-    target_ = Float2(position_.x - pattern_step_, position_.y);
+  case PatternMovement::k_PatRight:
+    target_position_ = Float2(position_.x + pattern_step_, position_.y);
     if (cycles == 2)
     {
       cycles = 0;
-      actual_pattern_ = kPatUp;
+      actual_pattern_ = PatternMovement::k_PatDown;
     }
     break;
-  case kPatUp:
-    target_ = Float2(position_.x, position_.y - pattern_step_);
+  case PatternMovement::k_PatLeft:
+    target_position_ = Float2(position_.x - pattern_step_, position_.y);
     if (cycles == 2)
     {
       cycles = 0;
-      actual_pattern_ = kPatRight;
+      actual_pattern_ = PatternMovement::k_PatUp;
     }
     break;
-  case kPatDown:
-    target_ = Float2(position_.x, position_.y + pattern_step_);
+  case PatternMovement::k_PatUp:
+    target_position_ = Float2(position_.x, position_.y - pattern_step_);
     if (cycles == 2)
     {
       cycles = 0;
-      actual_pattern_ = kPatLeft;
+      actual_pattern_ = PatternMovement::k_PatRight;
+    }
+    break;
+  case PatternMovement::k_PatDown:
+    target_position_ = Float2(position_.x, position_.y + pattern_step_);
+    if (cycles == 2)
+    {
+      cycles = 0;
+      actual_pattern_ = PatternMovement::k_PatLeft;
     }
     break;
   default:
@@ -204,7 +211,7 @@ void Agent::MOV_Pattern()
   cycles++;
 }
 
-float Agent::vectorMagnitude(float x, float y) const
+void Agent::MOV_Stop()
 {
-  return sqrtf((x*x) + (y*y));
+  target_position_ = position_;
 }
