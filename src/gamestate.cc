@@ -2,7 +2,6 @@
 
 GameState::GameState() {
   quit_game_ = false;
-  time_step_ = 16;
 }
 
 GameState& GameState::instance() {

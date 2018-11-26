@@ -30,14 +30,16 @@ void Init() {
   //game_state.time_step_ = 16;
 
   //Maximum time in milliseconds for our frequency (1/frequency)
-  game_state.time_step_ = (1.0f/game_state.frequency_);
+  game_state.time_step_ = (1.0/game_state.frequency_)*1000;
 
   ESAT::WindowInit(1280, 720);
 
   game_state.agent_spr_ = ESAT::SpriteFromFile("../data/agent.png");
   game_state.player_spr_ = ESAT::SpriteFromFile("../data/player.png");
-  game_state.test_agent_ = new Agent(MovementType::k_MovPattern, 0, 0);
-  game_state.player_ = new Agent(MovementType::k_MovStop, 500, 500);
+  game_state.test_agent_ = new Agent(MovementType::k_MovRandom, 0, 0, 200);
+  game_state.player_ = new Agent(MovementType::k_MovRandom , 500, 500, 200);
+  game_state.test_agent_->set_is_tracking(true);
+  game_state.player_->set_is_tracking(false);
 }
 
 void Draw() {
@@ -64,11 +66,12 @@ void InputService()
   }
 }
 
-void Update(float dt)
+void Update(uint32_t dt)
 {
   if (!ESAT::WindowIsOpened()) game_state.quit_game_ = true;
   if (game_state.should_game_end_) game_state.quit_game_ = true;
   game_state.test_agent_->update(dt);
+  game_state.player_->update(dt);
 }
 
 int ESAT::main(int argc, char **argv) {

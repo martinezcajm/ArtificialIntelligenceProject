@@ -26,12 +26,15 @@ class Agent
 {
 public:
   Agent();
-  Agent(const MovementType mov_type, const float x, const float y);
-  void update(const float dt);
+  Agent(const MovementType mov_type, const float x, const float y, const float speed);
+  void update(const uint32_t dt);
   void changeMovementType(const MovementType move_type);
   float x() const;
   float y() const;
+  bool is_tracking() const;
+  void set_is_tracking(bool tracks);
 private:
+  uint32_t id_ = 0;
   float pattern_step_ = 50;
   const float kEpsilon = 10;
   static const int determinist_size_ = 2;
@@ -39,8 +42,9 @@ private:
   Float2 determinist_targets_[determinist_size_];
   MovementType move_type_;
   PatternMovement actual_pattern_;
-  //float next_movement_total_;
-  //float accumulated_movement_;
+  bool is_tracking_;
+  bool target_reached_;
+
   
   //Agent* target;
   Float2 position_;
@@ -48,18 +52,20 @@ private:
   Float2 velocity_;
 
   float vision_range_ = 200;
-  //speed as m/s
-  const float kSpeed = 0.5f;
+  //speed as m/s is pixels/s
+  float speed_ = 100.0f;
   const float kSpeedUp = 2.0f;
 
-  void updateMind(const float dt);
-  void updateBody(const float dt);
-  void MOV_Determinist();
-  void MOV_Random();
-  void MOV_Tracking();
-  void MOV_Pattern();
-  void MOV_Stop();
-  void move(const float dt);
+  void init(const float x, const float y);
+
+  void updateMind(const uint32_t dt);
+  void updateBody(const uint32_t dt);
+  void MOV_Determinist(const uint32_t dt);
+  void MOV_Random(const uint32_t dt);
+  void MOV_Tracking(const uint32_t dt);
+  void MOV_Pattern(const uint32_t dt);
+  void MOV_Stop(const uint32_t dt);
+  void move(const uint32_t dt);
   void setOrientation(const Float2& destination);
   void calculateVelocity();
   bool positionReached() const;

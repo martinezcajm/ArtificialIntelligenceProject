@@ -22,7 +22,7 @@ public:
 
   bool quit_game_;
 
-  float time_step_;
+  uint32_t time_step_;
 
   bool should_game_end_;
 
@@ -34,7 +34,7 @@ public:
 
   Agent *player_;
 
-  int32_t frequency_;
+  uint32_t frequency_;
 
 };
 
