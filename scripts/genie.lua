@@ -10,7 +10,7 @@ solution "IA"
     "x64",
     "Native"
   }
-  windowstargetplatformversion "10.0.17134.0"
+  --windowstargetplatformversion "10.0.17134.0"
   language "C++"
 
   PROJ_DIR = path.getabsolute("..")
@@ -20,16 +20,18 @@ solution "IA"
 
     includedirs {
       path.join(PROJ_DIR, "include"),
-      path.join(PROJ_DIR, "deps/ESAT_rev196_vs2015/include")
+      path.join(PROJ_DIR, "deps/ESAT_rev196_vs2015/include"),
+	  path.join(PROJ_DIR, "deps/Math")
     }
 	
 	libdirs{ 
-		path.join(PROJ_DIR, "deps/ESAT_rev196_vs2015/bin")
+		path.join(PROJ_DIR, "deps/ESAT_rev196_vs2015/bin")		
 	}
 
     files {
       path.join(PROJ_DIR, "src/*.cc"),
-	  path.join(PROJ_DIR, "include/*.h")
+	  path.join(PROJ_DIR, "include/*.h"),
+	  path.join(PROJ_DIR, "deps/Math/*.h")
     }
    
     configuration "windows"

@@ -1,3 +1,9 @@
+// agent.cc
+// Jose Maria Martinez
+// Implementation of the agent. Movement functionality and decision making
+// functions.
+//Comments for the functions can be found at the header
+
 #include "agent.h"
 #include <cmath>
 #include <gamestate.h>
@@ -14,11 +20,17 @@ Agent::Agent(const MovementType mov_type, const float x, const float y, const fl
   init(x, y);
 }
 
+Agent::~Agent()
+{
+  
+}
+
+
 void Agent::init(const float x, const float y)
 {
-
+  epsilon_ = kEpsilon * speed_;
   position_ = Float2(x, y);
-  target_position_ = Float2(0, 0);
+  target_position_ = position_;
   velocity_ = Float2(0, 0);
 
   actual_pattern_ = PatternMovement::k_PatRight;
@@ -27,34 +39,15 @@ void Agent::init(const float x, const float y)
   determinist_targets_[0] = Float2(0, 0);
   determinist_targets_[1] = Float2(1000.0f, 0.0f);
 
-  target_reached_ = false;
-  is_tracking_ = false;
 
   id_ = total_agents;
   total_agents++;
 }
 
-
-bool Agent::is_tracking() const
-{
-  return is_tracking_;
-}
-
-void Agent::set_is_tracking(bool tracks)
-{
-  is_tracking_ = tracks;
-}
-
-
 void Agent::update(const uint32_t dt)
 {
   updateMind(dt);
   updateBody(dt);
-}
-
-void Agent::changeMovementType(const MovementType move_type)
-{
-  move_type_ = move_type;
 }
 
 float Agent::x() const
@@ -70,8 +63,6 @@ float Agent::y() const
 
 void Agent::updateBody(const uint32_t dt)
 {
-  //UpdateSensors(); podemos pasarle el delta time para no actualizar en cada frame
-  if (isPlayerAtSight() && is_tracking()) changeMovementType(MovementType::k_MovTracking);
   switch (move_type_)
   {
   case MovementType::k_MovDeterminist:
@@ -97,11 +88,30 @@ void Agent::updateBody(const uint32_t dt)
 
 void Agent::updateMind(const uint32_t dt)
 {
-
-  if (move_type_ == MovementType::k_MovTracking && target_reached_)
+  static bool initialized = false;
+  if (initialized) return;
+  const float generic_speed = 50.0f;
+  switch (move_type_)
   {
-    target_reached_ = false;
-    target_position_ = GameState::instance().player_->position_;
+  case MovementType::k_MovDeterminist:
+    speed_ = generic_speed * 0.75f;
+    epsilon_ = kEpsilon * speed_;
+    break;
+  case MovementType::k_MovRandom:
+    speed_ = generic_speed * 1.0f;
+    epsilon_ = kEpsilon * speed_;
+    break;
+  case MovementType::k_MovTracking:
+    speed_ = generic_speed * 1.25f;
+    epsilon_ = kEpsilon * speed_;
+    target_position_ = Float2(640,360);
+    break;
+  case MovementType::k_MovPattern:
+    speed_ = generic_speed * 1.50f;
+    epsilon_ = kEpsilon * speed_;
+    break;
+  default:
+    break;
   }
 }
 
@@ -116,16 +126,16 @@ void Agent::move(const uint32_t dt)
 bool Agent::positionReached() const
 {
   Float2 aux_vector = target_position_ - position_;
-  return aux_vector.Length() < kEpsilon;
+  return aux_vector.Length() < epsilon_;
 }
 
-bool Agent::isPlayerAtSight() const
-{
-  Float2 player_position = GameState::instance().player_->position_;
-  Float2 vec_distance = player_position - position_;
-  float distance = vec_distance.Length();
-  return (player_position - position_).Length() < vision_range_;
-}
+//bool Agent::isPlayerAtSight() const
+//{
+//  Float2 player_position = GameState::instance().player_->position_;
+//  Float2 vec_distance = player_position - position_;
+//  float distance = vec_distance.Length();
+//  return (player_position - position_).Length() < vision_range_;
+//}
 
 void Agent::setNextPosition(float new_target_x, float new_target_y)
 {
@@ -136,7 +146,6 @@ void Agent::setOrientation(const Float2& destination)
 {
   velocity_ = destination - position_;
   velocity_ /= velocity_.Length();
-  //velocity_ = { 1.0f, 0.0f };
 }
 
 void Agent::calculateVelocity()
@@ -185,9 +194,8 @@ void Agent::MOV_Tracking(const uint32_t dt)
   const uint32_t retarget_time = 3000; //3 s
   static uint32_t accum_time = 0;
   accum_time += dt;
-  //if (!positionReached()) return;
   if (accum_time < retarget_time && !positionReached()) return;
-  target_reached_ = true;
+  //target_reached_ = true;
   setNextPosition(target_position_.x, target_position_.y);
   accum_time = 0;
 }
