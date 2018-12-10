@@ -51,6 +51,6 @@ solution "IA"
     configuration {"gmake"}
       buildoptions_cpp{
         "-x c++",
-        "-std=c++14"
+        "-std=c++11"
       }
     configuration{}
