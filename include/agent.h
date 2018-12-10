@@ -16,13 +16,28 @@ enum class MovementType
   k_PADDING = 255
 };
 
-enum class PatternMovement
+enum class AgentType
 {
-  k_PatRight = 0,
-  k_PatLeft = 1,
-  k_PatDown = 2,
-  k_PatUp = 3,
+  k_Patrol = 0,
+  k_Scout = 1,
+  k_Chaser = 2,
+  k_Mindless = 3,
   k_PADDING = 255
+};
+
+enum class PatternToken
+{
+  k_East = 0,
+  k_West = 1,
+  k_South = 2,
+  k_North = 3,
+  k_PADDING = 255
+};
+
+struct PatternCommand
+{
+  PatternToken token;
+  uint32_t seconds;
 };
 
 /** @brief Agent entity
@@ -36,22 +51,28 @@ class Agent
 public:
   /** @brief Agent constructor
   *
-  * Agent constructor
+  * Default agent constructor, initializes the agent as a 
+  * mindless one at the point 0,0 
   *
   * @return *Agent
   */
   Agent();
+
   /** @brief Agent constructor
   *
-  * Agent constructor with parameter initialization
+  * Agent constructor. Depending of the rol assigned will have a
+  * different movement type:
+  *  -Patrol:   will follow a pattern
+  *  -Scout:    will do a random movement 
+  *  -Chaser:   will track 
+  *  -Mindless: will follow a determinist movement
   *
   * @return *Agent
-  * @param mov_type initial movement type of the agent
+  * @param agent_type role of the agent
   * @param x start x coordinate of the agent
   * @param y start y coordinate of the agent
-  * @param speed initial speed of the agent
   */
-  Agent(const MovementType mov_type, const float x, const float y, const float speed);
+  Agent(const AgentType agent_type, const float x, const float y);
   /** @brief Destroys the Agent 
   *
   * Destructor of the agent entity
@@ -83,14 +104,15 @@ public:
   float y() const;
 private:
   uint32_t id_ = 0;
-  float pattern_step_ = 50;
+  
+
+  //The epsilon will vary depending on the speed * kEpsilonFactor
   float epsilon_;
-  const float kEpsilon = 0.01f;
-  static const int determinist_size_ = 2;
-  int determinist_idx_;
-  Float2 determinist_targets_[determinist_size_];
+  const float kEpsilonFactor = 0.01f;
+  
   MovementType move_type_;
-  PatternMovement actual_pattern_;
+  PatternToken actual_pattern_;
+  AgentType type_agent_;
   //bool target_reached_;
 
   
@@ -101,9 +123,29 @@ private:
 
   //float vision_range_ = 200;
 
-  //speed as m/s is pixels/s
-  float speed_ = 5.0f;
+  //speed as m/s 
+  float speed_;
   const float kSpeedUp = 2.0f;
+  const float kMetersPerPixel = 10.0f;
+
+  bool initialized_;
+
+  //Determinist variables
+  int determinist_idx_;
+  static const int determinist_size_ = 2;
+  Float2 determinist_targets_[determinist_size_];
+  //Pattern variables
+  int pattern_idx_;
+  static const int pattern_size_ = 4;
+  PatternCommand pattern_targets_[pattern_size_];
+  uint32_t accum_time_pattern_;
+  float pattern_step_;
+  //Tracking variables
+  uint32_t tracking_retarget_time_;
+  uint32_t accum_time_tracking_;
+  //Random variables
+  uint32_t next_random_time_;
+  uint32_t accum_time_random_;
 
   /** @brief Initializes the agent
   *

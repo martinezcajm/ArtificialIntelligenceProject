@@ -14,16 +14,16 @@
 #include <agent.h>
 #include <gamestate.h>
 
-typedef enum
-{
-  kNothing = 0,
-  kExit = 1
-} Command;
+//typedef enum
+//{
+//  kNothing = 0,
+//  kExit = 1
+//} Command;
 //
 //Command actual_command = kNothing;
 //bool quit_game_ = false;
 
-GameState& game_state = GameState::instance();
+GameState& g_game_state = GameState::instance();
 
 /** @brief Init
 *
@@ -34,23 +34,23 @@ GameState& game_state = GameState::instance();
 void Init() {
 
   //game_state_.actual_command_ = kNothing;
-  game_state.quit_game_ = false;
-  game_state.should_game_end_ = false;
-  game_state.frequency_ = 60;
+  g_game_state.quit_game_ = false;
+  g_game_state.should_game_end_ = false;
+  g_game_state.frequency_ = 60;
   //Maximum time for a frequency of 60 frames per second (1/60)
-  //game_state.time_step_ = 16;
+  //g_game_state.time_step_ = 16;
 
   //Maximum time in milliseconds for our frequency (1/frequency)
-  game_state.time_step_ = (1.0/game_state.frequency_)*1000;
+  g_game_state.time_step_ = (1.0/g_game_state.frequency_)*1000;
 
   ESAT::WindowInit(1280, 720);
 
-  game_state.agent_spr_ = ESAT::SpriteFromFile("../data/agent.png");
+  g_game_state.agent_spr_ = ESAT::SpriteFromFile("../data/agent.png");
 
-  game_state.agents_.emplace_back(new Agent(MovementType::k_MovRandom, 1000, 500, 100));
-  game_state.agents_.emplace_back(new Agent(MovementType::k_MovPattern, 0, 500, 100));
-  game_state.agents_.emplace_back(new Agent(MovementType::k_MovDeterminist, 0, 0, 100));
-  game_state.agents_.emplace_back(new Agent(MovementType::k_MovTracking, 1100, 650, 100));
+  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Scout, 1000, 500));
+  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Patrol, 20, 250));
+  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Mindless, 0, 0));
+  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Chaser, 1100, 650));
 
 }
 
@@ -66,9 +66,9 @@ void Draw() {
   ESAT::DrawSetFillColor(255, 0, 0);
   ESAT::DrawSetStrokeColor(0, 0, 255);
 
-  for (Agent* agent: game_state.agents_)
+  for (Agent* agent: g_game_state.agents_)
   {
-    ESAT::DrawSprite(game_state.agent_spr_, agent->x(), agent->y());
+    ESAT::DrawSprite(g_game_state.agent_spr_, agent->x(), agent->y());
   }
 
   ESAT::DrawEnd();
@@ -86,7 +86,7 @@ void InputService()
   if (ESAT::IsSpecialKeyDown(ESAT::kSpecialKey_Escape))
   {
     //game_state_.actual_command_ = kExit;
-    game_state.should_game_end_ = true;
+    g_game_state.should_game_end_ = true;
   }
 }
 
@@ -99,9 +99,9 @@ void InputService()
 */
 void Update(uint32_t dt)
 {
-  if (!ESAT::WindowIsOpened()) game_state.quit_game_ = true;
-  if (game_state.should_game_end_) game_state.quit_game_ = true;
-  for (Agent* agent : game_state.agents_)
+  if (!ESAT::WindowIsOpened()) g_game_state.quit_game_ = true;
+  if (g_game_state.should_game_end_) g_game_state.quit_game_ = true;
+  for (Agent* agent : g_game_state.agents_)
   {
     agent->update(dt);
   }
@@ -116,15 +116,15 @@ void Update(uint32_t dt)
 */
 void Deinit()
 {
-  uint32_t idx = game_state.agents_.size()-1;
-  while(!game_state.agents_.empty())
+  uint32_t idx = g_game_state.agents_.size()-1;
+  while(!g_game_state.agents_.empty())
   {
-    Agent* a = game_state.agents_[idx];
+    Agent* a = g_game_state.agents_[idx];
     delete a;
-    game_state.agents_.pop_back();
+    g_game_state.agents_.pop_back();
     idx--;
   }
-  ESAT::SpriteRelease(game_state.agent_spr_);
+  ESAT::SpriteRelease(g_game_state.agent_spr_);
 
 }
 
@@ -142,14 +142,14 @@ int ESAT::main(int argc, char **argv) {
   double current_time = Time();
   double loop_last_time = Time();
   // main loop
-  while (!game_state.quit_game_) {
+  while (!g_game_state.quit_game_) {
 
     InputService();
     double accum_time = Time() - current_time;
-    while (accum_time >= game_state.time_step_)
+    while (accum_time >= g_game_state.time_step_)
     {
-      Update(game_state.time_step_);
-      current_time += game_state.time_step_;
+      Update(g_game_state.time_step_);
+      current_time += g_game_state.time_step_;
       accum_time = Time() - current_time;
     }
     Draw();

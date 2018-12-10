@@ -10,38 +10,30 @@
 
 static uint32_t total_agents = 0;
 
-Agent::Agent() : move_type_(MovementType::k_MovDeterminist)
+Agent::Agent() : type_agent_(AgentType::k_Mindless)
 {
   init(0, 0);
 }
 
-Agent::Agent(const MovementType mov_type, const float x, const float y, const float speed) : move_type_(mov_type), speed_(speed)
+Agent::Agent(const AgentType agent_type, const float x, const float y) : type_agent_(agent_type)
 {
   init(x, y);
 }
+
 
 Agent::~Agent()
 {
   
 }
 
-
 void Agent::init(const float x, const float y)
 {
-  epsilon_ = kEpsilon * speed_;
   position_ = Float2(x, y);
-  target_position_ = position_;
   velocity_ = Float2(0, 0);
-
-  actual_pattern_ = PatternMovement::k_PatRight;
-
-  determinist_idx_ = 0;
-  determinist_targets_[0] = Float2(0, 0);
-  determinist_targets_[1] = Float2(1000.0f, 0.0f);
-
-
+  target_position_ = position_;
   id_ = total_agents;
   total_agents++;
+  initialized_ = false;
 }
 
 void Agent::update(const uint32_t dt)
@@ -88,31 +80,59 @@ void Agent::updateBody(const uint32_t dt)
 
 void Agent::updateMind(const uint32_t dt)
 {
-  static bool initialized = false;
-  if (initialized) return;
-  const float generic_speed = 50.0f;
-  switch (move_type_)
+  if (!initialized_)
   {
-  case MovementType::k_MovDeterminist:
-    speed_ = generic_speed * 0.75f;
-    epsilon_ = kEpsilon * speed_;
-    break;
-  case MovementType::k_MovRandom:
-    speed_ = generic_speed * 1.0f;
-    epsilon_ = kEpsilon * speed_;
-    break;
-  case MovementType::k_MovTracking:
-    speed_ = generic_speed * 1.25f;
-    epsilon_ = kEpsilon * speed_;
-    target_position_ = Float2(640,360);
-    break;
-  case MovementType::k_MovPattern:
-    speed_ = generic_speed * 1.50f;
-    epsilon_ = kEpsilon * speed_;
-    break;
-  default:
-    break;
+    const float generic_speed = 5.0f;
+    speed_ = generic_speed * kMetersPerPixel;
+    switch (type_agent_)
+    {
+    case AgentType::k_Mindless:
+      move_type_ = MovementType::k_MovDeterminist;
+
+      determinist_idx_ = 0;
+      determinist_targets_[0] = Float2(0, 0);
+      determinist_targets_[1] = Float2(1000.0f, 0.0f);
+
+      speed_ *= 0.75f;
+      epsilon_ = kEpsilonFactor * speed_;
+      break;
+    case AgentType::k_Scout:
+      move_type_ = MovementType::k_MovRandom;
+      next_random_time_ = 5000;
+      accum_time_random_ = 0;
+
+      speed_ *= 1.0f;
+      epsilon_ = kEpsilonFactor * speed_;
+      break;
+    case AgentType::k_Chaser:
+      move_type_ = MovementType::k_MovTracking;
+      tracking_retarget_time_ = 3000; //3s
+      accum_time_tracking_ = 0;
+
+      speed_ *= 1.25f;
+      epsilon_ = kEpsilonFactor * speed_;
+      target_position_ = Float2(640, 360);
+      break;
+    case AgentType::k_Patrol:
+      move_type_ = MovementType::k_MovPattern;
+      pattern_idx_ = 0;
+      pattern_targets_[0] = PatternCommand{ PatternToken::k_East, 3000 };
+      pattern_targets_[1] = PatternCommand{ PatternToken::k_South, 3000 };
+      pattern_targets_[2] = PatternCommand{ PatternToken::k_West, 3000 };
+      pattern_targets_[3] = PatternCommand{ PatternToken::k_North, 3000 };
+
+      accum_time_pattern_ = 0;
+      pattern_step_ = 50;
+      speed_ *= 1.50f;
+      epsilon_ = kEpsilonFactor * speed_;
+      break;
+    default:
+      break;
+    }
+
+    initialized_ = true;
   }
+  
 }
 
 void Agent::move(const uint32_t dt)
@@ -165,13 +185,10 @@ void Agent::MOV_Determinist(const uint32_t dt)
 
 void Agent::MOV_Random(const uint32_t dt)
 {
-  const uint32_t change_position_time = 5000; //5 s
-  static uint32_t accum_time = 5000;
 
-  accum_time += dt;
+  accum_time_random_ += dt;
 
-  if (accum_time < change_position_time && !positionReached()) return;
-  //if (!positionReached()) return;
+  if (accum_time_random_ < next_random_time_ && !positionReached()) return;
   static float const boundary_x_left = 0.0f;
   static float const boundary_x_right = 1280.0f;
   static float const boundary_y_left = 0.0f;
@@ -186,62 +203,42 @@ void Agent::MOV_Random(const uint32_t dt)
 
   setNextPosition(rand_px, rand_py);
 
-  accum_time = 0;
+  accum_time_random_ = 0;
 }
 
 void Agent::MOV_Tracking(const uint32_t dt)
 {
-  const uint32_t retarget_time = 3000; //3 s
-  static uint32_t accum_time = 0;
-  accum_time += dt;
-  if (accum_time < retarget_time && !positionReached()) return;
-  //target_reached_ = true;
+  accum_time_tracking_ += dt;
+  if (accum_time_tracking_ < tracking_retarget_time_ && !positionReached()) return;
   setNextPosition(target_position_.x, target_position_.y);
-  accum_time = 0;
+  accum_time_tracking_ = 0.0f;
 }
 
 void Agent::MOV_Pattern(const uint32_t dt)
 {
-  if (!positionReached())return;
-  static int cycles = 0;
-  switch (actual_pattern_)
+  accum_time_pattern_ += dt;
+  if(accum_time_pattern_ > pattern_targets_[pattern_idx_].seconds)
   {
-  case PatternMovement::k_PatRight:
+    accum_time_pattern_ = 0;
+    pattern_idx_ = (pattern_idx_ + 1) % pattern_size_;
+  }
+  switch (pattern_targets_[pattern_idx_].token)
+  {
+  case PatternToken::k_East:
     target_position_ = Float2(position_.x + pattern_step_, position_.y);
-    if (cycles == 2)
-    {
-      cycles = 0;
-      actual_pattern_ = PatternMovement::k_PatDown;
-    }
     break;
-  case PatternMovement::k_PatLeft:
+  case PatternToken::k_West:
     target_position_ = Float2(position_.x - pattern_step_, position_.y);
-    if (cycles == 2)
-    {
-      cycles = 0;
-      actual_pattern_ = PatternMovement::k_PatUp;
-    }
     break;
-  case PatternMovement::k_PatUp:
+  case PatternToken::k_North:
     target_position_ = Float2(position_.x, position_.y - pattern_step_);
-    if (cycles == 2)
-    {
-      cycles = 0;
-      actual_pattern_ = PatternMovement::k_PatRight;
-    }
     break;
-  case PatternMovement::k_PatDown:
+  case PatternToken::k_South:
     target_position_ = Float2(position_.x, position_.y + pattern_step_);
-    if (cycles == 2)
-    {
-      cycles = 0;
-      actual_pattern_ = PatternMovement::k_PatLeft;
-    }
     break;
   default:
     break;
   }
-  cycles++;
 }
 
 void Agent::MOV_Stop(const uint32_t dt)
