@@ -83,7 +83,7 @@ void Agent::updateMind(const uint32_t dt)
   if (!initialized_)
   {
     const float generic_speed = 5.0f;
-    speed_ = generic_speed * kMetersPerPixel;
+    speed_ = generic_speed;
     switch (type_agent_)
     {
     case AgentType::k_Mindless:
@@ -98,7 +98,7 @@ void Agent::updateMind(const uint32_t dt)
       break;
     case AgentType::k_Scout:
       move_type_ = MovementType::k_MovRandom;
-      next_random_time_ = 5000;
+      next_random_time_ = 5000; //5s
       accum_time_random_ = 0;
 
       speed_ *= 1.0f;

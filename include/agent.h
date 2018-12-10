@@ -126,7 +126,6 @@ private:
   //speed as m/s 
   float speed_;
   const float kSpeedUp = 2.0f;
-  const float kMetersPerPixel = 10.0f;
 
   bool initialized_;
 
