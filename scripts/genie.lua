@@ -10,7 +10,7 @@ solution "IA"
     "x64",
     "Native"
   }
-  windowstargetplatformversion "10.0.17134.0"
+  
   language "C++"
 
   PROJ_DIR = path.getabsolute("..")
@@ -36,7 +36,10 @@ solution "IA"
    
     configuration "windows"
       links { "opengl32", "user32", "gdi32", "shell32"}
-   
+	  
+	configuration "vs2017"
+      windowstargetplatformversion "10.0.17134.0"
+    
     configuration "Debug"
 	  links {"ESAT_d", "ESAT_extra_d"}
       targetdir "../bin/debug"

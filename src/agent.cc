@@ -211,7 +211,7 @@ void Agent::MOV_Tracking(const uint32_t dt)
   accum_time_tracking_ += dt;
   if (accum_time_tracking_ < tracking_retarget_time_ && !positionReached()) return;
   setNextPosition(target_position_.x, target_position_.y);
-  accum_time_tracking_ = 0.0f;
+  accum_time_tracking_ = 0;
 }
 
 void Agent::MOV_Pattern(const uint32_t dt)

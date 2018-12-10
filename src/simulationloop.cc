@@ -41,7 +41,7 @@ void Init() {
   //g_game_state.time_step_ = 16;
 
   //Maximum time in milliseconds for our frequency (1/frequency)
-  g_game_state.time_step_ = (1.0/g_game_state.frequency_)*1000;
+  g_game_state.time_step_ = static_cast<uint32_t>((1.0/g_game_state.frequency_)*1000);
 
   ESAT::WindowInit(1280, 720);
 
