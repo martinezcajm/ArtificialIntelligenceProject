@@ -48,6 +48,15 @@ enum class FSMStates
   k_PADDING = 255
 };
 
+enum class FSMGoHomeStates
+{
+  k_Init = 0,
+  k_CalculatePath = 1,
+  k_Waiting = 2,
+  k_End = 3,
+  k_PADDING = 255
+};
+
 struct PatternCommand
 {
   PatternToken token;
@@ -174,6 +183,8 @@ private:
   float fsm_distance_;
   const float track_distance_ = 20.0f;
 
+  FSMGoHomeStates actual_state_go_home_;
+
   /** @brief Initializes the agent
   *
   * Initializes the attributes from the agent.
@@ -290,6 +301,8 @@ private:
   * @return void
   */
   void setNextPosition(float new_target_x, float new_target_y);
+
+  bool goHomeFSM();
 
   //bool isPlayerAtSight() const;
 };

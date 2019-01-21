@@ -35,6 +35,7 @@ void Agent::init(const float x, const float y)
   total_agents++;
   initialized_ = false;
   actual_state_ = FSMStates::k_Init;
+  actual_state_go_home_ = FSMGoHomeStates::k_Init;
   timer_ = 0.0f;
   pill_grabbed_ = false;
   fsm_distance_ = 0.0f;
@@ -138,8 +139,8 @@ void Agent::updateMind(const uint32_t dt)
   }
 
   //FSM State
-  float rand_px = rand() % 2;
-  pill_grabbed_ = rand_px;
+  float rand_px = rand() % 20;
+  pill_grabbed_ = (rand_px == 5.0f);
   fsm_distance_ = rand() % 101;
 
   switch(actual_state_)
@@ -207,11 +208,12 @@ void Agent::updateMind(const uint32_t dt)
     }
     break;
   case FSMStates::k_GoHome:
-    if(fsm_distance_ < fsm_epsilon_)
-    {
-      actual_state_ = FSMStates::k_Home;
-      printf("Change k_GoHome->k_Home \n");
-    }
+    if (goHomeFSM()) actual_state_ = FSMStates::k_Home;
+    //if(fsm_distance_ < fsm_epsilon_)
+    //{
+    //  actual_state_ = FSMStates::k_Home;
+    //  printf("Change k_GoHome->k_Home \n");
+    //}
     break;
   case FSMStates::k_Wander:
     if (pill_grabbed_)
@@ -229,10 +231,38 @@ void Agent::updateMind(const uint32_t dt)
     break;
   default:
     printf("Game ended \n");
+    actual_state_ = FSMStates::k_Init;
     break;
   }
   
 }
+
+bool Agent::goHomeFSM()
+{
+  switch(actual_state_go_home_)
+  {
+  case FSMGoHomeStates::k_Init:
+    actual_state_go_home_ = FSMGoHomeStates::k_CalculatePath;
+    printf("Change goHomeFSM k_Init->k_CalculatePath \n");
+    break;
+  case FSMGoHomeStates::k_CalculatePath:
+    actual_state_go_home_ = FSMGoHomeStates::k_Waiting;
+    printf("Change goHomeFSM k_CalculatePath->k_Waiting \n");
+    break;
+  case FSMGoHomeStates::k_Waiting:
+    if (fsm_distance_ < fsm_epsilon_)
+    {
+      actual_state_go_home_ = FSMGoHomeStates::k_End;
+      printf("Change goHomeFSM k_Waiting->k_End \n");
+    }
+    break;
+  default:
+    actual_state_go_home_ = FSMGoHomeStates::k_Init;
+    break;
+  }
+  return actual_state_go_home_ == FSMGoHomeStates::k_End;
+}
+
 
 void Agent::move(const uint32_t dt)
 {
