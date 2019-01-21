@@ -48,9 +48,9 @@ void Init() {
   g_game_state.agent_spr_ = ESAT::SpriteFromFile("../data/agent.png");
 
   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Scout, 1000, 500));
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Patrol, 20, 250));
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Mindless, 0, 0));
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Chaser, 1100, 650));
+  //g_game_state.agents_.emplace_back(new Agent(AgentType::k_Patrol, 20, 250));
+  //g_game_state.agents_.emplace_back(new Agent(AgentType::k_Mindless, 0, 0));
+  //g_game_state.agents_.emplace_back(new Agent(AgentType::k_Chaser, 1100, 650));
 
 }
 

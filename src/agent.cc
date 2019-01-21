@@ -34,6 +34,10 @@ void Agent::init(const float x, const float y)
   id_ = total_agents;
   total_agents++;
   initialized_ = false;
+  actual_state_ = FSMStates::k_Init;
+  timer_ = 0.0f;
+  pill_grabbed_ = false;
+  fsm_distance_ = 0.0f;
 }
 
 void Agent::update(const uint32_t dt)
@@ -131,6 +135,101 @@ void Agent::updateMind(const uint32_t dt)
     }
 
     initialized_ = true;
+  }
+
+  //FSM State
+  float rand_px = rand() % 2;
+  pill_grabbed_ = rand_px;
+  fsm_distance_ = rand() % 101;
+
+  switch(actual_state_)
+  {
+  case FSMStates::k_Init:
+    actual_state_ = FSMStates::k_Home;
+    printf("Change k_Init->k_Home \n");
+    break;
+  case FSMStates::k_Home:
+    if(timer_ > exist_home_time_)
+    {
+      actual_state_ = FSMStates::k_Wander;
+      printf("Change k_Home->k_Wander \n");
+      timer_ = 0.0f;
+    }else
+    {
+      timer_ += dt;
+    }
+    break;
+  case FSMStates::k_Chase:
+    timer_ += dt;
+    if (pill_grabbed_)
+    {
+      actual_state_ = FSMStates::k_Flee;
+      printf("Change k_Chase->k_Flee \n");
+      pill_grabbed_ = false;
+      timer_ = invencibility_duration_;
+    }else if(fsm_distance_ < fsm_epsilon_)
+    {
+      actual_state_ = FSMStates::k_Eating;
+      printf("Change k_Chase->k_Eating \n");
+      timer_ = 0;
+    }else if(fsm_distance_ >= track_distance_ || timer_ > lose_focus_time_)
+    {
+      actual_state_ = FSMStates::k_Wander;
+      printf("Change k_Chase->k_Wander \n");
+      timer_ = 0;
+    }
+    break;
+  case FSMStates::k_Dead:
+    timer_ += dt;
+    if(timer_ > death_time)
+    {
+      actual_state_ = FSMStates::k_GoHome;
+      printf("Change k_Dead->k_GoHome \n");
+      timer_ = 0;
+    }
+    break;
+  case FSMStates::k_Eating:
+    actual_state_ = FSMStates::k_End;
+    printf("Change k_Eating->k_End \n");
+    break;
+  case FSMStates::k_Flee:
+    timer_ -= dt;
+    if(timer_ <= 0)
+    {
+      actual_state_ = FSMStates::k_Wander;
+      printf("Change k_Flee->k_Wander \n");
+      timer_ = 0;
+    }else if(fsm_distance_ < fsm_epsilon_)
+    {
+      actual_state_ = FSMStates::k_Dead;
+      printf("Change k_Flee->k_Dead \n");
+      timer_ = 0;
+    }
+    break;
+  case FSMStates::k_GoHome:
+    if(fsm_distance_ < fsm_epsilon_)
+    {
+      actual_state_ = FSMStates::k_Home;
+      printf("Change k_GoHome->k_Home \n");
+    }
+    break;
+  case FSMStates::k_Wander:
+    if (pill_grabbed_)
+    {
+      actual_state_ = FSMStates::k_Flee;
+      printf("Change K_Wander->K_Flee \n");
+      pill_grabbed_ = false;
+      timer_ = invencibility_duration_;
+    }else if(fsm_distance_ < track_distance_)
+    {
+      actual_state_ = FSMStates::k_Chase;
+      printf("Change K_Wander->K_Chase \n");
+      timer_ = 0;
+    }
+    break;
+  default:
+    printf("Game ended \n");
+    break;
   }
   
 }

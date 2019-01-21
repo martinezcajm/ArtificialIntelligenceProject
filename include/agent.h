@@ -34,6 +34,20 @@ enum class PatternToken
   k_PADDING = 255
 };
 
+enum class FSMStates
+{
+  k_Init = 0,
+  k_Home = 1,
+  k_Wander = 2,
+  k_Chase = 3,
+  k_Eating = 4,
+  k_Flee = 5,
+  k_Dead = 6,
+  k_GoHome = 7,
+  k_End = 8,
+  k_PADDING = 255
+};
+
 struct PatternCommand
 {
   PatternToken token;
@@ -145,6 +159,20 @@ private:
   //Random variables
   uint32_t next_random_time_;
   uint32_t accum_time_random_;
+
+  //FSM variables
+  FSMStates actual_state_;
+  int32_t timer_;
+  const int32_t exist_home_time_ = 3000;
+  const int32_t lose_focus_time_ = 5000;
+  const int32_t invencibility_duration_ = 8000;
+  const int32_t death_time = 2000;
+  bool pill_grabbed_;
+  //TODO this will be the variables of the agent, for now we have 
+  //TODO specific ones for testing the FSM
+  const float fsm_epsilon_ = 50.0f;
+  float fsm_distance_;
+  const float track_distance_ = 20.0f;
 
   /** @brief Initializes the agent
   *
