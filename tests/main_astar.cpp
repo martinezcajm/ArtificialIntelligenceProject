@@ -2,15 +2,16 @@
 // Jose Maria Martinez
 // Implementation of the A* algorithm
 
-#include <ESAT/window.h>
-#include <ESAT/time.h>
-#include <gamestate.h>
-#include <ESAT/input.h>
-#include <ESAT/draw.h>
+#include "ESAT/window.h"
+#include "ESAT/time.h"
+#include "gamestate.h"
+#include "ESAT/input.h"
+#include "ESAT/draw.h"
 #include "path.h"
 #include "path_finder.h"
 
 GameState& g_game_state = GameState::instance();
+bool g_mouse_pressed_ = false;
 
 /** @brief Init
 *
@@ -19,7 +20,7 @@ GameState& g_game_state = GameState::instance();
 * @return void
 */
 void Init() {
-
+  g_mouse_pressed_ = false;
   //game_state_.actual_command_ = kNothing;
   g_game_state.quit_game_ = false;
   g_game_state.should_game_end_ = false;
@@ -31,6 +32,7 @@ void Init() {
   g_game_state.time_step_ = static_cast<uint32_t>((1.0 / g_game_state.frequency_) * 1000);
 
   ESAT::WindowInit(960, 704);
+  ESAT::WindowSetMouseVisibility(true);
 
   g_game_state.agent_spr_ = ESAT::SpriteFromFile("../../../data/agent.png");
   g_game_state.screen_spr_ = ESAT::SpriteFromFile("../../../data/gfx/maps/map_03_960x704_layout ABGS.png");
@@ -42,8 +44,9 @@ void Init() {
 
   Path* p = new Path();
   g_game_state.pf_agent = new PathFinder();
-  g_game_state.pf_agent->GeneratePath(p);
-  g_game_state.pf_agent->LoadMap("../../../data/gfx/maps/map_03_120x88_cost.png");
+  g_game_state.pf_agent->LoadMap("../../../data/gfx/maps/map_03_120x88_cost.png", 960, 704);
+  //g_game_state.pf_agent->GeneratePath(p);
+  
   delete p;
   int a = 3;
 }
@@ -61,6 +64,7 @@ void InputService()
     //game_state_.actual_command_ = kExit;
     g_game_state.should_game_end_ = true;
   }
+  if (ESAT::MouseButtonDown(0)) g_mouse_pressed_ = true;
 }
 
 /** @brief Update
@@ -74,6 +78,10 @@ void Update(uint32_t dt)
 {
   if (!ESAT::WindowIsOpened()) g_game_state.quit_game_ = true;
   if (g_game_state.should_game_end_) g_game_state.quit_game_ = true;
+  if (g_mouse_pressed_) {
+    g_mouse_pressed_ = false;
+    printf("mouse pressed at {%f,%f} \n", ESAT::MousePositionX(), ESAT::MousePositionY());
+  }
   for (Agent* agent : g_game_state.agents_)
   {
     agent->update(dt);
@@ -94,6 +102,8 @@ void Draw() {
   ESAT::DrawSetStrokeColor(0, 0, 255);
 
   ESAT::DrawSprite(g_game_state.screen_spr_, 0, 0);
+
+  //ESAT::DrawSprite("", 0, 0);
 
   for (Agent* agent : g_game_state.agents_)
   {

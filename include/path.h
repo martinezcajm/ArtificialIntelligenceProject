@@ -13,11 +13,11 @@
 #ifndef __PATH_H__
 #define __PATH_H__
 
-#include <vector>
-#include <platform_types.h>
-#include <common_def.h>
+#include "platform_types.h"
+#include "common_def.h"
+#include <cstdio>
 
-const int kMaxPoints = 100;
+const int kMaxPoints = 500;
 
 enum class Direction
 {
@@ -77,6 +77,9 @@ private:
   s16 num_loops_; // -1 = infinite, 0 = no loops, n = n loops
   u16 current_loop_;
   s16 offset_;
+
+  Path(const Path& p) {};
+  Path operator=(const Path& p) {};
 };
 
 #endif

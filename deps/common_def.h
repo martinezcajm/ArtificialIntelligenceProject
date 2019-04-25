@@ -26,6 +26,9 @@ typedef enum
   kErrorCode_BadLoopsSetting = -5,
   kErrorCode_BadDirectionSetting = -5,
   kErrorCode_PathNotCreated = -6,
+  kErrorCode_InvalidOrigin = -7,
+  kErrorCode_InvalidDestination= -8,
+  kErrorCode_PathNotFound = -9,
 	kErrorCode_Memory = -10,
 	kErrorCode_File = -20
 } ErrorCode;

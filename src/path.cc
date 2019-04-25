@@ -1,7 +1,5 @@
-#include <path.h>
-#include <platform_types.h>
-#include <common_def.h>
-
+#include "path.h"
+#include <cstdlib>
 
 Path::Path()
 {

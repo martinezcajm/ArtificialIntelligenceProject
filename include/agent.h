@@ -4,7 +4,7 @@
 #ifndef __AGENT_H__
 #define __AGENT_H__
 #include <cstdint>
-#include <Math/float2.h>
+#include "Math/float2.h"
 
 enum class MovementType
 {
@@ -88,18 +88,18 @@ public:
   * @return void
   */
   void update(const uint32_t dt);
-  /** @brief gets the x position of the agent
+  /** @brief gets the x position_ of the agent
   *
-  * Returns the x position of the agent.
+  * Returns the x position_ of the agent.
   *
-  * @return float x position
+  * @return float x position_
   */
   float x() const;
-  /** @brief gets the y position of the agent
+  /** @brief gets the y position_ of the agent
   *
-  * Returns the y position of the agent.
+  * Returns the y position_ of the agent.
   *
-  * @return float y position
+  * @return float y position_
   */
   float y() const;
 private:
@@ -187,7 +187,7 @@ private:
   /** @brief Random behaviour
   *
   * Realizes the random movement. It's in charge of selecting
-  * the next random position in case the threshold requirement has
+  * the next random position_ in case the threshold requirement has
   * been reached.
   *
   * @param dt time that has passed in the game world
@@ -197,7 +197,7 @@ private:
   /** @brief Tracking behaviour
   *
   * Realizes the tracking movement. Makes the body advance to the
-  * target position that the mind has established.
+  * target position_ that the mind has established.
   *
   * @param dt time that has passed in the game world
   * @return void
@@ -246,14 +246,14 @@ private:
   * @return void
   */
   void calculateVelocity();
-  /** @brief Checks if the position has been reached
+  /** @brief Checks if the position_ has been reached
   *
   * Checks whether or not the agent has reached it's destination.
   *
-  * @return bool true if the position has been reached
+  * @return bool true if the position_ has been reached
   */
   bool positionReached() const;
-  /** @brief sets the next position of the agent
+  /** @brief sets the next position_ of the agent
   *
   * Updates the destination the agent needs to reach.
   *

@@ -4,9 +4,9 @@
 // functions.
 //Comments for the functions can be found at the header
 
-#include "agent.h"
 #include <cmath>
-#include <gamestate.h>
+#include "agent.h"
+#include "gamestate.h"
 
 static uint32_t total_agents = 0;
 
