@@ -1,0 +1,33 @@
+// common_def.h
+// Toni Barella
+// Artificial Intelligence - 3HND 
+// ESAT 2016 - 2019
+//
+#ifndef __COMMON_DEF_H__
+#define __COMMON_DEF_H__
+
+#define VERBOSE_
+
+#ifndef ESAT_SDK
+typedef struct {
+	float x;
+	float y;
+	float z;
+} Vector3;
+#endif
+
+typedef enum
+{
+  kErrorCode_Ok = 0,
+  kErrorCode_InvalidPointer = -1,
+  kErrorCode_StorageFull = -2,
+  kErrorCode_IncorrectPointsNumber = -3,
+  kErrorCode_EmptyPath = -4,
+  kErrorCode_BadLoopsSetting = -5,
+  kErrorCode_BadDirectionSetting = -5,
+  kErrorCode_PathNotCreated = -6,
+	kErrorCode_Memory = -10,
+	kErrorCode_File = -20
+} ErrorCode;
+
+#endif // __COMMON_DEF_H__

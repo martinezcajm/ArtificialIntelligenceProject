@@ -23,7 +23,7 @@ Agent::Agent(const AgentType agent_type, const float x, const float y) : type_ag
 
 Agent::~Agent()
 {
-  
+
 }
 
 void Agent::init(const float x, const float y)
@@ -34,11 +34,6 @@ void Agent::init(const float x, const float y)
   id_ = total_agents;
   total_agents++;
   initialized_ = false;
-  actual_state_ = FSMStates::k_Init;
-  actual_state_go_home_ = FSMGoHomeStates::k_Init;
-  timer_ = 0.0f;
-  pill_grabbed_ = false;
-  fsm_distance_ = 0.0f;
 }
 
 void Agent::update(const uint32_t dt)
@@ -138,131 +133,7 @@ void Agent::updateMind(const uint32_t dt)
     initialized_ = true;
   }
 
-  //FSM State
-  float rand_px = rand() % 20;
-  pill_grabbed_ = (rand_px == 5.0f);
-  fsm_distance_ = rand() % 101;
-
-  switch(actual_state_)
-  {
-  case FSMStates::k_Init:
-    actual_state_ = FSMStates::k_Home;
-    printf("Change k_Init->k_Home \n");
-    break;
-  case FSMStates::k_Home:
-    if(timer_ > exist_home_time_)
-    {
-      actual_state_ = FSMStates::k_Wander;
-      printf("Change k_Home->k_Wander \n");
-      timer_ = 0.0f;
-    }else
-    {
-      timer_ += dt;
-    }
-    break;
-  case FSMStates::k_Chase:
-    timer_ += dt;
-    if (pill_grabbed_)
-    {
-      actual_state_ = FSMStates::k_Flee;
-      printf("Change k_Chase->k_Flee \n");
-      pill_grabbed_ = false;
-      timer_ = invencibility_duration_;
-    }else if(fsm_distance_ < fsm_epsilon_)
-    {
-      actual_state_ = FSMStates::k_Eating;
-      printf("Change k_Chase->k_Eating \n");
-      timer_ = 0;
-    }else if(fsm_distance_ >= track_distance_ || timer_ > lose_focus_time_)
-    {
-      actual_state_ = FSMStates::k_Wander;
-      printf("Change k_Chase->k_Wander \n");
-      timer_ = 0;
-    }
-    break;
-  case FSMStates::k_Dead:
-    timer_ += dt;
-    if(timer_ > death_time)
-    {
-      actual_state_ = FSMStates::k_GoHome;
-      printf("Change k_Dead->k_GoHome \n");
-      timer_ = 0;
-    }
-    break;
-  case FSMStates::k_Eating:
-    actual_state_ = FSMStates::k_End;
-    printf("Change k_Eating->k_End \n");
-    break;
-  case FSMStates::k_Flee:
-    timer_ -= dt;
-    if(timer_ <= 0)
-    {
-      actual_state_ = FSMStates::k_Wander;
-      printf("Change k_Flee->k_Wander \n");
-      timer_ = 0;
-    }else if(fsm_distance_ < fsm_epsilon_)
-    {
-      actual_state_ = FSMStates::k_Dead;
-      printf("Change k_Flee->k_Dead \n");
-      timer_ = 0;
-    }
-    break;
-  case FSMStates::k_GoHome:
-    if (goHomeFSM()) actual_state_ = FSMStates::k_Home;
-    //if(fsm_distance_ < fsm_epsilon_)
-    //{
-    //  actual_state_ = FSMStates::k_Home;
-    //  printf("Change k_GoHome->k_Home \n");
-    //}
-    break;
-  case FSMStates::k_Wander:
-    if (pill_grabbed_)
-    {
-      actual_state_ = FSMStates::k_Flee;
-      printf("Change K_Wander->K_Flee \n");
-      pill_grabbed_ = false;
-      timer_ = invencibility_duration_;
-    }else if(fsm_distance_ < track_distance_)
-    {
-      actual_state_ = FSMStates::k_Chase;
-      printf("Change K_Wander->K_Chase \n");
-      timer_ = 0;
-    }
-    break;
-  default:
-    printf("Game ended \n");
-    actual_state_ = FSMStates::k_Init;
-    break;
-  }
-  
 }
-
-bool Agent::goHomeFSM()
-{
-  switch(actual_state_go_home_)
-  {
-  case FSMGoHomeStates::k_Init:
-    actual_state_go_home_ = FSMGoHomeStates::k_CalculatePath;
-    printf("Change goHomeFSM k_Init->k_CalculatePath \n");
-    break;
-  case FSMGoHomeStates::k_CalculatePath:
-    actual_state_go_home_ = FSMGoHomeStates::k_Waiting;
-    printf("Change goHomeFSM k_CalculatePath->k_Waiting \n");
-    break;
-  case FSMGoHomeStates::k_Waiting:
-    if (fsm_distance_ < fsm_epsilon_)
-    {
-      actual_state_go_home_ = FSMGoHomeStates::k_End;
-      printf("Change goHomeFSM k_Waiting->k_End \n");
-    }
-    break;
-  default:
-    actual_state_go_home_ = FSMGoHomeStates::k_Init;
-    break;
-  }
-  return actual_state_go_home_ == FSMGoHomeStates::k_End;
-}
-
 
 void Agent::move(const uint32_t dt)
 {
@@ -346,7 +217,7 @@ void Agent::MOV_Tracking(const uint32_t dt)
 void Agent::MOV_Pattern(const uint32_t dt)
 {
   accum_time_pattern_ += dt;
-  if(accum_time_pattern_ > pattern_targets_[pattern_idx_].seconds)
+  if (accum_time_pattern_ > pattern_targets_[pattern_idx_].seconds)
   {
     accum_time_pattern_ = 0;
     pattern_idx_ = (pattern_idx_ + 1) % pattern_size_;

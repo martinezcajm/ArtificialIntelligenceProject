@@ -4,7 +4,7 @@
 #ifndef __AGENT_H__
 #define __AGENT_H__
 #include <cstdint>
-#include <float2.h>
+#include <Math/float2.h>
 
 enum class MovementType
 {
@@ -34,29 +34,6 @@ enum class PatternToken
   k_PADDING = 255
 };
 
-enum class FSMStates
-{
-  k_Init = 0,
-  k_Home = 1,
-  k_Wander = 2,
-  k_Chase = 3,
-  k_Eating = 4,
-  k_Flee = 5,
-  k_Dead = 6,
-  k_GoHome = 7,
-  k_End = 8,
-  k_PADDING = 255
-};
-
-enum class FSMGoHomeStates
-{
-  k_Init = 0,
-  k_CalculatePath = 1,
-  k_Waiting = 2,
-  k_End = 3,
-  k_PADDING = 255
-};
-
 struct PatternCommand
 {
   PatternToken token;
@@ -74,8 +51,8 @@ class Agent
 public:
   /** @brief Agent constructor
   *
-  * Default agent constructor, initializes the agent as a 
-  * mindless one at the point 0,0 
+  * Default agent constructor, initializes the agent as a
+  * mindless one at the point 0,0
   *
   * @return *Agent
   */
@@ -86,8 +63,8 @@ public:
   * Agent constructor. Depending of the rol assigned will have a
   * different movement type:
   *  -Patrol:   will follow a pattern
-  *  -Scout:    will do a random movement 
-  *  -Chaser:   will track 
+  *  -Scout:    will do a random movement
+  *  -Chaser:   will track
   *  -Mindless: will follow a determinist movement
   *
   * @return *Agent
@@ -96,7 +73,7 @@ public:
   * @param y start y coordinate of the agent
   */
   Agent(const AgentType agent_type, const float x, const float y);
-  /** @brief Destroys the Agent 
+  /** @brief Destroys the Agent
   *
   * Destructor of the agent entity
   *
@@ -127,18 +104,18 @@ public:
   float y() const;
 private:
   uint32_t id_ = 0;
-  
+
 
   //The epsilon will vary depending on the speed * kEpsilonFactor
   float epsilon_;
   const float kEpsilonFactor = 0.01f;
-  
+
   MovementType move_type_;
   PatternToken actual_pattern_;
   AgentType type_agent_;
   //bool target_reached_;
 
-  
+
   //Agent* target;
   Float2 position_;
   Float2 target_position_;
@@ -168,22 +145,6 @@ private:
   //Random variables
   uint32_t next_random_time_;
   uint32_t accum_time_random_;
-
-  //FSM variables
-  FSMStates actual_state_;
-  int32_t timer_;
-  const int32_t exist_home_time_ = 3000;
-  const int32_t lose_focus_time_ = 5000;
-  const int32_t invencibility_duration_ = 8000;
-  const int32_t death_time = 2000;
-  bool pill_grabbed_;
-  //TODO this will be the variables of the agent, for now we have 
-  //TODO specific ones for testing the FSM
-  const float fsm_epsilon_ = 50.0f;
-  float fsm_distance_;
-  const float track_distance_ = 20.0f;
-
-  FSMGoHomeStates actual_state_go_home_;
 
   /** @brief Initializes the agent
   *
@@ -235,7 +196,7 @@ private:
   void MOV_Random(const uint32_t dt);
   /** @brief Tracking behaviour
   *
-  * Realizes the tracking movement. Makes the body advance to the 
+  * Realizes the tracking movement. Makes the body advance to the
   * target position that the mind has established.
   *
   * @param dt time that has passed in the game world
@@ -291,7 +252,7 @@ private:
   *
   * @return bool true if the position has been reached
   */
-  bool positionReached() const;  
+  bool positionReached() const;
   /** @brief sets the next position of the agent
   *
   * Updates the destination the agent needs to reach.
@@ -301,8 +262,6 @@ private:
   * @return void
   */
   void setNextPosition(float new_target_x, float new_target_y);
-
-  bool goHomeFSM();
 
   //bool isPlayerAtSight() const;
 };

@@ -8,6 +8,9 @@
 #include <ESAT/sprite.h>
 #include <cstdint>
 #include <vector>
+//#include "path_finder.h"
+
+class PathFinder;
 
 /** @brief GameState entity
 *
@@ -61,7 +64,11 @@ public:
 
   ESAT::SpriteHandle agent_spr_;
 
+  ESAT::SpriteHandle screen_spr_;
+
   std::vector<Agent*> agents_;
+
+  PathFinder* pf_agent;
 
   uint32_t frequency_;
 
