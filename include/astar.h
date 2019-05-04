@@ -71,7 +71,7 @@ private:
 
   void clean();
 
-  u32 calculateHeuristic(const AStarNode* node);
+  u32 calculateHeuristic(const Float2& origin, const Float2& dst) const;
 
   //void ExpandNodeInDirection(AgentDirection d, AStarNode* node, const MapData& collisionData);
 

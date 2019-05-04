@@ -54,9 +54,11 @@ s16 PathFinder::GeneratePath(/*origin, dest, */ Path* path)
    *  a_star_->generatePath(Float2{416.0f,32.0f}, Float2{640.0f,32.0f}, path, current_map_);
    *  Found (obstacle)
    *  a_star_->generatePath(Float2{ 416.0f,32.0f }, Float2{ 792.0f,32.0f }, path, current_map_);
+   *  Found (long and hard)
+   *  a_star_->generatePath(Float2{ 0.0f,0.0f }, Float2{ 374.0f,448.0f }, path, current_map_);
    *  
    */
-  a_star_->generatePath(Float2{ 0.0f,0.0f }, Float2{ 937.0f,230.0f }, path, current_map_);
+  a_star_->generatePath(Float2{ 0.0f,0.0f }, Float2{ 374.0f,448.0f }, path, current_map_);
 
   return kErrorCode_Ok;
 }

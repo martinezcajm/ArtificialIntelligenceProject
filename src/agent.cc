@@ -134,7 +134,7 @@ void Agent::updateMind(const uint32_t dt)
       break;
     case AgentType::k_Hero:
       move_type_ = MovementType::k_MovStop;
-      speed_ *= 0.75f;
+      speed_ *= 20.0f;
       epsilon_ = kEpsilonFactor * speed_;
       GameState::instance().pf_agent->GeneratePath(&path_);
       break;

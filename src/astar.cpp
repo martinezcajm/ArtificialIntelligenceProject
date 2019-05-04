@@ -193,7 +193,8 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const MapData& col
           //Set the parent of node_successor to node_current
           node_successor->parent_ = node_current;
           //Set h to be the estimated distance to node_goal (using the heuristic function)
-          node_successor->h = calculateHeuristic(node_successor);
+          node_successor->h = calculateHeuristic(node_successor->position_, node_goal->position_);
+          node_successor->f = node_successor->g + node_successor->h;
           //Add node_successor to the OPEN list
           open_list_.push_back(node_successor);
         }
@@ -259,9 +260,12 @@ void AStar::clean()
   }
 }
 
-u32 AStar::calculateHeuristic(const AStarNode* node)
+u32 AStar::calculateHeuristic(const Float2& origin, const Float2& dst) const
 {
-  return 0;
+  Float2 result = dst - origin;
+  u32 quantity_moved = result.Length();
+  quantity_moved *= base_step_cost_;
+  return quantity_moved;
 }
 
 bool MapData::IsValidPosition(const s32 x, const s32 y) const
