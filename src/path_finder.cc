@@ -44,8 +44,20 @@ s16 PathFinder::LoadMap(const char* src, const float original_map_width, const f
 
 s16 PathFinder::GeneratePath(/*origin, dest, */ Path* path)
 {
-  a_star_->generatePath(Float2{0.0f,0.0f}, Float2{960.0f,0.0f}, path, current_map_);
-  
+  /*
+   * TESTS
+   *  Not found (trying to go through water
+   *  a_star_->generatePath(Float2{ 0.0f,0.0f }, Float2{ 956.0f, 0.0f }, path, current_map_);
+   *  Found (bording the river)
+   *  a_star_->generatePath(Float2{ 0.0f,0.0f }, Float2{ 937.0f,230.0f }, path, current_map_);
+   *  Found (straight line)
+   *  a_star_->generatePath(Float2{416.0f,32.0f}, Float2{640.0f,32.0f}, path, current_map_);
+   *  Found (obstacle)
+   *  a_star_->generatePath(Float2{ 416.0f,32.0f }, Float2{ 792.0f,32.0f }, path, current_map_);
+   *  
+   */
+  a_star_->generatePath(Float2{ 0.0f,0.0f }, Float2{ 937.0f,230.0f }, path, current_map_);
+
   return kErrorCode_Ok;
 }
 

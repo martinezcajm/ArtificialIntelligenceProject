@@ -5,6 +5,7 @@
 #define __AGENT_H__
 #include <cstdint>
 #include "Math/float2.h"
+#include "path.h"
 
 enum class MovementType
 {
@@ -22,6 +23,7 @@ enum class AgentType
   k_Scout = 1,
   k_Chaser = 2,
   k_Mindless = 3,
+  k_Hero = 4,
   k_PADDING = 255
 };
 
@@ -102,6 +104,16 @@ public:
   * @return float y position_
   */
   float y() const;
+
+  /** @brief sets the next position_ of the agent
+  *
+  * Updates the destination the agent needs to reach.
+  *
+  * @param new_target_x x coordinate of the new_position
+  * @param new_target_y y coordinate of the new_position
+  * @return void
+  */
+  void startAStar();
 private:
   uint32_t id_ = 0;
 
@@ -113,7 +125,7 @@ private:
   MovementType move_type_;
   PatternToken actual_pattern_;
   AgentType type_agent_;
-  //bool target_reached_;
+  bool target_reached_;
 
 
   //Agent* target;
@@ -145,6 +157,8 @@ private:
   //Random variables
   uint32_t next_random_time_;
   uint32_t accum_time_random_;
+
+  Path path_;
 
   /** @brief Initializes the agent
   *
@@ -262,6 +276,8 @@ private:
   * @return void
   */
   void setNextPosition(float new_target_x, float new_target_y);
+
+  
 
   //bool isPlayerAtSight() const;
 };

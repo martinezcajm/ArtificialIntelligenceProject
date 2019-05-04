@@ -1,4 +1,5 @@
 #include "path.h"
+#include "Math/float2.h"
 #include <cstdlib>
 
 Path::Path()
@@ -23,7 +24,8 @@ s16 Path::create(u16 points)
 {
   if (points == 0 || points > kMaxPoints) return kErrorCode_IncorrectPointsNumber;
   total_points_ = points;
-  points_ = static_cast<Vector3*>( malloc(total_points_ * sizeof(Vector3)));
+  //points_ = static_cast<Vector3*>( malloc(total_points_ * sizeof(Vector3)));
+  points_ = static_cast<Float2*>(malloc(total_points_ * sizeof(Vector3)));
   return kErrorCode_Ok;
 }
 
@@ -54,20 +56,41 @@ s16 Path::set_direction(Direction direction)
 
 s16 Path::set_action(Action action)
 {
+  switch (action)
+  {
+  case Action::kActionLoopInfinite:
+    num_loops_ = -1;
+    break;
+  case Action::kActionLoopNTimes:
+    return kErrorCode_BadLoopsSetting;
+  default:
+    num_loops_ = 0;
+    break;
+  }
   action_ = action;
-  num_loops_ = 0;
   return kErrorCode_Ok;
 }
 
 s16 Path::set_action(Action action, s16 loops)
 {
-  if (loops < -1) return kErrorCode_BadLoopsSetting;
+  if (loops < 0 && action != Action::kActionLoopNTimes) return kErrorCode_BadLoopsSetting;
   action_ = action;
   num_loops_ = loops;
   return kErrorCode_Ok;
 }
 
-s16 Path::addPoint(Vector3* new_point)
+//s16 Path::addPoint(Vector3* new_point)
+//{
+//  if (!new_point) return kErrorCode_InvalidPointer;
+//  if (isLast()) return kErrorCode_StorageFull;
+//  lp_index_++;
+//  *(points_ + lp_index_) = *new_point;
+//  //Vector3* aux = points_ + lp_index_;
+//  //*aux = *new_point;
+//  return kErrorCode_Ok;
+//}
+
+s16 Path::addPoint(Float2* new_point)
 {
   if (!new_point) return kErrorCode_InvalidPointer;
   if (isLast()) return kErrorCode_StorageFull;
@@ -78,20 +101,30 @@ s16 Path::addPoint(Vector3* new_point)
   return kErrorCode_Ok;
 }
 
-s16 Path::addPoint(float x, float y, float z)
+//s16 Path::addPoint(float x, float y, float z)
+//{
+//  if (isLast()) return kErrorCode_StorageFull;
+//  lp_index_++;
+//  Vector3* aux = points_ + lp_index_;
+//  aux->x = x;
+//  aux->y = y;
+//  aux->z = z;
+//  return kErrorCode_Ok;
+//}
+
+s16 Path::addPoint(float x, float y)
 {
   if (isLast()) return kErrorCode_StorageFull;
   lp_index_++;
-  Vector3* aux = points_ + lp_index_;
+  Float2* aux = points_ + lp_index_;
   aux->x = x;
   aux->y = y;
-  aux->z = z;
   return kErrorCode_Ok;
 }
 
 bool Path::isLast()
 {
-  return total_points_ == lp_index_ + 1;
+  return total_points_ == cp_index_ + 1;
 }
 
 bool Path::isReady()
@@ -99,7 +132,7 @@ bool Path::isReady()
   return ready_;
 }
 
-Vector3 const* Path::nextPoint()
+Float2 const* Path::nextPoint()
 {
   //if (!isReady())return;
   //In case this is the last point and we are doing an infinite loop or
@@ -113,11 +146,11 @@ Vector3 const* Path::nextPoint()
     }
   }
   cp_index_++;
-  const Vector3* v = points_ + cp_index_;
+  const Float2* v = points_ + cp_index_;
   return v;
 }
 
-Vector3 const* Path::prevPoint()
+Float2 const* Path::prevPoint()
 {
   if (cp_index_ == 0)
   {
@@ -130,13 +163,13 @@ Vector3 const* Path::prevPoint()
     }
   }
   cp_index_--;
-  //const Vector3* v = points_ + cp_index_;
+  //const Float2* v = points_ + cp_index_;
   return points_ + cp_index_;
 }
 
-Vector3 const* Path::lastPoint()
+Float2 const* Path::lastPoint()
 {
-  //if (!isReady())return const Vector3*{0.0f,0.0f,0.0f};
+  //if (!isReady())return const Float2*{0.0f,0.0f};
   return points_ + lp_index_;
 }
 

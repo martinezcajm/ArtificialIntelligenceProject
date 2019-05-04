@@ -7,6 +7,7 @@
 #include <cmath>
 #include "agent.h"
 #include "gamestate.h"
+#include "path_finder.h"
 
 static uint32_t total_agents = 0;
 
@@ -71,6 +72,7 @@ void Agent::updateBody(const uint32_t dt)
     break;
   case MovementType::k_MovStop:
     MOV_Stop(dt);
+    break;
   default:
     break;
   }
@@ -87,11 +89,15 @@ void Agent::updateMind(const uint32_t dt)
     switch (type_agent_)
     {
     case AgentType::k_Mindless:
+      ////
+      path_.create(2);
+      path_.addPoint(1000.0f, 0.0f);
+      path_.addPoint(0.0f, 0.0f);
+      path_.set_direction(Direction::kDirForward);
+      path_.set_action(Action::kActionLoopInfinite);
+      path_.setToReady();
+      ////
       move_type_ = MovementType::k_MovDeterminist;
-
-      determinist_idx_ = 0;
-      determinist_targets_[0] = Float2(0, 0);
-      determinist_targets_[1] = Float2(1000.0f, 0.0f);
 
       speed_ *= 0.75f;
       epsilon_ = kEpsilonFactor * speed_;
@@ -126,11 +132,25 @@ void Agent::updateMind(const uint32_t dt)
       speed_ *= 1.50f;
       epsilon_ = kEpsilonFactor * speed_;
       break;
+    case AgentType::k_Hero:
+      move_type_ = MovementType::k_MovStop;
+      speed_ *= 0.75f;
+      epsilon_ = kEpsilonFactor * speed_;
+      GameState::instance().pf_agent->GeneratePath(&path_);
+      break;
     default:
       break;
     }
 
     initialized_ = true;
+  }
+
+  if(target_reached_)
+  {
+    if(path_.isLast())
+    {
+      move_type_ = MovementType::k_MovStop;
+    }
   }
 
 }
@@ -163,8 +183,10 @@ void Agent::setNextPosition(float new_target_x, float new_target_y)
 }
 
 void Agent::setOrientation(const Float2& destination)
-{
+{  
   velocity_ = destination - position_;
+  // 0/0 exception
+  if (velocity_.Length() == 0.0f) return;
   velocity_ /= velocity_.Length();
 }
 
@@ -177,10 +199,10 @@ void Agent::calculateVelocity()
 void Agent::MOV_Determinist(const uint32_t dt)
 {
   if (!positionReached()) return;
-  //TODO target_reached_ = true conectar mente con cuerpo
+  target_reached_ = true;
 
-  determinist_idx_ = (determinist_idx_ + 1) % determinist_size_;
-  setNextPosition(determinist_targets_[determinist_idx_].x, determinist_targets_[determinist_idx_].y);
+  const Float2* p = path_.nextPoint();
+  setNextPosition(p->x, p->y);
 }
 
 void Agent::MOV_Random(const uint32_t dt)
@@ -244,4 +266,9 @@ void Agent::MOV_Pattern(const uint32_t dt)
 void Agent::MOV_Stop(const uint32_t dt)
 {
   target_position_ = position_;
+}
+
+void Agent::startAStar()
+{
+  move_type_ = MovementType::k_MovDeterminist;
 }

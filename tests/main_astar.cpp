@@ -12,6 +12,8 @@
 
 GameState& g_game_state = GameState::instance();
 bool g_mouse_pressed_ = false;
+bool s_pressed_ = false;
+Path* p;
 
 /** @brief Init
 *
@@ -34,18 +36,20 @@ void Init() {
   ESAT::WindowInit(960, 704);
   ESAT::WindowSetMouseVisibility(true);
 
-  g_game_state.agent_spr_ = ESAT::SpriteFromFile("../../../data/agent.png");
+  g_game_state.agent_spr_ = ESAT::SpriteFromFile("../../../data/gfx/agents/allied_soldier.bmp");
   g_game_state.screen_spr_ = ESAT::SpriteFromFile("../../../data/gfx/maps/map_03_960x704_layout ABGS.png");
 
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Scout, 1000, 500));
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Patrol, 20, 250));
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Mindless, 0, 0));
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Chaser, 1100, 650));
 
-  Path* p = new Path();
+  
+
+  //Path* p = new Path();
+  //Path finder agent
   g_game_state.pf_agent = new PathFinder();
   g_game_state.pf_agent->LoadMap("../../../data/gfx/maps/map_03_120x88_cost.png", 960, 704);
   //g_game_state.pf_agent->GeneratePath(p);
+
+  //g_game_state.agents_.emplace_back(new Agent(AgentType::k_Hero, 416, 32));
+  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Hero, 0, 0));
   
   delete p;
   int a = 3;
@@ -65,6 +69,7 @@ void InputService()
     g_game_state.should_game_end_ = true;
   }
   if (ESAT::MouseButtonDown(0)) g_mouse_pressed_ = true;
+  if (ESAT::IsSpecialKeyDown(ESAT::kSpecialKey_F1)) s_pressed_ = true;
 }
 
 /** @brief Update
@@ -81,6 +86,11 @@ void Update(uint32_t dt)
   if (g_mouse_pressed_) {
     g_mouse_pressed_ = false;
     printf("mouse pressed at {%f,%f} \n", ESAT::MousePositionX(), ESAT::MousePositionY());
+  }
+  if(s_pressed_)
+  {
+    s_pressed_ = false;
+    g_game_state.agents_[0]->startAStar();
   }
   for (Agent* agent : g_game_state.agents_)
   {

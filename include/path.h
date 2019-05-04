@@ -17,6 +17,7 @@
 #include "common_def.h"
 #include <cstdio>
 
+class Float2;
 const int kMaxPoints = 500;
 
 enum class Direction
@@ -49,19 +50,25 @@ public:
   s16 set_action(Action action, s16 loops);
 
 
-  s16 addPoint(float x, float y, float z);
-  s16 addPoint(Vector3 *new_point);
+  //s16 addPoint(float x, float y, float z);
+  s16 addPoint(float x, float y);
+  //s16 addPoint(Vector3 *new_point);
+  s16 addPoint(Float2 *new_point);
   bool isLast();
   bool isReady();
 
-  Vector3 const* nextPoint();
-  Vector3 const* prevPoint();
-  Vector3 const* lastPoint();
+  //Vector3 const* nextPoint();
+  //Vector3 const* prevPoint();
+  //Vector3 const* lastPoint();
+  Float2 const* nextPoint();
+  Float2 const* prevPoint();
+  Float2 const* lastPoint();
 
   s16 print(FILE *out_file = stdout); // not only the list of points, but other features too (direction, loops, etc.)
 
 private:
-  Vector3 *points_;
+  Float2 *points_;
+  /*Vector3 *points_;*/
   //Vector3 points_[kMaxPoints];
   //Curse2Vector *points_;
 
