@@ -77,8 +77,12 @@ solution ("3IA_Solution" .. _ACTION)
 		"./include/agent.h",
 		"./include/path.h",
 		"./include/gamestate.h",
+		"./include/astar.h",
+		"./include/path_finder.h",
 		"./src/agent.cc",
 		"./src/path.cc",
+		"./src/path_finder.cc",
+		"./src/astar.cpp",
 		"./src/gamestate.cc",
 		"./tests/main_base.cc",
 		

@@ -133,6 +133,9 @@ private:
   Float2 target_position_;
   Float2 velocity_;
 
+  uint32_t mind_time_ = 1;
+  uint32_t mind_acum_ = 0;
+
   //float vision_range_ = 200;
 
   //speed as m/s 
@@ -233,7 +236,15 @@ private:
   * @param dt time that has passed in the game world
   * @return void
   */
-  void MOV_Stop(const uint32_t dt);
+  void MOV_Stop();
+  /** @brief Movement specific for A*
+  *
+  * Realizes the movement using the A* algoritm.
+  *
+  * @param dt time that has passed in the game world
+  * @return void
+  */
+  void MOV_AStar(const uint32_t dt);
   /** @brief moves the agent
   *
   * Moves the agent based on the velocity it has at the moment. The agent

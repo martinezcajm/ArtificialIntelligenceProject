@@ -15,7 +15,7 @@ public:
 
   s16 GeneratePath(Path* path);
 
-  void update(const uint32_t dt);
+  /*void update(const uint32_t dt);*/
 
 private:
   MapData current_map_;
@@ -25,8 +25,8 @@ private:
 
   AStar* a_star_;
 
-  PathFinder(const PathFinder& pf) {};
-  PathFinder operator=(const PathFinder& pf) {};
+  PathFinder(const PathFinder& pf) = delete;
+  PathFinder operator=(const PathFinder& pf) = delete;
 };
 
 #endif

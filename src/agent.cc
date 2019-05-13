@@ -71,7 +71,7 @@ void Agent::updateBody(const uint32_t dt)
     MOV_Pattern(dt);
     break;
   case MovementType::k_MovStop:
-    MOV_Stop(dt);
+    MOV_Stop();
     break;
   default:
     break;
@@ -82,6 +82,10 @@ void Agent::updateBody(const uint32_t dt)
 
 void Agent::updateMind(const uint32_t dt)
 {
+  mind_acum_ += dt;
+  if (mind_acum_ < mind_time_) return;
+
+  mind_acum_ = 0;
   if (!initialized_)
   {
     const float generic_speed = 5.0f;
@@ -263,9 +267,13 @@ void Agent::MOV_Pattern(const uint32_t dt)
   }
 }
 
-void Agent::MOV_Stop(const uint32_t dt)
+void Agent::MOV_Stop()
 {
   target_position_ = position_;
+}
+
+void Agent::MOV_AStar(const uint32_t dt) {
+
 }
 
 void Agent::startAStar()

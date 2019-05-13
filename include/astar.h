@@ -8,24 +8,24 @@
 
 class Path;
 
-typedef struct MapData {
+struct MapData {
   s32 width_;
   s32 height_;
   bool* collision_data_;
   Float2 ratio_;
-  bool IsValidPosition(const s32 x, const s32 y) const;
-  bool IsOccupied(const s32 x, const s32 y) const;
+  bool IsValidPosition(const float x, const float y) const;
+  bool IsOccupied(const float x, const float y) const;
 };
 
-typedef struct AStarNode
+struct AStarNode
 {
   Float2 position_;
-  u16 f;
-  u16 g;
-  u16 h;
+  u32 f;
+  u32 g;
+  u32 h;
   AStarNode* parent_;
 
-  AStarNode(Float2 position, AStarNode* parent, s32 step);
+  AStarNode(Float2 position, AStarNode* parent, u16 step);
   ~AStarNode();
   bool HasSameState(const AStarNode& node);
 };
@@ -60,12 +60,12 @@ private:
 
   u16 base_step_cost_;
 
-  AStar(const AStar& as) {};
-  AStar operator=(const AStar& as) {};
+  AStar(const AStar& as) = delete;
+  AStar operator=(const AStar& as) = delete;
 
-  bool isNodeInClosedList(const s32 x, const s32 y, s32* position);
+  bool isNodeInClosedList(const float x, const float y, s32* position);
 
-  bool isNodeInOpenList(const s32 x, const s32 y, s32* position);
+  bool isNodeInOpenList(const float x, const float y, s32* position);
 
   s32 getLowestFNodeIdx() const;
 

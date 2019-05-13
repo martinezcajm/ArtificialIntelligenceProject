@@ -20,10 +20,10 @@ Path::~Path()
   clear();
 }
 
-s16 Path::create(u16 points)
+s16 Path::create(u32 points)
 {
   if (points == 0 || points > kMaxPoints) return kErrorCode_IncorrectPointsNumber;
-  total_points_ = points;
+  total_points_ = static_cast<s16>(points);
   //points_ = static_cast<Vector3*>( malloc(total_points_ * sizeof(Vector3)));
   points_ = static_cast<Float2*>(malloc(total_points_ * sizeof(Vector3)));
   return kErrorCode_Ok;

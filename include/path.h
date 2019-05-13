@@ -41,7 +41,7 @@ public:
   Path();
   ~Path();
 
-  s16 create(u16 points = 50);
+  s16 create(u32 points = 50);
   s16 clear();
   s16 setToReady();
 
@@ -85,8 +85,8 @@ private:
   u16 current_loop_;
   s16 offset_;
 
-  Path(const Path& p) {};
-  Path operator=(const Path& p) {};
+  Path(const Path& p) = delete;
+  Path operator=(const Path& p) = delete;
 };
 
 #endif

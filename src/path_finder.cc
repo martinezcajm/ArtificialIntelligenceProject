@@ -63,7 +63,7 @@ s16 PathFinder::GeneratePath(/*origin, dest, */ Path* path)
   return kErrorCode_Ok;
 }
 
-void PathFinder::update(const uint32_t dt)
-{
-  
-}
+//void PathFinder::update(const uint32_t dt)
+//{
+//  
+//}
