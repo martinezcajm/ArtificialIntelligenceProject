@@ -154,8 +154,8 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const MapData& col
       {
         //TODO check if it's worth to only creating it after checking if it's in the open list or the closed list
         AStarNode* node_successor = new AStarNode(Float2(new_position.x, new_position.y), node_current, step_cost);
-        s32 idx_ol;
-        s32 idx_cl;
+        s32 idx_ol = -1;
+        s32 idx_cl = -1;
         /*If node_successor is on the OPEN list but the existing one is as good or
         better then discard this successor and continue with next successor*/
         if(isNodeInOpenList(new_position.x, new_position.y, &idx_ol))

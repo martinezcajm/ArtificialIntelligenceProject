@@ -52,7 +52,6 @@ void Init() {
   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Hero, 0, 0));
   
   delete p;
-  int a = 3;
 }
 
 /** @brief InputService
@@ -157,9 +156,9 @@ int ESAT::main(int argc, char **argv) {
 
 
   Init();
-  unsigned int frames = 0;
+  //unsigned int frames = 0;
   double current_time = Time();
-  double loop_last_time = Time();
+  //double loop_last_time = Time();
   // main loop
   while (!g_game_state.quit_game_) {
 

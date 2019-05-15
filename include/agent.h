@@ -24,6 +24,9 @@ enum class AgentType
   k_Chaser = 2,
   k_Mindless = 3,
   k_Hero = 4,
+  k_Huge = 5,
+  k_Normal = 6,
+  k_Small = 7,
   k_PADDING = 255
 };
 
@@ -33,6 +36,15 @@ enum class PatternToken
   k_West = 1,
   k_South = 2,
   k_North = 3,
+  k_PADDING = 255
+};
+
+enum class FSMStates
+{
+  k_Working = 0,
+  k_Chasing = 1,
+  k_Fleeing = 2,
+  k_Resting = 3,
   k_PADDING = 255
 };
 
@@ -161,6 +173,9 @@ private:
   uint32_t next_random_time_;
   uint32_t accum_time_random_;
 
+  //FSM variables
+  FSMStates actual_state_;
+
   Path path_;
 
   /** @brief Initializes the agent
@@ -192,6 +207,34 @@ private:
   * @return void
   */
   void updateBody(const uint32_t dt);
+  /** @brief Final state machine for working behaviour
+  *
+  * Applies the specified movement of the agent while it's in 
+  * working state.
+  * @return void
+  */
+  void FSM_Working();
+  /** @brief Final state machine for chasing behaviour
+  *
+  * Agent behaviour while it's chasing another agent. THi
+  *
+  * @return void
+  */
+  void FSM_Chasing();
+  /** @brief Final state machine for fleeing behaviour
+  *
+  * Agent behaviour while it's fleeing from another agent
+  *
+  * @return void
+  */
+  void FSM_Fleeing();
+  /** @brief Final state machine for resting behaviour
+  *
+  * Agent behaviour while it's resitng
+  *
+  * @return void
+  */
+  void FSM_Resting();
   /** @brief Determinist behaviour
   *
   * Realizes the determinist movement. Advances through the path established
@@ -200,6 +243,7 @@ private:
   * @param dt time that has passed in the game world
   * @return void
   */
+
   void MOV_Determinist(const uint32_t dt);
   /** @brief Random behaviour
   *

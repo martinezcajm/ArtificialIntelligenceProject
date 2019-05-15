@@ -88,6 +88,7 @@ void Agent::updateMind(const uint32_t dt)
   mind_acum_ = 0;
   if (!initialized_)
   {
+    actual_state_ = FSMStates::k_Working;
     const float generic_speed = 5.0f;
     speed_ = generic_speed;
     switch (type_agent_)
@@ -142,13 +143,61 @@ void Agent::updateMind(const uint32_t dt)
       epsilon_ = kEpsilonFactor * speed_;
       GameState::instance().pf_agent->GeneratePath(&path_);
       break;
+    case AgentType::k_Huge:
+      ////
+      path_.create(2);
+      path_.addPoint(1000.0f, 0.0f);
+      path_.addPoint(0.0f, 0.0f);
+      path_.set_direction(Direction::kDirForward);
+      path_.set_action(Action::kActionLoopInfinite);
+      path_.setToReady();
+      ////
+      move_type_ = MovementType::k_MovDeterminist;
+
+      speed_ *= 0.75f;
+      epsilon_ = kEpsilonFactor * speed_;
+      break;
+    case AgentType::k_Normal:
+      move_type_ = MovementType::k_MovRandom;
+      next_random_time_ = 5000; //5s
+      accum_time_random_ = 0;
+
+      speed_ *= 1.0f;
+      epsilon_ = kEpsilonFactor * speed_;
+      break;
+    case AgentType::k_Small:
+      move_type_ = MovementType::k_MovPattern;
+      pattern_idx_ = 0;
+      pattern_targets_[0] = PatternCommand{ PatternToken::k_East, 3000 };
+      pattern_targets_[1] = PatternCommand{ PatternToken::k_South, 3000 };
+      pattern_targets_[2] = PatternCommand{ PatternToken::k_West, 3000 };
+      pattern_targets_[3] = PatternCommand{ PatternToken::k_North, 3000 };
+
+      accum_time_pattern_ = 0;
+      pattern_step_ = 50;
+      speed_ *= 1.25f;
+      epsilon_ = kEpsilonFactor * speed_;
+      break;
     default:
       break;
     }
 
     initialized_ = true;
   }
-
+  switch (actual_state_) {
+  case FSMStates::k_Working:
+    FSM_Working();
+    break;
+  case FSMStates::k_Chasing:
+    FSM_Chasing();
+    break;
+  case FSMStates::k_Fleeing:
+    FSM_Fleeing();
+    break;
+  case FSMStates::k_Resting:
+    FSM_Resting();
+    break;
+  }
   if(target_reached_)
   {
     if(path_.isLast())
@@ -198,6 +247,22 @@ void Agent::calculateVelocity()
 {
   setOrientation(target_position_);
   velocity_ *= speed_;
+}
+
+void Agent::FSM_Working() {
+
+}
+
+void Agent::FSM_Chasing() {
+
+}
+
+void Agent::FSM_Fleeing() {
+
+}
+
+void Agent::FSM_Resting() {
+
 }
 
 void Agent::MOV_Determinist(const uint32_t dt)
