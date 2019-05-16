@@ -78,12 +78,14 @@ solution ("3IA_Solution" .. _ACTION)
 		"./include/path.h",
 		"./include/gamestate.h",
 		"./include/astar.h",
+		"./include/map.h",
 		"./include/path_finder.h",
 		"./src/agent.cc",
 		"./src/path.cc",
 		"./src/path_finder.cc",
 		"./src/astar.cpp",
 		"./src/gamestate.cc",
+		"./src/map.cc",
 		"./tests/main_base.cc",
 		
 		}
@@ -95,11 +97,13 @@ solution ("3IA_Solution" .. _ACTION)
 		"./include/path.h",
 		"./include/gamestate.h",
 		"./include/astar.h",
+		"./include/map.h",
 		"./include/path_finder.h",
 		"./src/agent.cc",
 		"./src/path.cc",
 		"./src/path_finder.cc",
 		"./src/astar.cpp",
 		"./src/gamestate.cc",
+		"./src/map.cc",
 		"./tests/main_astar.cpp",
 	}

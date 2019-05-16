@@ -8,6 +8,7 @@
 #include <ESAT/sprite.h>
 #include <cstdint>
 #include <vector>
+#include "map.h"
 //#include "path_finder.h"
 
 class PathFinder;
@@ -34,7 +35,7 @@ private:
   * @return *GameState
   * @param g the game state we will copy
   */
-  GameState(const GameState& g) = delete;
+  GameState(const GameState& g) {};
   /** @brief Destroys the GameState
   *
   * Destructor of the GameState
@@ -64,13 +65,13 @@ public:
 
   ESAT::SpriteHandle agent_spr_;
 
-  ESAT::SpriteHandle screen_spr_;
-
   std::vector<Agent*> agents_;
 
   PathFinder* pf_agent;
 
   uint32_t frequency_;
+
+  Map map_;
 
 };
 

@@ -41,7 +41,7 @@ public:
   Path();
   ~Path();
 
-  s16 create(u32 points = 50);
+  s16 create(u16 points = 50);
   s16 clear();
   s16 setToReady();
 

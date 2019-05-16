@@ -14,6 +14,7 @@ enum class MovementType
   k_MovTracking = 2,
   k_MovPattern = 3,
   k_MovStop = 4,
+  k_MovAStar = 5,
   k_PADDING = 255
 };
 
@@ -54,6 +55,8 @@ struct PatternCommand
   uint32_t seconds;
 };
 
+class PathFinder;
+
 /** @brief Agent entity
 *
 * This class is the representation of an agent that can
@@ -72,6 +75,22 @@ public:
   */
   Agent();
 
+  /** @brief Agent constructor
+  *
+  * Agent constructor. Depending of the rol assigned will have a
+  * different movement type:
+  *  -Patrol:   will follow a pattern
+  *  -Scout:    will do a random movement
+  *  -Chaser:   will track
+  *  -Mindless: will follow a determinist movement
+  *
+  * @return *Agent
+  * @param agent_type role of the agent
+  * @param x start x coordinate of the agent
+  * @param y start y coordinate of the agent
+  * @param reference to a pathfinder agent, in case this agent is capable of pathfinding
+  */
+  Agent(const AgentType agent_type, const float x, const float y, PathFinder* pf);
   /** @brief Agent constructor
   *
   * Agent constructor. Depending of the rol assigned will have a
@@ -119,13 +138,23 @@ public:
 
   /** @brief sets the next position_ of the agent
   *
-  * Updates the destination the agent needs to reach.
+  * Puts the agent to search a path from the origin to dst using
+  * an A* algorithm
   *
-  * @param new_target_x x coordinate of the new_position
-  * @param new_target_y y coordinate of the new_position
+  * @param origin x start point of the path
+  * @param dst destination of the path
+  * @return void
+  */
+  void prepareAStar(const Float2& origin,const Float2& dst);
+  /** @brief sets the next position_ of the agent
+  *
+  * Puts the agent to search a path from the origin to dst using
+  * an A* algorithm
+  *
   * @return void
   */
   void startAStar();
+
 private:
   uint32_t id_ = 0;
 
@@ -177,6 +206,7 @@ private:
   FSMStates actual_state_;
 
   Path path_;
+  PathFinder* path_finder_agent_;
 
   /** @brief Initializes the agent
   *
@@ -209,7 +239,7 @@ private:
   void updateBody(const uint32_t dt);
   /** @brief Final state machine for working behaviour
   *
-  * Applies the specified movement of the agent while it's in 
+  * Applies the specified movement of the agent while it's in
   * working state.
   * @return void
   */
@@ -332,7 +362,7 @@ private:
   */
   void setNextPosition(float new_target_x, float new_target_y);
 
-  
+
 
   //bool isPlayerAtSight() const;
 };

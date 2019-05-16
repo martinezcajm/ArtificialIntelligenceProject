@@ -6,26 +6,27 @@
 #include "Math/float2.h"
 #include <vector>
 
+class Map;
 class Path;
 
-struct MapData {
-  s32 width_;
-  s32 height_;
-  bool* collision_data_;
-  Float2 ratio_;
-  bool IsValidPosition(const float x, const float y) const;
-  bool IsOccupied(const float x, const float y) const;
-};
+//typedef struct MapData {
+//  s32 width_;
+//  s32 height_;
+//  bool* collision_data_;
+//  Float2 ratio_;
+//  bool IsValidPosition(const s32 x, const s32 y) const;
+//  bool IsOccupied(const s32 x, const s32 y) const;
+//};
 
-struct AStarNode
+typedef struct AStarNode
 {
   Float2 position_;
-  u32 f;
-  u32 g;
-  u32 h;
+  u16 f;
+  u16 g;
+  u16 h;
   AStarNode* parent_;
 
-  AStarNode(Float2 position, AStarNode* parent, u16 step);
+  AStarNode(Float2 position, AStarNode* parent, s32 step);
   ~AStarNode();
   bool HasSameState(const AStarNode& node);
 };
@@ -50,7 +51,7 @@ public:
 
   ~AStar();
 
-  s16 generatePath(Float2 origin, Float2 dst, Path* path, const MapData& collisionData);
+  s16 generatePath(Float2 origin, Float2 dst, Path* path, const Map& collisionData);
 
 private:
 
@@ -60,12 +61,12 @@ private:
 
   u16 base_step_cost_;
 
-  AStar(const AStar& as) = delete;
-  AStar operator=(const AStar& as) = delete;
+  AStar(const AStar& as) {};
+  AStar operator=(const AStar& as) {};
 
-  bool isNodeInClosedList(const float x, const float y, s32* position);
+  bool isNodeInClosedList(const s32 x, const s32 y, s32* position);
 
-  bool isNodeInOpenList(const float x, const float y, s32* position);
+  bool isNodeInOpenList(const s32 x, const s32 y, s32* position);
 
   s32 getLowestFNodeIdx() const;
 

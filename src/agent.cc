@@ -16,6 +16,12 @@ Agent::Agent() : type_agent_(AgentType::k_Mindless)
   init(0, 0);
 }
 
+Agent::Agent(const AgentType agent_type, const float x, const float y, PathFinder* pf) : type_agent_(agent_type)
+{
+  init(x, y);
+  path_finder_agent_ = pf;
+}
+
 Agent::Agent(const AgentType agent_type, const float x, const float y) : type_agent_(agent_type)
 {
   init(x, y);
@@ -73,6 +79,8 @@ void Agent::updateBody(const uint32_t dt)
   case MovementType::k_MovStop:
     MOV_Stop();
     break;
+  case MovementType::k_MovAStar:
+    MOV_AStar(dt);
   default:
     break;
   }
@@ -141,7 +149,6 @@ void Agent::updateMind(const uint32_t dt)
       move_type_ = MovementType::k_MovStop;
       speed_ *= 20.0f;
       epsilon_ = kEpsilonFactor * speed_;
-      GameState::instance().pf_agent->GeneratePath(&path_);
       break;
     case AgentType::k_Huge:
       ////
@@ -198,13 +205,6 @@ void Agent::updateMind(const uint32_t dt)
     FSM_Resting();
     break;
   }
-  if(target_reached_)
-  {
-    if(path_.isLast())
-    {
-      move_type_ = MovementType::k_MovStop;
-    }
-  }
 
 }
 
@@ -236,7 +236,7 @@ void Agent::setNextPosition(float new_target_x, float new_target_y)
 }
 
 void Agent::setOrientation(const Float2& destination)
-{  
+{
   velocity_ = destination - position_;
   // 0/0 exception
   if (velocity_.Length() == 0.0f) return;
@@ -338,10 +338,31 @@ void Agent::MOV_Stop()
 }
 
 void Agent::MOV_AStar(const uint32_t dt) {
+  if (target_reached_)
+  {
+    if (path_.isLast())
+    {
+      move_type_ = MovementType::k_MovStop;
+    }else
+    {
+      if (!positionReached()) return;
+      target_reached_ = true;
 
+      const Float2* p = path_.nextPoint();
+      setNextPosition(p->x, p->y);
+    }
+  }
+}
+
+void Agent::prepareAStar(const Float2& origin, const Float2& dst)
+{
+  if(path_finder_agent_ && !path_.isReady())
+  {
+    path_finder_agent_->GeneratePath(&path_, origin, dst);
+  }
 }
 
 void Agent::startAStar()
 {
-  move_type_ = MovementType::k_MovDeterminist;
+  move_type_ = MovementType::k_MovAStar;
 }

@@ -14,6 +14,8 @@ GameState& g_game_state = GameState::instance();
 bool g_mouse_pressed_ = false;
 bool s_pressed_ = false;
 Path* p;
+Float2 g_origin = Float2{ 0.0f,0.0f };
+Float2 g_dst = Float2{ 374.0f,448.0f };
 
 /** @brief Init
 *
@@ -36,21 +38,28 @@ void Init() {
   ESAT::WindowInit(960, 704);
   ESAT::WindowSetMouseVisibility(true);
 
+  printf("Press F1 to Start the Path finding \n");
+
   g_game_state.agent_spr_ = ESAT::SpriteFromFile("../../../data/gfx/agents/allied_soldier.bmp");
-  g_game_state.screen_spr_ = ESAT::SpriteFromFile("../../../data/gfx/maps/map_03_960x704_layout ABGS.png");
 
+  g_game_state.map_.loadMap("../../../data/gfx/maps/map_03_120x88_cost.png", 
+                            "../../../data/gfx/maps/map_03_960x704_layout ABGS.png");
 
-  
+  g_game_state.map_.loadMap("../../../data/gfx/maps/map_03_60x44_cost.png",
+    "../../../data/gfx/maps/map_03_960x704_layout ABGS.png");
 
   //Path* p = new Path();
   //Path finder agent
-  g_game_state.pf_agent = new PathFinder();
-  g_game_state.pf_agent->LoadMap("../../../data/gfx/maps/map_03_120x88_cost.png", 960, 704);
-  //g_game_state.pf_agent->GeneratePath(p);
+  g_game_state.pf_agent = new PathFinder(g_game_state.map_);
+  
+  //g_game_state.pf_agent->LoadMap("../../../data/gfx/maps/map_03_120x88_cost.png", 960, 704);
+
 
   //g_game_state.agents_.emplace_back(new Agent(AgentType::k_Hero, 416, 32));
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Hero, 0, 0));
-  
+  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Hero, g_origin.x, g_origin.y, g_game_state.pf_agent));
+
+  g_game_state.agents_[0]->prepareAStar(g_origin, g_dst);
+
   delete p;
 }
 
@@ -110,7 +119,7 @@ void Draw() {
   ESAT::DrawSetFillColor(255, 0, 0);
   ESAT::DrawSetStrokeColor(0, 0, 255);
 
-  ESAT::DrawSprite(g_game_state.screen_spr_, 0, 0);
+  ESAT::DrawSprite(g_game_state.map_.background(), 0, 0);
 
   //ESAT::DrawSprite("", 0, 0);
 
@@ -142,7 +151,6 @@ void Deinit()
     idx--;
   }
   ESAT::SpriteRelease(g_game_state.agent_spr_);
-  ESAT::SpriteRelease(g_game_state.screen_spr_);
   delete(g_game_state.pf_agent);
 }
 
@@ -156,9 +164,9 @@ int ESAT::main(int argc, char **argv) {
 
 
   Init();
-  //unsigned int frames = 0;
+  unsigned int frames = 0;
   double current_time = Time();
-  //double loop_last_time = Time();
+  double loop_last_time = Time();
   // main loop
   while (!g_game_state.quit_game_) {
 
