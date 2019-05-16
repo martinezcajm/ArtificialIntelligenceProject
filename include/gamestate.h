@@ -63,7 +63,7 @@ public:
 
   bool should_game_end_;
 
-  ESAT::SpriteHandle agent_spr_;
+  //ESAT::SpriteHandle agent_spr_;
 
   std::vector<Agent*> agents_;
 

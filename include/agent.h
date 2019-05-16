@@ -6,6 +6,7 @@
 #include <cstdint>
 #include "Math/float2.h"
 #include "path.h"
+#include <ESAT/sprite.h>
 
 enum class MovementType
 {
@@ -136,24 +137,26 @@ public:
   */
   float y() const;
 
-  /** @brief sets the next position_ of the agent
+  /** @brief Calculates a path from origin to dst
   *
-  * Puts the agent to search a path from the origin to dst using
-  * an A* algorithm
+  * Calculates a path for the agent from origin to dst using the A*
+  * algorithm taking into account the map loaded at the game state.
   *
   * @param origin x start point of the path
   * @param dst destination of the path
   * @return void
   */
   void prepareAStar(const Float2& origin,const Float2& dst);
-  /** @brief sets the next position_ of the agent
+  /** @brief sets the agent to follow the path he has
   *
-  * Puts the agent to search a path from the origin to dst using
-  * an A* algorithm
+  * Sets the agent to follow the path he has. This function must be used
+  * after a prepareAStar call.
   *
   * @return void
   */
   void startAStar();
+
+  ESAT::SpriteHandle representation() const;
 
 private:
   uint32_t id_ = 0;
@@ -168,6 +171,8 @@ private:
   AgentType type_agent_;
   bool target_reached_;
 
+
+  ESAT::SpriteHandle representation_;
 
   //Agent* target;
   Float2 position_;
@@ -205,14 +210,20 @@ private:
 
   //FSM variables
   FSMStates actual_state_;
-  float flee_distance_ = 10.0f;
-  float chase_distance_ = 11.0f;
-  float lost_focus_distance_ = 15.0f;
+  float flee_distance_ = 200.0f;
+  float chase_distance_ = 225.0f;
+  float lost_focus_distance_ = 300.0f;
   uint32_t resting_time_ = 4000; //4s
   uint32_t time_rested_ = 0;
 
   Path path_;
   PathFinder* path_finder_agent_;
+
+#ifdef DEBUG
+  uint32_t time_for_print_ = 3000; //3s
+  uint32_t accum_time_ = 0;
+#endif
+  
 
   /** @brief Initializes the agent
   *
@@ -249,21 +260,21 @@ private:
   * working state.
   * @return void
   */
-  void FSM_Working();
+  void FSM_Working(uint32_t dt);
   /** @brief Final state machine for chasing behaviour
   *
   * Agent behaviour while it's chasing another agent. THi
   *
   * @return void
   */
-  void FSM_Chasing();
+  void FSM_Chasing(uint32_t dt);
   /** @brief Final state machine for fleeing behaviour
   *
   * Agent behaviour while it's fleeing from another agent
   *
   * @return void
   */
-  void FSM_Fleeing();
+  void FSM_Fleeing(uint32_t dt);
   /** @brief Final state machine for resting behaviour
   *
   * Agent behaviour while it's resitng
@@ -370,9 +381,6 @@ private:
 
   bool isBigger(Agent* a);
 
-
-
-  //bool isPlayerAtSight() const;
 };
 
 

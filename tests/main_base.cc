@@ -45,12 +45,12 @@ void Init() {
 
   ESAT::WindowInit(1280, 720);
 
-  g_game_state.agent_spr_ = ESAT::SpriteFromFile("../../../data/agent.png");
 
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Scout, 1000, 500));
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Patrol, 20, 250));
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Mindless, 0, 0));
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Chaser, 1100, 650));
+  //g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 1000, 500));
+  //g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 500, 500));
+  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 150, 0));
+  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Normal, 20, 250));
+  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Huge, 0, 0));
 
 }
 
@@ -68,7 +68,8 @@ void Draw() {
 
   for (Agent* agent : g_game_state.agents_)
   {
-    ESAT::DrawSprite(g_game_state.agent_spr_, agent->x(), agent->y());
+    if(agent->representation())
+      ESAT::DrawSprite(agent->representation(), agent->x(), agent->y());
   }
 
   ESAT::DrawEnd();
@@ -124,8 +125,6 @@ void Deinit()
     g_game_state.agents_.pop_back();
     idx--;
   }
-  ESAT::SpriteRelease(g_game_state.agent_spr_);
-
 }
 
 /** @brief main

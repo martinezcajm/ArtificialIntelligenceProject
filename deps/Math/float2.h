@@ -33,7 +33,6 @@ public:
 
 };
 
-
 inline Float2::Float2() {
   this->x = 0;
   this->y = 0;

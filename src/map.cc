@@ -13,7 +13,7 @@ Map::Map()
 
 Map::~Map()
 {
-  free_resources();
+  freeResources();
 }
 
 Float2 Map::ratio() const
@@ -34,20 +34,20 @@ bool Map::isOccupied(const s32 x, const s32 y) const
   return !collision_data_[position];
 }
 
-void Map::free_resources()
+void Map::freeResources()
 {
   if (collision_data_) free(collision_data_);
   ESAT::SpriteRelease(background_);
 }
 
-s16 Map::loadMap(const char* src, const char* original)
+s16 Map::loadMap(const char* src, const char* background)
 {
   //If there's already data loaded we free it
-  if (collision_data_) free_resources();
+  if (collision_data_) freeResources();
 
   s32 bpp;
 
-  unsigned char* background_image = stbi_load(original, &original_width_, &original_height_, &bpp, 1);
+  unsigned char* background_image = stbi_load(background, &original_width_, &original_height_, &bpp, 1);
 
   if (!background_image) return kErrorCode_Memory;
 
@@ -74,7 +74,7 @@ s16 Map::loadMap(const char* src, const char* original)
   }
   ratio_ = Float2(static_cast<float>(original_width_) / width_, static_cast<float>(original_height_) / height_);
 
-  background_ = ESAT::SpriteFromFile(original);
+  background_ = ESAT::SpriteFromFile(background);
 
   stbi_image_free(background_image);
   stbi_image_free(image_data);

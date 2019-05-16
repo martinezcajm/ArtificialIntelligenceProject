@@ -40,7 +40,7 @@ void Init() {
 
   printf("Press F1 to Start the Path finding \n");
 
-  g_game_state.agent_spr_ = ESAT::SpriteFromFile("../../../data/gfx/agents/allied_soldier.bmp");
+  //g_game_state.agent_spr_ = ESAT::SpriteFromFile("../../../data/gfx/agents/allied_soldier.bmp");
 
   g_game_state.map_.loadMap("../../../data/gfx/maps/map_03_120x88_cost.png", 
                             "../../../data/gfx/maps/map_03_960x704_layout ABGS.png");
@@ -125,7 +125,7 @@ void Draw() {
 
   for (Agent* agent : g_game_state.agents_)
   {
-    ESAT::DrawSprite(g_game_state.agent_spr_, agent->x(), agent->y());
+    ESAT::DrawSprite(agent->representation(), agent->x(), agent->y());
   }
 
   ESAT::DrawEnd();
@@ -150,7 +150,6 @@ void Deinit()
     g_game_state.agents_.pop_back();
     idx--;
   }
-  ESAT::SpriteRelease(g_game_state.agent_spr_);
   delete(g_game_state.pf_agent);
 }
 

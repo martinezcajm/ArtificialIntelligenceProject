@@ -24,7 +24,7 @@ public:
 
 private:
 
-  void free_resources();
+  void freeResources();
 
   Map(const Map& map) = delete;
 

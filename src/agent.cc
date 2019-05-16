@@ -30,7 +30,10 @@ Agent::Agent(const AgentType agent_type, const float x, const float y) : type_ag
 
 Agent::~Agent()
 {
-
+  if(representation_)
+  {
+    ESAT::SpriteRelease(representation_);
+  }
 }
 
 void Agent::init(const float x, const float y)
@@ -41,6 +44,12 @@ void Agent::init(const float x, const float y)
   id_ = total_agents;
   total_agents++;
   initialized_ = false;
+  representation_ = nullptr;
+}
+
+ESAT::SpriteHandle Agent::representation() const
+{
+  return representation_;
 }
 
 void Agent::update(const uint32_t dt)
@@ -98,7 +107,8 @@ void Agent::updateMind(const uint32_t dt)
   {
     objective_ = nullptr;
     actual_state_ = FSMStates::k_Working;
-    const float generic_speed = 5.0f;
+    //const float generic_speed = 5.0f;
+    const float generic_speed = 50.0f;
     speed_ = generic_speed;
     switch (type_agent_)
     {
@@ -150,6 +160,7 @@ void Agent::updateMind(const uint32_t dt)
       move_type_ = MovementType::k_MovStop;
       speed_ *= 20.0f;
       epsilon_ = kEpsilonFactor * speed_;
+      representation_ = ESAT::SpriteFromFile("../../../data/gfx/agents/allied_soldier.bmp");
       break;
     case AgentType::k_Huge:
       ////
@@ -162,16 +173,22 @@ void Agent::updateMind(const uint32_t dt)
       ////
       move_type_ = MovementType::k_MovDeterminist;
 
+      tracking_retarget_time_ = 3000; //3s
+
       speed_ *= 0.75f;
       epsilon_ = kEpsilonFactor * speed_;
+      representation_ = ESAT::SpriteFromFile("../../../data/gfx/agents/big_agent.png");
       break;
     case AgentType::k_Normal:
       move_type_ = MovementType::k_MovRandom;
       next_random_time_ = 5000; //5s
       accum_time_random_ = 0;
 
+      tracking_retarget_time_ = 1500; //1.5s
+
       speed_ *= 1.0f;
       epsilon_ = kEpsilonFactor * speed_;
+      representation_ = ESAT::SpriteFromFile("../../../data/gfx/agents/normal_agent.png");
       break;
     case AgentType::k_Small:
       move_type_ = MovementType::k_MovPattern;
@@ -181,10 +198,13 @@ void Agent::updateMind(const uint32_t dt)
       pattern_targets_[2] = PatternCommand{ PatternToken::k_West, 3000 };
       pattern_targets_[3] = PatternCommand{ PatternToken::k_North, 3000 };
 
+      tracking_retarget_time_ = 1000; //1s
+
       accum_time_pattern_ = 0;
       pattern_step_ = 50;
       speed_ *= 1.25f;
       epsilon_ = kEpsilonFactor * speed_;
+      representation_ = ESAT::SpriteFromFile("../../../data/gfx/agents/small_agent.png");
       break;
     default:
       break;
@@ -194,13 +214,13 @@ void Agent::updateMind(const uint32_t dt)
   }
   switch (actual_state_) {
   case FSMStates::k_Working:
-    FSM_Working();
+    FSM_Working(dt);
     break;
   case FSMStates::k_Chasing:
-    FSM_Chasing();
+    FSM_Chasing(dt);
     break;
   case FSMStates::k_Fleeing:
-    FSM_Fleeing();
+    FSM_Fleeing(dt);
     break;
   case FSMStates::k_Resting:
     FSM_Resting(dt);
@@ -223,14 +243,6 @@ bool Agent::positionReached() const
   return aux_vector.Length() < epsilon_;
 }
 
-//bool Agent::isPlayerAtSight() const
-//{
-//  Float2 player_position = GameState::instance().player_->position_;
-//  Float2 vec_distance = player_position - position_;
-//  float distance = vec_distance.Length();
-//  return (player_position - position_).Length() < vision_range_;
-//}
-
 void Agent::setNextPosition(float new_target_x, float new_target_y)
 {
   target_position_ = Float2(new_target_x, new_target_y);
@@ -250,14 +262,29 @@ void Agent::calculateVelocity()
   velocity_ *= speed_;
 }
 
-void Agent::FSM_Working() {
+void Agent::FSM_Working(uint32_t dt) {
+#ifdef DEBUG
+  accum_time_ += dt;
+#endif
+  
+
   for (Agent* agent : GameState::instance().agents_)
   {
     Float2 distance = agent->position_ - this->position_;
     const float d = distance.Length();
+#ifdef DEBUG
+    if (accum_time_ >= time_for_print_)
+    {
+      printf("I'm at a distance of: %f \n", d);
+      accum_time_ = 0;
+    }
+#endif
     //We check if the agent is in chase range and we are bigger
     if(agent != this && isBigger(agent) && d <= chase_distance_)
     {
+#ifdef DEBUG
+      printf("Changing to chase \n");
+#endif
       actual_state_ = FSMStates::k_Chasing;
       objective_ = agent;
       move_type_ = MovementType::k_MovTracking;
@@ -266,6 +293,9 @@ void Agent::FSM_Working() {
     //We check if the agent is in flee range and is smaller
     if(agent != this && !isBigger(agent) && d <= flee_distance_)
     {
+#ifdef DEBUG
+      printf("Changing to flee \n");
+#endif
       actual_state_ = FSMStates::k_Fleeing;
       objective_ = agent;
       move_type_ = MovementType::k_MovTracking;
@@ -274,11 +304,24 @@ void Agent::FSM_Working() {
   }
 }
 
-void Agent::FSM_Chasing() {
+void Agent::FSM_Chasing(uint32_t dt) {
   Float2 distance = objective_->position_ - this->position_;
   const float d = distance.Length();
+
+#ifdef DEBUG
+  accum_time_ += dt;
+  if (accum_time_ >= time_for_print_)
+  {
+    printf("I'm at a distance of: %f \n", d);
+    accum_time_ = 0;
+  }
+#endif
+
   if(d >= lost_focus_distance_)
   {
+#ifdef DEBUG
+    printf("I'm going to take a rest \n");
+#endif
     actual_state_ = FSMStates::k_Resting;
     move_type_ = MovementType::k_MovStop;
     objective_ = nullptr;
@@ -286,17 +329,31 @@ void Agent::FSM_Chasing() {
   }
   if(target_reached_)
   {
+#ifdef DEBUG
+    printf("I'm chasing to: {%f,%f} \n", objective_->position_.x, objective_->position_.y);
+#endif
     target_position_ = objective_->position_;
     target_reached_ = false;
   }
 }
 
-void Agent::FSM_Fleeing() {
+void Agent::FSM_Fleeing(uint32_t dt) {
   Float2 distance = this->position_ - objective_->position_;
   //Float2 distance = objective_->position_ - this->position_;
   const float d = distance.Length();
+#ifdef DEBUG
+  accum_time_ += dt;
+  if (accum_time_ >= time_for_print_)
+  {
+    printf("I'm at a distance of: %f \n", d);
+    accum_time_ = 0;
+  }
+#endif
   if (d >= lost_focus_distance_)
   {
+#ifdef DEBUG
+    printf("I'm going to take a rest \n");
+#endif
     actual_state_ = FSMStates::k_Resting;
     move_type_ = MovementType::k_MovStop;
     objective_ = nullptr;
@@ -305,16 +362,20 @@ void Agent::FSM_Fleeing() {
   if (target_reached_)
   {
     Float2 direction = distance / d;
-    direction *= 10.0f;
+    direction *= 100.0f;
     Float2 final_position = position_ + direction;
-    //We normalize to our screen boundaries
-    final_position.x = fmax(final_position.x, 0.0f);
-    final_position.y = fmax(final_position.y, 0.0f);
-    final_position.x = fmin(final_position.x, 1280.0f);
-    final_position.y = fmin(final_position.y, 720.0f);
+    //We normalize to our screen boundaries they are not exact because the
+    //sprites of the agents are not exactly a pixel, so they get out.
+    final_position.x = fmax(final_position.x, 20.0f);
+    final_position.y = fmax(final_position.y, 20.0f);
+    final_position.x = fmin(final_position.x, 1260.0f);
+    final_position.y = fmin(final_position.y, 680.0f);
 
     target_position_ = final_position;
     target_reached_ = false;
+#ifdef DEBUG
+    printf("I'm going to flee to: {%f,%f} \n", final_position.x, final_position.y);
+#endif
   }
 }
 
@@ -322,6 +383,10 @@ void Agent::FSM_Resting(const uint32_t dt) {
   time_rested_ += dt;
   if(time_rested_ >= resting_time_)
   {
+#ifdef DEBUG
+    printf("Time to work a bit. \n");
+#endif
+    time_rested_ = 0;
     actual_state_ = FSMStates::k_Working;
     switch(type_agent_)
     {
