@@ -96,6 +96,7 @@ void Agent::updateMind(const uint32_t dt)
   mind_acum_ = 0;
   if (!initialized_)
   {
+    objective_ = nullptr;
     actual_state_ = FSMStates::k_Working;
     const float generic_speed = 5.0f;
     speed_ = generic_speed;
@@ -202,7 +203,7 @@ void Agent::updateMind(const uint32_t dt)
     FSM_Fleeing();
     break;
   case FSMStates::k_Resting:
-    FSM_Resting();
+    FSM_Resting(dt);
     break;
   }
 
@@ -250,20 +251,121 @@ void Agent::calculateVelocity()
 }
 
 void Agent::FSM_Working() {
-
+  for (Agent* agent : GameState::instance().agents_)
+  {
+    Float2 distance = agent->position_ - this->position_;
+    const float d = distance.Length();
+    //We check if the agent is in chase range and we are bigger
+    if(agent != this && isBigger(agent) && d <= chase_distance_)
+    {
+      actual_state_ = FSMStates::k_Chasing;
+      objective_ = agent;
+      move_type_ = MovementType::k_MovTracking;
+      return;
+    }
+    //We check if the agent is in flee range and is smaller
+    if(agent != this && !isBigger(agent) && d <= flee_distance_)
+    {
+      actual_state_ = FSMStates::k_Fleeing;
+      objective_ = agent;
+      move_type_ = MovementType::k_MovTracking;
+      return;
+    }
+  }
 }
 
 void Agent::FSM_Chasing() {
-
+  Float2 distance = objective_->position_ - this->position_;
+  const float d = distance.Length();
+  if(d >= lost_focus_distance_)
+  {
+    actual_state_ = FSMStates::k_Resting;
+    move_type_ = MovementType::k_MovStop;
+    objective_ = nullptr;
+    return;
+  }
+  if(target_reached_)
+  {
+    target_position_ = objective_->position_;
+    target_reached_ = false;
+  }
 }
 
 void Agent::FSM_Fleeing() {
+  Float2 distance = this->position_ - objective_->position_;
+  //Float2 distance = objective_->position_ - this->position_;
+  const float d = distance.Length();
+  if (d >= lost_focus_distance_)
+  {
+    actual_state_ = FSMStates::k_Resting;
+    move_type_ = MovementType::k_MovStop;
+    objective_ = nullptr;
+    return;
+  }
+  if (target_reached_)
+  {
+    Float2 direction = distance / d;
+    direction *= 10.0f;
+    Float2 final_position = position_ + direction;
+    //We normalize to our screen boundaries
+    final_position.x = fmax(final_position.x, 0.0f);
+    final_position.y = fmax(final_position.y, 0.0f);
+    final_position.x = fmin(final_position.x, 1280.0f);
+    final_position.y = fmin(final_position.y, 720.0f);
 
+    target_position_ = final_position;
+    target_reached_ = false;
+  }
 }
 
-void Agent::FSM_Resting() {
+void Agent::FSM_Resting(const uint32_t dt) {
+  time_rested_ += dt;
+  if(time_rested_ >= resting_time_)
+  {
+    actual_state_ = FSMStates::k_Working;
+    switch(type_agent_)
+    {
+    case AgentType::k_Small:
+      move_type_ = MovementType::k_MovPattern;
+      break;
+    case AgentType::k_Normal:
+      move_type_ = MovementType::k_MovRandom;
+      break;
+    case AgentType::k_Huge:
+      move_type_ = MovementType::k_MovDeterminist;
+      break;
+    }
+  }
 
+  for (Agent* agent : GameState::instance().agents_)
+  {
+    Float2 distance = agent->position_ - this->position_;
+    const float d = distance.Length();
+    //We check if the agent is in flee range and is smaller
+    if (agent != this && !isBigger(agent) && d <= flee_distance_)
+    {
+      actual_state_ = FSMStates::k_Fleeing;
+      objective_ = agent;
+      move_type_ = MovementType::k_MovTracking;
+      return;
+    }
+  }
 }
+
+bool Agent::isBigger(Agent* a)
+{
+  //If we are huge and the other agent is not huge, we are bigger
+  bool bigger_if_huge = ((type_agent_ == AgentType::k_Huge) &&
+                        (a->type_agent_ != AgentType::k_Huge));
+
+  //If we are medium and the other agent is small, we are bigger
+  bool bigger_if_medium = ((type_agent_ == AgentType::k_Normal) &&
+                          (a->type_agent_ == AgentType::k_Small));
+
+  //If one of the previous conditions is true we are bigger
+  return bigger_if_huge || bigger_if_medium;
+}
+
 
 void Agent::MOV_Determinist(const uint32_t dt)
 {
@@ -301,6 +403,7 @@ void Agent::MOV_Tracking(const uint32_t dt)
 {
   accum_time_tracking_ += dt;
   if (accum_time_tracking_ < tracking_retarget_time_ && !positionReached()) return;
+  target_reached_ = true;
   setNextPosition(target_position_.x, target_position_.y);
   accum_time_tracking_ = 0;
 }

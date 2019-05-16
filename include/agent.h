@@ -196,6 +196,7 @@ private:
   uint32_t accum_time_pattern_;
   float pattern_step_;
   //Tracking variables
+  Agent* objective_;
   uint32_t tracking_retarget_time_;
   uint32_t accum_time_tracking_;
   //Random variables
@@ -204,6 +205,11 @@ private:
 
   //FSM variables
   FSMStates actual_state_;
+  float flee_distance_ = 10.0f;
+  float chase_distance_ = 11.0f;
+  float lost_focus_distance_ = 15.0f;
+  uint32_t resting_time_ = 4000; //4s
+  uint32_t time_rested_ = 0;
 
   Path path_;
   PathFinder* path_finder_agent_;
@@ -264,7 +270,7 @@ private:
   *
   * @return void
   */
-  void FSM_Resting();
+  void FSM_Resting(const uint32_t dt);
   /** @brief Determinist behaviour
   *
   * Realizes the determinist movement. Advances through the path established
@@ -361,6 +367,8 @@ private:
   * @return void
   */
   void setNextPosition(float new_target_x, float new_target_y);
+
+  bool isBigger(Agent* a);
 
 
 
