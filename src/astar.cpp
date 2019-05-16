@@ -53,11 +53,12 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const Map& collisi
   Float2 origin_ratio = origin / collisionData.ratio();
   Float2 dst_ratio = dst / collisionData.ratio();
 
-  origin_ratio.x = static_cast<u32>(origin_ratio.x);
-  origin_ratio.y = static_cast<u32>(origin_ratio.y);
+  origin_ratio.x = floorf(origin_ratio.x);
+  origin_ratio.y = floorf(origin_ratio.y);
 
-  dst_ratio.x = static_cast<u32>(dst_ratio.x);
-  dst_ratio.y = static_cast<u32>(dst_ratio.y);
+  dst_ratio.x = floorf(dst_ratio.x);
+  dst_ratio.y = floorf(dst_ratio.y);
+
 
   if (!path) return kErrorCode_InvalidPointer;
   //Check that the origin and destination are valids in our map coordinates
@@ -155,8 +156,8 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const Map& collisi
       {
         //TODO check if it's worth to only creating it after checking if it's in the open list or the closed list
         AStarNode* node_successor = new AStarNode(Float2(new_position.x, new_position.y), node_current, step_cost);
-        s32 idx_ol;
-        s32 idx_cl;
+        s32 idx_ol = -1;
+        s32 idx_cl = -1;
         /*If node_successor is on the OPEN list but the existing one is as good or
         better then discard this successor and continue with next successor*/
         if(isNodeInOpenList(new_position.x, new_position.y, &idx_ol))
@@ -221,7 +222,7 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const Map& collisi
   /*Once we got the path calculated we create it using our path class*/
   //We count the number of points needed for the path
   AStarNode* aux = node_current;
-  u32 count = 0;
+  u16 count = 0;
   std::stack<AStarNode*> final_path;
   final_path.push(aux);
   count++;
@@ -248,6 +249,7 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const Map& collisi
   delete node_goal;
   clean(); 
   printf(" Path found, please press F1 to start.\n");
+  return kErrorCode_Ok;
 }
 
 void AStar::clean()
@@ -266,30 +268,16 @@ void AStar::clean()
 
 u32 AStar::calculateHeuristic(const Float2& origin, const Float2& dst) const
 {
-  Float2 result = dst - origin;
+  const Float2 result = dst - origin;
   //L infinite
-  u32 quantity_moved = std::max(result.x, result.y);
+  u32 quantity_moved = static_cast<u32>(fmax(result.x, result.y));
   //L
   //u32 quantity_moved = result.Length();
   quantity_moved *= base_step_cost_;
   return quantity_moved;
 }
 
-//bool MapData::IsValidPosition(const s32 x, const s32 y) const
-//{
-//  if (x > width_ || x < 0) return false;
-//  if (y > height_ || y < 0) return false;
-//  return true;
-//}
-//
-//bool MapData::IsOccupied(const s32 x, const s32 y) const
-//{
-//  if (!IsValidPosition(x, y)) return true;
-//  const s32 position = x+(y * width_);
-//  return !collision_data_[position];
-//}
-
-bool AStar::isNodeInClosedList(const s32 x, const s32 y, s32* position)
+bool AStar::isNodeInClosedList(const float x, const float y, s32* position)
 {
   s32 idx = 0;
   for (AStarNode* node : closed_list_)
@@ -305,7 +293,7 @@ bool AStar::isNodeInClosedList(const s32 x, const s32 y, s32* position)
   return false;
 }
 
-bool AStar::isNodeInOpenList(const s32 x, const s32 y, s32* position)
+bool AStar::isNodeInOpenList(const float x, const float y, s32* position)
 {
   s32 idx = 0;
   for (AStarNode* node : open_list_)
@@ -326,7 +314,7 @@ s32 AStar::getLowestFNodeIdx() const
   if (open_list_.empty()) return -1;
   s32 idx = 0;
   s32 result = 0;
-  s32 current_f = open_list_[0]->f;
+  u32 current_f = open_list_[0]->f;
 
   for (AStarNode* node : open_list_)
   {

@@ -10,7 +10,7 @@ class Map;
 class PathFinder
 {
 public:
-  PathFinder::PathFinder(Map& map);
+  PathFinder::PathFinder();
   ~PathFinder();
 
   s16 GeneratePath(Path* path, Float2 origin, Float2 dst);

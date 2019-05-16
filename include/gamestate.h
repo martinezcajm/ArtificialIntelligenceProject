@@ -32,10 +32,11 @@ private:
   *
   * GameState copy constructor without anything to disable it.
   *
-  * @return *GameState
   * @param g the game state we will copy
+  *
+  * @return *GameState
   */
-  GameState(const GameState& g) {};
+  GameState(const GameState& g) = delete;
   /** @brief Destroys the GameState
   *
   * Destructor of the GameState

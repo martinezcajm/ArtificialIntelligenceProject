@@ -48,9 +48,41 @@ void Init() {
 
   //g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 1000, 500));
   //g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 500, 500));
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 150, 0));
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Normal, 20, 250));
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Huge, 0, 0));
+
+
+  /****
+   *
+   *First Test (One of each kind)
+   *
+   *g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 150, 0));
+   *g_game_state.agents_.emplace_back(new Agent(AgentType::k_Normal, 20, 250));
+   *g_game_state.agents_.emplace_back(new Agent(AgentType::k_Huge, 0, 0));
+   *
+   *
+   *Second test (a bunch of them wandering half an hour)
+   *
+   *g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 1000, 500));
+   *g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 500, 500));
+   *g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 300, 0));
+   *g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 250, 300));
+   *g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 150, 0));
+   *g_game_state.agents_.emplace_back(new Agent(AgentType::k_Normal, 20, 250));
+   *g_game_state.agents_.emplace_back(new Agent(AgentType::k_Normal, 80, 250));
+   *g_game_state.agents_.emplace_back(new Agent(AgentType::k_Normal, 200, 150));
+   *g_game_state.agents_.emplace_back(new Agent(AgentType::k_Huge, 0, 0));
+   *g_game_state.agents_.emplace_back(new Agent(AgentType::k_Huge, 300, 700));
+   ****/
+
+   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 1000, 500));
+   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 500, 500));
+   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 300, 0));
+   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 250, 300));
+   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Small, 300, 1000));
+   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Normal, 20, 250));
+   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Normal, 800, 500));
+   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Normal, 500, 150));
+   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Huge, 0, 0));
+   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Huge, 300, 700));
 
 }
 
@@ -137,9 +169,9 @@ int ESAT::main(int argc, char **argv) {
 
 
   Init();
-  unsigned int frames = 0;
+  //unsigned int frames = 0;
   double current_time = Time();
-  double loop_last_time = Time();
+  //double loop_last_time = Time();
   // main loop
   while (!g_game_state.quit_game_) {
 

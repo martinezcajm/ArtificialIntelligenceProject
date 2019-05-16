@@ -79,7 +79,7 @@ private:
 
   s16 cp_index_; // current point index_
   s16 lp_index_; // last point index
-  s16 total_points_;
+  u16 total_points_;
 
   s16 num_loops_; // -1 = infinite, 0 = no loops, n = n loops
   u16 current_loop_;

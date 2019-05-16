@@ -11,7 +11,7 @@
 
 static uint32_t total_agents = 0;
 
-Agent::Agent() : type_agent_(AgentType::k_Mindless)
+Agent::Agent() : type_agent_(AgentType::k_Small)
 {
   init(0, 0);
 }
@@ -112,50 +112,6 @@ void Agent::updateMind(const uint32_t dt)
     speed_ = generic_speed;
     switch (type_agent_)
     {
-    case AgentType::k_Mindless:
-      ////
-      path_.create(2);
-      path_.addPoint(1000.0f, 0.0f);
-      path_.addPoint(0.0f, 0.0f);
-      path_.set_direction(Direction::kDirForward);
-      path_.set_action(Action::kActionLoopInfinite);
-      path_.setToReady();
-      ////
-      move_type_ = MovementType::k_MovDeterminist;
-
-      speed_ *= 0.75f;
-      epsilon_ = kEpsilonFactor * speed_;
-      break;
-    case AgentType::k_Scout:
-      move_type_ = MovementType::k_MovRandom;
-      next_random_time_ = 5000; //5s
-      accum_time_random_ = 0;
-
-      speed_ *= 1.0f;
-      epsilon_ = kEpsilonFactor * speed_;
-      break;
-    case AgentType::k_Chaser:
-      move_type_ = MovementType::k_MovTracking;
-      tracking_retarget_time_ = 3000; //3s
-      accum_time_tracking_ = 0;
-
-      speed_ *= 1.25f;
-      epsilon_ = kEpsilonFactor * speed_;
-      target_position_ = Float2(640, 360);
-      break;
-    case AgentType::k_Patrol:
-      move_type_ = MovementType::k_MovPattern;
-      pattern_idx_ = 0;
-      pattern_targets_[0] = PatternCommand{ PatternToken::k_East, 3000 };
-      pattern_targets_[1] = PatternCommand{ PatternToken::k_South, 3000 };
-      pattern_targets_[2] = PatternCommand{ PatternToken::k_West, 3000 };
-      pattern_targets_[3] = PatternCommand{ PatternToken::k_North, 3000 };
-
-      accum_time_pattern_ = 0;
-      pattern_step_ = 50;
-      speed_ *= 1.50f;
-      epsilon_ = kEpsilonFactor * speed_;
-      break;
     case AgentType::k_Hero:
       move_type_ = MovementType::k_MovStop;
       speed_ *= 20.0f;

@@ -38,9 +38,6 @@ void Init() {
   ESAT::WindowInit(960, 704);
   ESAT::WindowSetMouseVisibility(true);
 
-  printf("Press F1 to Start the Path finding \n");
-
-  //g_game_state.agent_spr_ = ESAT::SpriteFromFile("../../../data/gfx/agents/allied_soldier.bmp");
 
   g_game_state.map_.loadMap("../../../data/gfx/maps/map_03_120x88_cost.png", 
                             "../../../data/gfx/maps/map_03_960x704_layout ABGS.png");
@@ -48,14 +45,10 @@ void Init() {
   g_game_state.map_.loadMap("../../../data/gfx/maps/map_03_60x44_cost.png",
     "../../../data/gfx/maps/map_03_960x704_layout ABGS.png");
 
-  //Path* p = new Path();
-  //Path finder agent
-  g_game_state.pf_agent = new PathFinder(g_game_state.map_);
+
+  g_game_state.pf_agent = new PathFinder();
   
-  //g_game_state.pf_agent->LoadMap("../../../data/gfx/maps/map_03_120x88_cost.png", 960, 704);
 
-
-  //g_game_state.agents_.emplace_back(new Agent(AgentType::k_Hero, 416, 32));
   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Hero, g_origin.x, g_origin.y, g_game_state.pf_agent));
 
   g_game_state.agents_[0]->prepareAStar(g_origin, g_dst);
@@ -121,11 +114,10 @@ void Draw() {
 
   ESAT::DrawSprite(g_game_state.map_.background(), 0, 0);
 
-  //ESAT::DrawSprite("", 0, 0);
-
   for (Agent* agent : g_game_state.agents_)
   {
-    ESAT::DrawSprite(agent->representation(), agent->x(), agent->y());
+    if(agent->representation())
+      ESAT::DrawSprite(agent->representation(), agent->x(), agent->y());
   }
 
   ESAT::DrawEnd();
@@ -163,9 +155,9 @@ int ESAT::main(int argc, char **argv) {
 
 
   Init();
-  unsigned int frames = 0;
+  //unsigned int frames = 0;
   double current_time = Time();
-  double loop_last_time = Time();
+  //double loop_last_time = Time();
   // main loop
   while (!g_game_state.quit_game_) {
 

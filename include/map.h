@@ -12,9 +12,9 @@ public:
 
   ~Map();
 
-  bool isValidPosition(const s32 x, const s32 y) const;
+  bool isValidPosition(const float x, const float y) const;
 
-  bool isOccupied(const s32 x, const s32 y) const;
+  bool isOccupied(const float x, const float y) const;
 
   s16 loadMap(const char* src, const char* background);
 

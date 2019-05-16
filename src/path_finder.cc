@@ -5,9 +5,8 @@
 #include "map.h"
 #include "gamestate.h"
 
-PathFinder::PathFinder(Map& map)
+PathFinder::PathFinder()
 {
-  //current_map_ = map;
   a_star_ = new AStar();
 }
 

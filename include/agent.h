@@ -20,15 +20,11 @@ enum class MovementType
 };
 
 enum class AgentType
-{
-  k_Patrol = 0,
-  k_Scout = 1,
-  k_Chaser = 2,
-  k_Mindless = 3,
+{  
+  k_Huge = 1,
+  k_Normal = 2,
+  k_Small = 3,
   k_Hero = 4,
-  k_Huge = 5,
-  k_Normal = 6,
-  k_Small = 7,
   k_PADDING = 255
 };
 
@@ -324,7 +320,6 @@ private:
   *
   * Stops the movement.
   *
-  * @param dt time that has passed in the game world
   * @return void
   */
   void MOV_Stop();
@@ -378,7 +373,13 @@ private:
   * @return void
   */
   void setNextPosition(float new_target_x, float new_target_y);
-
+  /** @brief sets the next position_ of the agent
+  *
+  * Checks if the agent is bigger than another agent
+  *
+  * @param a agent to compare with
+  * @return bool true in case the agent is bigger false otherwise
+  */
   bool isBigger(Agent* a);
 
 };

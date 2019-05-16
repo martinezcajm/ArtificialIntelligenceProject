@@ -27,10 +27,10 @@ ESAT::SpriteHandle Map::background() const
 }
 
 
-bool Map::isOccupied(const s32 x, const s32 y) const
+bool Map::isOccupied(const float x, const float y) const
 {
   if (!isValidPosition(x, y)) return true;
-  const s32 position = x + (y * width_);
+  const s32 position = static_cast<s32>(x + (y* width_));
   return !collision_data_[position];
 }
 
@@ -82,7 +82,7 @@ s16 Map::loadMap(const char* src, const char* background)
   return kErrorCode_Ok;
 }
 
-bool Map::isValidPosition(const s32 x, const s32 y) const
+bool Map::isValidPosition(const float x, const float y) const
 {
   if (x > width_ || x < 0) return false;
   if (y > height_ || y < 0) return false;
