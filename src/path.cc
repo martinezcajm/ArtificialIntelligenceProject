@@ -1,3 +1,8 @@
+// path.cc
+// Jose Maria Martinez
+// Implementation of the path class
+//Comments for the functions can be found at the header
+
 #include "path.h"
 #include "Math/float2.h"
 #include <cstdlib>
@@ -34,7 +39,9 @@ s16 Path::clear()
   if(points_)
   {
     free(points_);
+    points_ = nullptr;
   }
+  ready_ = false;
   return kErrorCode_Ok;
 }
 
@@ -79,17 +86,6 @@ s16 Path::set_action(Action action, s16 loops)
   return kErrorCode_Ok;
 }
 
-//s16 Path::addPoint(Vector3* new_point)
-//{
-//  if (!new_point) return kErrorCode_InvalidPointer;
-//  if (isLast()) return kErrorCode_StorageFull;
-//  lp_index_++;
-//  *(points_ + lp_index_) = *new_point;
-//  //Vector3* aux = points_ + lp_index_;
-//  //*aux = *new_point;
-//  return kErrorCode_Ok;
-//}
-
 s16 Path::addPoint(Float2* new_point)
 {
   if (!new_point) return kErrorCode_InvalidPointer;
@@ -100,17 +96,6 @@ s16 Path::addPoint(Float2* new_point)
   //*aux = *new_point;
   return kErrorCode_Ok;
 }
-
-//s16 Path::addPoint(float x, float y, float z)
-//{
-//  if (isLast()) return kErrorCode_StorageFull;
-//  lp_index_++;
-//  Vector3* aux = points_ + lp_index_;
-//  aux->x = x;
-//  aux->y = y;
-//  aux->z = z;
-//  return kErrorCode_Ok;
-//}
 
 s16 Path::addPoint(float x, float y)
 {
@@ -134,15 +119,19 @@ bool Path::isReady()
 
 Float2 const* Path::nextPoint()
 {
-  //if (!isReady())return;
+  if (!isReady())return nullptr;
   //In case this is the last point and we are doing an infinite loop or
-  //this is still is not the last loop we start again
+  //this still is not the last loop we start again. Otherwise there's no 
+  //point so we return nullptr.
   if(isLast())
   {
     if(num_loops_ == -1 || static_cast<s16>(current_loop_) < num_loops_)
     {
       current_loop_++;
       cp_index_ = -1;
+    }else
+    {
+      return nullptr;
     }
   }
   cp_index_++;
@@ -152,14 +141,18 @@ Float2 const* Path::nextPoint()
 
 Float2 const* Path::prevPoint()
 {
+  if (!isReady())return nullptr;
   if (cp_index_ == 0)
   {
     //In case this is the first point and we already made a loop we go to the last point
-    //as it was the previous one
+    //as it was the previous one. Otherwise there's no point so we return nullptr.
     if (static_cast<s16>(current_loop_) > 0)
     {
       current_loop_--;
       cp_index_ = lp_index_ + 1;
+    }else
+    {
+      return nullptr;
     }
   }
   cp_index_--;
@@ -169,11 +162,6 @@ Float2 const* Path::prevPoint()
 
 Float2 const* Path::lastPoint()
 {
-  //if (!isReady())return const Float2*{0.0f,0.0f};
+  if (!isReady())return nullptr;
   return points_ + lp_index_;
-}
-
-s16 Path::print(FILE* out_file)
-{
-  return kErrorCode_Ok;
 }

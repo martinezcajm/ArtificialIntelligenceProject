@@ -4,7 +4,7 @@
 #ifndef __AGENT_H__
 #define __AGENT_H__
 #include <cstdint>
-#include "Math/float2.h"
+#include "common_def.h"
 #include "path.h"
 #include <ESAT/sprite.h>
 
@@ -49,10 +49,11 @@ enum class FSMStates
 struct PatternCommand
 {
   PatternToken token;
-  uint32_t seconds;
+  u32 seconds;
 };
 
 class PathFinder;
+struct AgentMessage;
 
 /** @brief Agent entity
 *
@@ -75,32 +76,30 @@ public:
   /** @brief Agent constructor
   *
   * Agent constructor. Depending of the rol assigned will have a
-  * different movement type:
-  *  -Patrol:   will follow a pattern
-  *  -Scout:    will do a random movement
-  *  -Chaser:   will track
-  *  -Mindless: will follow a determinist movement
+  * different movement type by default:
+  *  -Huge:    will follow a determinist movement
+  *  -Normal:  will move at random
+  *  -Small:   will follow a pattern
   *
   * @return *Agent
   * @param agent_type role of the agent
   * @param x start x coordinate of the agent
   * @param y start y coordinate of the agent
-  * @param reference to a pathfinder agent, in case this agent is capable of pathfinding
+  * @param pf to a pathfinder agent, in case this agent is capable of pathfinding
   */
   Agent(const AgentType agent_type, const float x, const float y, PathFinder* pf);
   /** @brief Agent constructor
   *
   * Agent constructor. Depending of the rol assigned will have a
-  * different movement type:
-  *  -Patrol:   will follow a pattern
-  *  -Scout:    will do a random movement
-  *  -Chaser:   will track
-  *  -Mindless: will follow a determinist movement
+  * different movement type by default:
+  *  -Huge:    will follow a determinist movement
+  *  -Normal:  will move at random
+  *  -Small:   will follow a pattern
   *
-  * @return *Agent
   * @param agent_type role of the agent
   * @param x start x coordinate of the agent
   * @param y start y coordinate of the agent
+  * @return *Agent
   */
   Agent(const AgentType agent_type, const float x, const float y);
   /** @brief Destroys the Agent
@@ -117,7 +116,7 @@ public:
   * @param dt time that has passed in the game world
   * @return void
   */
-  void update(const uint32_t dt);
+  void update(const u32 dt);
   /** @brief gets the x position_ of the agent
   *
   * Returns the x position_ of the agent.
@@ -143,6 +142,16 @@ public:
   * @return void
   */
   void prepareAStar(const Float2& origin,const Float2& dst);
+  /** @brief Calculates a path from origin to dst using messages between agents
+  *
+  * Calculates a path for the agent from origin to dst using the A*
+  * algorithm taking into account the map loaded at the game state.
+  *
+  * @param origin x start point of the path
+  * @param dst destination of the path
+  * @return void
+  */
+  void prepareAStarMessage(const Float2& origin, const Float2& dst);
   /** @brief sets the agent to follow the path he has
   *
   * Sets the agent to follow the path he has. This function must be used
@@ -151,11 +160,27 @@ public:
   * @return void
   */
   void startAStar();
-
+  /** @brief gets the representation_ of the agent
+  *
+  * Returns the representation_ of the agent.
+  *
+  * @return SpriteHandle
+  */
   ESAT::SpriteHandle representation() const;
+  /** @brief function to receive a message from another agent
+  *
+  * Function to send a message to the agent. This message will be
+  * treated at the updateMind function.
+  *
+  * @param msg content of the message sent
+  * @param id of the one who sent the message
+  *
+  * @return void
+  */
+  void sendMessage(const AgentMessage& msg, const u32 id);
 
 private:
-  uint32_t id_ = 0;
+  u32 id_ = 0;
 
 
   //The epsilon will vary depending on the speed * kEpsilonFactor
@@ -175,8 +200,8 @@ private:
   Float2 target_position_;
   Float2 velocity_;
 
-  uint32_t mind_time_ = 1;
-  uint32_t mind_acum_ = 0;
+  u32 mind_time_ = 1;
+  u32 mind_acum_ = 0;
 
   //float vision_range_ = 200;
 
@@ -194,30 +219,33 @@ private:
   int pattern_idx_;
   static const int pattern_size_ = 4;
   PatternCommand pattern_targets_[pattern_size_];
-  uint32_t accum_time_pattern_;
+  u32 accum_time_pattern_;
   float pattern_step_;
   //Tracking variables
-  Agent* objective_;
-  uint32_t tracking_retarget_time_;
-  uint32_t accum_time_tracking_;
+  Agent* objective_ = nullptr;
+  u32 tracking_retarget_time_;
+  u32 accum_time_tracking_;
   //Random variables
-  uint32_t next_random_time_;
-  uint32_t accum_time_random_;
+  u32 next_random_time_;
+  u32 accum_time_random_;
 
   //FSM variables
   FSMStates actual_state_;
   float flee_distance_ = 200.0f;
   float chase_distance_ = 225.0f;
   float lost_focus_distance_ = 300.0f;
-  uint32_t resting_time_ = 4000; //4s
-  uint32_t time_rested_ = 0;
+  u32 resting_time_ = 4000; //4s
+  u32 time_rested_ = 0;
 
   Path path_;
-  PathFinder* path_finder_agent_;
+  PathFinder* path_finder_agent_ = nullptr;
+
+  //Message variables
+  AgentMessage* mail_box_ = nullptr;
 
 #ifdef DEBUG
-  uint32_t time_for_print_ = 3000; //3s
-  uint32_t accum_time_ = 0;
+  u32 time_for_print_ = 3000; //3s
+  u32 accum_time_ = 0;
 #endif
   
 
@@ -240,7 +268,7 @@ private:
   * @param dt time that has passed in the game world
   * @return void
   */
-  void updateMind(const uint32_t dt);
+  void updateMind(const u32 dt);
   /** @brief Updates the body of the agent
   *
   * Updates the physic representation of the agent. Deals with
@@ -249,35 +277,35 @@ private:
   * @param dt time that has passed in the game world
   * @return void
   */
-  void updateBody(const uint32_t dt);
+  void updateBody(const u32 dt);
   /** @brief Final state machine for working behaviour
   *
   * Applies the specified movement of the agent while it's in
   * working state.
   * @return void
   */
-  void FSM_Working(uint32_t dt);
+  void FSM_Working(u32 dt);
   /** @brief Final state machine for chasing behaviour
   *
   * Agent behaviour while it's chasing another agent. THi
   *
   * @return void
   */
-  void FSM_Chasing(uint32_t dt);
+  void FSM_Chasing(u32 dt);
   /** @brief Final state machine for fleeing behaviour
   *
   * Agent behaviour while it's fleeing from another agent
   *
   * @return void
   */
-  void FSM_Fleeing(uint32_t dt);
+  void FSM_Fleeing(u32 dt);
   /** @brief Final state machine for resting behaviour
   *
   * Agent behaviour while it's resitng
   *
   * @return void
   */
-  void FSM_Resting(const uint32_t dt);
+  void FSM_Resting(const u32 dt);
   /** @brief Determinist behaviour
   *
   * Realizes the determinist movement. Advances through the path established
@@ -287,7 +315,7 @@ private:
   * @return void
   */
 
-  void MOV_Determinist(const uint32_t dt);
+  void MOV_Determinist(const u32 dt);
   /** @brief Random behaviour
   *
   * Realizes the random movement. It's in charge of selecting
@@ -297,7 +325,7 @@ private:
   * @param dt time that has passed in the game world
   * @return void
   */
-  void MOV_Random(const uint32_t dt);
+  void MOV_Random(const u32 dt);
   /** @brief Tracking behaviour
   *
   * Realizes the tracking movement. Makes the body advance to the
@@ -306,7 +334,7 @@ private:
   * @param dt time that has passed in the game world
   * @return void
   */
-  void MOV_Tracking(const uint32_t dt);
+  void MOV_Tracking(const u32 dt);
   /** @brief Pattern behaviour
   *
   * Realizes the pattern movement. Advances through the path established
@@ -315,7 +343,7 @@ private:
   * @param dt time that has passed in the game world
   * @return void
   */
-  void MOV_Pattern(const uint32_t dt);
+  void MOV_Pattern(const u32 dt);
   /** @brief Stop behaviour
   *
   * Stops the movement.
@@ -330,7 +358,7 @@ private:
   * @param dt time that has passed in the game world
   * @return void
   */
-  void MOV_AStar(const uint32_t dt);
+  void MOV_AStar(const u32 dt);
   /** @brief moves the agent
   *
   * Moves the agent based on the velocity it has at the moment. The agent
@@ -373,9 +401,9 @@ private:
   * @return void
   */
   void setNextPosition(float new_target_x, float new_target_y);
-  /** @brief sets the next position_ of the agent
+  /** @brief checks if another agent is bigger than himself
   *
-  * Checks if the agent is bigger than another agent
+  * checks if another agent is bigger than himself
   *
   * @param a agent to compare with
   * @return bool true in case the agent is bigger false otherwise

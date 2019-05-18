@@ -21,13 +21,13 @@ AStarNode::AStarNode(Float2 pos, AStarNode* p, s32 step)
   if(parent)
   {
     g = parent->g + step;
-    /*h = 0;
-    f = g + h;*/
+    h = 0;
+    f = g + h;
   }else
   {
     g = 0;
-    /*h = 0;
-    f = 0;*/
+    h = 0;
+    f = 0;
   }
   
 }
@@ -72,12 +72,12 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const Map& collisi
   if (collisionData.isOccupied(origin_ratio.x, origin_ratio.y))
   {
     printf("Trying to reach an invalid position \n");
-    return kErrorCode_PathNotFound;
+    return kErrorCode_InvalidOrigin;
   }
   if (collisionData.isOccupied(dst_ratio.x, dst_ratio.y))
   {
     printf("Trying to reach an invalid position \n");
-    return kErrorCode_PathNotFound;
+    return kErrorCode_InvalidDestination;
   }
   path->clear();
 
@@ -251,12 +251,13 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const Map& collisi
   path->set_direction(Direction::kDirForward);
   path->setToReady();
 
+  clean();
   //We don't need to delete node_start as right now it is already on the lists
   //that will be cleaned at clean()
   //delete node_start;
   delete node_goal;
   clean(); 
-  printf(" Path found, please press F2 to start.\n");
+  printf(" Path found, please press F1 to start.\n");
   return kErrorCode_Ok;
 }
 
@@ -281,12 +282,12 @@ s16 AStar::generatePath(Float2 origin, Float2 dst, Path* path, const Map& collis
     if (collisionData.isOccupied(origin_ratio.x, origin_ratio.y))
     {
       printf("Trying to reach an invalid position \n");
-      return kErrorCode_PathNotFound;
+      return kErrorCode_InvalidOrigin;
     }
     if (collisionData.isOccupied(dst_ratio.x, dst_ratio.y))
     {
       printf("Trying to reach an invalid position \n");
-      return kErrorCode_PathNotFound;
+      return kErrorCode_InvalidDestination;
     }
     path->clear();
 

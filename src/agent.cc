@@ -9,7 +9,7 @@
 #include "gamestate.h"
 #include "path_finder.h"
 
-static uint32_t total_agents = 0;
+static u32 total_agents = 1;
 
 Agent::Agent() : type_agent_(AgentType::k_Small)
 {
@@ -52,7 +52,7 @@ ESAT::SpriteHandle Agent::representation() const
   return representation_;
 }
 
-void Agent::update(const uint32_t dt)
+void Agent::update(const u32 dt)
 {
   updateMind(dt);
   updateBody(dt);
@@ -69,7 +69,7 @@ float Agent::y() const
 }
 
 
-void Agent::updateBody(const uint32_t dt)
+void Agent::updateBody(const u32 dt)
 {
   switch (move_type_)
   {
@@ -97,18 +97,24 @@ void Agent::updateBody(const uint32_t dt)
   move(dt);
 }
 
-void Agent::updateMind(const uint32_t dt)
+void Agent::updateMind(const u32 dt)
 {
   mind_acum_ += dt;
   if (mind_acum_ < mind_time_) return;
 
-  mind_acum_ = 0;
+  mind_acum_ = 0;  
   if (!initialized_)
   {
+    mail_box_ = static_cast<AgentMessage*>(malloc(total_agents * sizeof(AgentMessage)));
+    for (u32 i = 0; i < total_agents; i++)
+    {
+      (mail_box_ + i)->type = AgentMessageType::k_Nothing;
+      (mail_box_ + i)->position = Float2(0.0f, 0.0f);
+    }
     objective_ = nullptr;
     actual_state_ = FSMStates::k_Working;
-    //const float generic_speed = 5.0f;
-    const float generic_speed = 50.0f;
+    const float generic_speed = 5.0f;
+    //const float generic_speed = 50.0f;
     speed_ = generic_speed;
     switch (type_agent_)
     {
@@ -168,6 +174,18 @@ void Agent::updateMind(const uint32_t dt)
 
     initialized_ = true;
   }
+
+  for (u32 i = 0; i < total_agents; i++)
+  {
+    if ((mail_box_ + i)->type == AgentMessageType::k_PathIsReady)
+    {
+      move_type_ = MovementType::k_MovAStar;
+      (mail_box_ + i)->type = AgentMessageType::k_Nothing;
+      break;
+    }
+    (mail_box_ + i)->position = Float2(0.0f, 0.0f);
+  }
+
   switch (actual_state_) {
   case FSMStates::k_Working:
     FSM_Working(dt);
@@ -181,11 +199,13 @@ void Agent::updateMind(const uint32_t dt)
   case FSMStates::k_Resting:
     FSM_Resting(dt);
     break;
+  default:
+    break;
   }
 
 }
 
-void Agent::move(const uint32_t dt)
+void Agent::move(const u32 dt)
 {
   //displacement
   const float time_in_seconds = dt * 0.001f;
@@ -218,7 +238,7 @@ void Agent::calculateVelocity()
   velocity_ *= speed_;
 }
 
-void Agent::FSM_Working(uint32_t dt) {
+void Agent::FSM_Working(u32 dt) {
 #ifdef DEBUG
   accum_time_ += dt;
 #endif
@@ -260,7 +280,7 @@ void Agent::FSM_Working(uint32_t dt) {
   }
 }
 
-void Agent::FSM_Chasing(uint32_t dt) {
+void Agent::FSM_Chasing(u32 dt) {
   Float2 distance = objective_->position_ - this->position_;
   const float d = distance.Length();
 
@@ -293,7 +313,7 @@ void Agent::FSM_Chasing(uint32_t dt) {
   }
 }
 
-void Agent::FSM_Fleeing(uint32_t dt) {
+void Agent::FSM_Fleeing(u32 dt) {
   Float2 distance = this->position_ - objective_->position_;
   //Float2 distance = objective_->position_ - this->position_;
   const float d = distance.Length();
@@ -335,7 +355,7 @@ void Agent::FSM_Fleeing(uint32_t dt) {
   }
 }
 
-void Agent::FSM_Resting(const uint32_t dt) {
+void Agent::FSM_Resting(const u32 dt) {
   time_rested_ += dt;
   if(time_rested_ >= resting_time_)
   {
@@ -388,7 +408,7 @@ bool Agent::isBigger(Agent* a)
 }
 
 
-void Agent::MOV_Determinist(const uint32_t dt)
+void Agent::MOV_Determinist(const u32 dt)
 {
   if (!positionReached()) return;
   target_reached_ = true;
@@ -397,7 +417,7 @@ void Agent::MOV_Determinist(const uint32_t dt)
   setNextPosition(p->x, p->y);
 }
 
-void Agent::MOV_Random(const uint32_t dt)
+void Agent::MOV_Random(const u32 dt)
 {
 
   accum_time_random_ += dt;
@@ -420,7 +440,7 @@ void Agent::MOV_Random(const uint32_t dt)
   accum_time_random_ = 0;
 }
 
-void Agent::MOV_Tracking(const uint32_t dt)
+void Agent::MOV_Tracking(const u32 dt)
 {
   accum_time_tracking_ += dt;
   if (accum_time_tracking_ < tracking_retarget_time_ && !positionReached()) return;
@@ -429,7 +449,7 @@ void Agent::MOV_Tracking(const uint32_t dt)
   accum_time_tracking_ = 0;
 }
 
-void Agent::MOV_Pattern(const uint32_t dt)
+void Agent::MOV_Pattern(const u32 dt)
 {
   accum_time_pattern_ += dt;
   if (accum_time_pattern_ > pattern_targets_[pattern_idx_].seconds)
@@ -461,7 +481,7 @@ void Agent::MOV_Stop()
   target_position_ = position_;
 }
 
-void Agent::MOV_AStar(const uint32_t dt) {
+void Agent::MOV_AStar(const u32 dt) {
   if (target_reached_)
   {
     if (path_.isLast())
@@ -478,15 +498,31 @@ void Agent::MOV_AStar(const uint32_t dt) {
   }
 }
 
-void Agent::prepareAStar(const Float2& origin, const Float2& dst)
+void Agent::prepareAStarMessage(const Float2& origin, const Float2& dst)
 {
   if(path_finder_agent_ && !path_.isReady())
   {
-    path_finder_agent_->GeneratePath(&path_, origin, dst);
+    AgentMessage msg;
+    msg.type = AgentMessageType::k_AskForPath;
+    msg.position = origin;
+    msg.dst = dst;
+    msg.path = &path_;
+    path_finder_agent_->sendMessage(msg, id_);
+    //path_finder_agent_->generatePath(&path_, origin, dst);
   }
+}
+
+void Agent::prepareAStar(const Float2& origin, const Float2& dst)
+{
+  path_finder_agent_->generatePath(&path_, origin, dst);
 }
 
 void Agent::startAStar()
 {
   move_type_ = MovementType::k_MovAStar;
+}
+
+void Agent::sendMessage(const AgentMessage& msg, const u32 id)
+{
+  *(mail_box_ + id) = msg;
 }

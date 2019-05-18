@@ -15,7 +15,7 @@ solution ("3IA_Solution" .. _ACTION)
 	language "C++"
 	kind "ConsoleApp"
 
-	projects = { "PR0_Base", "PR1_AStar" }
+	projects = { "PR0_Base", "PR1_AStar", "PR2_Extras" }
 
 	for i, prj in ipairs(projects) do 
 		project (prj)
@@ -106,4 +106,21 @@ solution ("3IA_Solution" .. _ACTION)
 		"./src/gamestate.cc",
 		"./src/map.cc",
 		"./tests/main_astar.cpp",
+	}
+	
+	project "PR2_Extras"
+		files {
+		"./include/agent.h",
+		"./include/path.h",
+		"./include/gamestate.h",
+		"./include/astar.h",
+		"./include/map.h",
+		"./include/path_finder.h",
+		"./src/agent.cc",
+		"./src/path.cc",
+		"./src/path_finder.cc",
+		"./src/astar.cpp",
+		"./src/gamestate.cc",
+		"./src/map.cc",
+		"./tests/main_extras.cpp",
 	}

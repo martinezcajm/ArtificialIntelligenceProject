@@ -1,15 +1,14 @@
 // gamestate.h
 // Jose Maria Martinez
 // Header of the functions of the gamestate class
+
 #ifndef __GAME_STATE_H__
 #define __GAME_STATE_H__
 
 #include <agent.h>
-#include <ESAT/sprite.h>
 #include <cstdint>
 #include <vector>
 #include "map.h"
-//#include "path_finder.h"
 
 class PathFinder;
 
@@ -56,19 +55,17 @@ public:
   */
   static GameState& instance();
 
-  //Float2 player_position;
-
   bool quit_game_;
 
   uint32_t time_step_;
 
   bool should_game_end_;
 
-  //ESAT::SpriteHandle agent_spr_;
+  uint32_t num_agents_;
 
   std::vector<Agent*> agents_;
 
-  PathFinder* pf_agent;
+  PathFinder* pf_agent_;
 
   uint32_t frequency_;
 

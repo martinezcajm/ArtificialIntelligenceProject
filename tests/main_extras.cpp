@@ -1,6 +1,6 @@
 // main_astar.cc
 // Jose Maria Martinez
-// Implementation of the A* algorithm
+// Implementation of the extras
 
 #include "ESAT/window.h"
 #include "ESAT/time.h"
@@ -12,7 +12,6 @@
 GameState& g_game_state = GameState::instance();
 bool g_mouse_pressed = false;
 bool g_f1_pressed = false;
-bool g_f2_pressed = false;
 Float2 g_origin = Float2{ 0.0f,0.0f };
 Float2 g_dst = Float2{ 374.0f,448.0f };
 
@@ -23,12 +22,12 @@ Float2 g_dst = Float2{ 374.0f,448.0f };
 * @return void
 */
 void Init() {
-  printf("Press F1 to calculate the A* \n");
+  printf("Press F1, to start to calculate the A* algorithm \n");
   g_mouse_pressed = false;
-  //game_state_.actual_command_ = kNothing;
   g_game_state.quit_game_ = false;
   g_game_state.should_game_end_ = false;
   g_game_state.frequency_ = 60;
+  g_game_state.num_agents_ = 0;
   //Maximum time for a frequency of 60 frames per second (1/60)
   //g_game_state.time_step_ = 16;
 
@@ -38,12 +37,8 @@ void Init() {
   ESAT::WindowInit(960, 704);
   ESAT::WindowSetMouseVisibility(true);
 
-
-  g_game_state.map_.loadMap("../../../data/gfx/maps/map_03_120x88_cost.png", 
-                            "../../../data/gfx/maps/map_03_960x704_layout ABGS.png");
-
-  /*g_game_state.map_.loadMap("../../../data/gfx/maps/map_03_60x44_cost.png",
-    "../../../data/gfx/maps/map_03_960x704_layout ABGS.png");*/
+  g_game_state.map_.loadMap("../../../data/gfx/maps/map_03_60x44_cost.png",
+    "../../../data/gfx/maps/map_03_960x704_layout ABGS.png");
 
 
   g_game_state.pf_agent_ = new PathFinder();
@@ -64,12 +59,10 @@ void InputService()
 {
   if (ESAT::IsSpecialKeyDown(ESAT::kSpecialKey_Escape))
   {
-    //game_state_.actual_command_ = kExit;
     g_game_state.should_game_end_ = true;
   }
   if (ESAT::MouseButtonDown(0)) g_mouse_pressed = true;
   if (ESAT::IsSpecialKeyDown(ESAT::kSpecialKey_F1)) g_f1_pressed = true;
-  if (ESAT::IsSpecialKeyDown(ESAT::kSpecialKey_F2)) g_f2_pressed = true;
 }
 
 /** @brief Update
@@ -90,13 +83,9 @@ void Update(uint32_t dt)
   if(g_f1_pressed)
   {
     g_f1_pressed = false;
-    g_game_state.agents_[0]->prepareAStar(g_origin, g_dst);
+    g_game_state.agents_[0]->prepareAStarMessage(g_origin, g_dst);
   }
-  if(g_f2_pressed)
-  {
-    g_f2_pressed = false;
-    g_game_state.agents_[0]->startAStar();
-  }
+  g_game_state.pf_agent_->update(dt);
   for (Agent* agent : g_game_state.agents_)
   {
     agent->update(dt);

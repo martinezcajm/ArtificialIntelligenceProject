@@ -1,3 +1,8 @@
+// map.cc
+// Jose Maria Martinez
+// Implementation of the map class
+//Comments for the functions can be found at the header
+
 #include "map.h"
 #include "STB/stb_image.h"
 #include "common_def.h"
@@ -42,6 +47,7 @@ void Map::freeResources()
 
 s16 Map::loadMap(const char* src, const char* background)
 {
+  if (!src || !background) return kErrorCode_InvalidPointer;
   //If there's already data loaded we free it
   if (collision_data_) freeResources();
 

@@ -1,8 +1,3 @@
-// astar.cc
-// Jose Maria Martinez
-// Implementation of the A* algorithm.
-//Comments for the functions can be found at the header
-
 #include "astar.h"
 #include "path.h"
 #include "map.h"
@@ -14,20 +9,20 @@ static const AgentDirection g_directions[8] = { AgentDirection::k_Northwest, Age
                                               AgentDirection::k_West, AgentDirection::k_East,
                                               AgentDirection::k_Southwest, AgentDirection::k_South, AgentDirection::k_Southeast };
 
-AStarNode::AStarNode(Float2 pos, AStarNode* p, s32 step)
+AStarNode::AStarNode(Float2 position, AStarNode* parent, s32 step)
 {
-  position = pos;
-  parent = p;
-  if(parent)
+  position_ = position;
+  parent_ = parent;
+  if(parent_)
   {
     g = parent->g + step;
-    /*h = 0;
-    f = g + h;*/
+    h = 0;
+    f = g + h;
   }else
   {
     g = 0;
-    /*h = 0;
-    f = 0;*/
+    h = 0;
+    f = 0;
   }
   
 }
@@ -37,10 +32,10 @@ AStarNode::~AStarNode()
   
 }
 
-bool AStarNode::hasSameState(const AStarNode& node)
+bool AStarNode::HasSameState(const AStarNode& node)
 {
-  return (position.x == node.position.x &&
-    position.y == node.position.y);
+  return (position_.x == node.position_.x &&
+    position_.y == node.position_.y);
 }
 
 AStar::AStar()
@@ -68,16 +63,14 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const Map& collisi
 
 
   if (!path) return kErrorCode_InvalidPointer;
-  //Check that the origin and destination are valid in our map coordinates
-  if (collisionData.isOccupied(origin_ratio.x, origin_ratio.y))
+  //Check that the origin and destination are valids in our map coordinates
+  if (!collisionData.isValidPosition(origin_ratio.x, origin_ratio.y))
   {
-    printf("Trying to reach an invalid position \n");
-    return kErrorCode_PathNotFound;
+    return kErrorCode_InvalidOrigin;
   }
-  if (collisionData.isOccupied(dst_ratio.x, dst_ratio.y))
+  if (!collisionData.isValidPosition(dst_ratio.x, dst_ratio.y))
   {
-    printf("Trying to reach an invalid position \n");
-    return kErrorCode_PathNotFound;
+    return kErrorCode_InvalidDestination;
   }
   path->clear();
 
@@ -112,14 +105,14 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const Map& collisi
 
 
     //If node_current is the same state as node_goal: break from the while loop
-    if (node_current->hasSameState(*node_goal)) break;
+    if (node_current->HasSameState(*node_goal)) break;
 
     //Generate each state node_successor that can come after node_current
     for (AgentDirection d : g_directions)
     {
       bool finished_loop = false;
       u16 step_cost = base_step_cost_;
-      Float2 new_position = node_current->position;
+      Float2 new_position = node_current->position_;
       switch (d)
       {
       case AgentDirection::k_Northwest:
@@ -205,9 +198,9 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const Map& collisi
             delete aux;
           }
           //Set the parent of node_successor to node_current
-          node_successor->parent = node_current;
+          node_successor->parent_ = node_current;
           //Set h to be the estimated distance to node_goal (using the heuristic function)
-          node_successor->h = calculateHeuristic(node_successor->position, node_goal->position);
+          node_successor->h = calculateHeuristic(node_successor->position_, node_goal->position_);
           node_successor->f = node_successor->g + node_successor->h;
           //Add node_successor to the OPEN list
           open_list_.push_back(node_successor);
@@ -219,7 +212,7 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const Map& collisi
   }
 
   //If the current node is not the node goal we didn't find the path
-  if (!node_current->hasSameState(*node_goal)) {
+  if (!node_current->HasSameState(*node_goal)) {
     //We don't need to delete node_start as right now it is already on the lists
     //that will be cleaned at clean()
     //delete node_start;
@@ -235,9 +228,9 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const Map& collisi
   std::stack<AStarNode*> final_path;
   final_path.push(aux);
   count++;
-  while(!aux->hasSameState(*node_start))
+  while(!aux->HasSameState(*node_start))
   {
-    aux = aux->parent;
+    aux = aux->parent_;
     final_path.push(aux);
     count++;
   }
@@ -246,24 +239,24 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const Map& collisi
   {
     AStarNode* tmp = final_path.top();
     final_path.pop();
-    path->addPoint(tmp->position.x * collisionData.ratio().x, tmp->position.y * collisionData.ratio().y);
+    path->addPoint(tmp->position_.x * collisionData.ratio().x, tmp->position_.y * collisionData.ratio().y);
   }
   path->set_direction(Direction::kDirForward);
   path->setToReady();
 
+  clean();
   //We don't need to delete node_start as right now it is already on the lists
   //that will be cleaned at clean()
   //delete node_start;
   delete node_goal;
   clean(); 
-  printf(" Path found, please press F2 to start.\n");
+  printf(" Path found, please press F1 to start.\n");
   return kErrorCode_Ok;
 }
 
-s16 AStar::generatePath(Float2 origin, Float2 dst, Path* path, const Map& collisionData, double timeout)
+s16 AStar::generatePath(Float2 origin, Float2 dst, Path* path, const Map& collisionData, u32 timeout)
 {
-  const double start_time = ESAT::Time();
-  double elapsed_time = 0;
+  double loop_actual_time = ESAT::Time();
   if(actual_state_ == AStarStatus::k_Finished)
   {
     printf("Calculating path... wait please \n");
@@ -277,16 +270,14 @@ s16 AStar::generatePath(Float2 origin, Float2 dst, Path* path, const Map& collis
     dst_ratio.y = floorf(dst_ratio.y);
 
     if (!path) return kErrorCode_InvalidPointer;
-    //Check that the origin and destination are valid in our map coordinates
-    if (collisionData.isOccupied(origin_ratio.x, origin_ratio.y))
+    //Check that the origin and destination are valids in our map coordinates
+    if (!collisionData.isValidPosition(origin_ratio.x, origin_ratio.y))
     {
-      printf("Trying to reach an invalid position \n");
-      return kErrorCode_PathNotFound;
+      return kErrorCode_InvalidOrigin;
     }
-    if (collisionData.isOccupied(dst_ratio.x, dst_ratio.y))
+    if (!collisionData.isValidPosition(dst_ratio.x, dst_ratio.y))
     {
-      printf("Trying to reach an invalid position \n");
-      return kErrorCode_PathNotFound;
+      return kErrorCode_InvalidDestination;
     }
     path->clear();
 
@@ -310,11 +301,14 @@ s16 AStar::generatePath(Float2 origin, Float2 dst, Path* path, const Map& collis
     open_list_.push_back(node_start);
 
     actual_state_ = AStarStatus::k_Calculating;
-    node_current = nullptr;
   }
+  
+  AStarNode* node_current = nullptr;
+
+  
 
   //while the OPEN list is not empty
-  while (!open_list_.empty() && !(elapsed_time > timeout))
+  while (!open_list_.empty())
   {
     //Get the node off the OPEN list with the lowest f and call it node_current
     const s32 lowest_f_idx = getLowestFNodeIdx();
@@ -323,14 +317,14 @@ s16 AStar::generatePath(Float2 origin, Float2 dst, Path* path, const Map& collis
 
 
     //If node_current is the same state as node_goal: break from the while loop
-    if (node_current->hasSameState(*node_goal)) break;
+    if (node_current->HasSameState(*node_goal)) break;
 
     //Generate each state node_successor that can come after node_current
     for (AgentDirection d : g_directions)
     {
       bool finished_loop = false;
       u16 step_cost = base_step_cost_;
-      Float2 new_position = node_current->position;
+      Float2 new_position = node_current->position_;
       switch (d)
       {
       case AgentDirection::k_Northwest:
@@ -416,9 +410,9 @@ s16 AStar::generatePath(Float2 origin, Float2 dst, Path* path, const Map& collis
             delete aux;
           }
           //Set the parent of node_successor to node_current
-          node_successor->parent = node_current;
+          node_successor->parent_ = node_current;
           //Set h to be the estimated distance to node_goal (using the heuristic function)
-          node_successor->h = calculateHeuristic(node_successor->position, node_goal->position);
+          node_successor->h = calculateHeuristic(node_successor->position_, node_goal->position_);
           node_successor->f = node_successor->g + node_successor->h;
           //Add node_successor to the OPEN list
           open_list_.push_back(node_successor);
@@ -427,22 +421,15 @@ s16 AStar::generatePath(Float2 origin, Float2 dst, Path* path, const Map& collis
     }
     //Add node_current to the CLOSED list
     closed_list_.push_back(node_current);
-    elapsed_time =  ESAT::Time() - start_time;
-  }
-  if(elapsed_time > timeout)
-  {
-    return kErrorCode_Timeout;
   }
 
   //If the current node is not the node goal we didn't find the path
-  if (!node_current->hasSameState(*node_goal)) {
+  if (!node_current->HasSameState(*node_goal)) {
     //We don't need to delete node_start as right now it is already on the lists
     //that will be cleaned at clean()
     //delete node_start;
     delete node_goal;
-    clean(); 
-    printf("Path not found.\n");
-    actual_state_ = AStarStatus::k_Finished;
+    clean(); printf("Path not found.\n");
     return kErrorCode_PathNotFound;
   }
 
@@ -453,9 +440,9 @@ s16 AStar::generatePath(Float2 origin, Float2 dst, Path* path, const Map& collis
   std::stack<AStarNode*> final_path;
   final_path.push(aux);
   count++;
-  while (!aux->hasSameState(*node_start))
+  while (!aux->HasSameState(*node_start))
   {
-    aux = aux->parent;
+    aux = aux->parent_;
     final_path.push(aux);
     count++;
   }
@@ -464,17 +451,18 @@ s16 AStar::generatePath(Float2 origin, Float2 dst, Path* path, const Map& collis
   {
     AStarNode* tmp = final_path.top();
     final_path.pop();
-    path->addPoint(tmp->position.x * collisionData.ratio().x, tmp->position.y * collisionData.ratio().y);
+    path->addPoint(tmp->position_.x * collisionData.ratio().x, tmp->position_.y * collisionData.ratio().y);
   }
   path->set_direction(Direction::kDirForward);
   path->setToReady();
-  printf(" Path found, proceeding to execute it.\n");
+
+  clean();
   //We don't need to delete node_start as right now it is already on the lists
   //that will be cleaned at clean()
   //delete node_start;
   delete node_goal;
   clean();
-  actual_state_ = AStarStatus::k_Finished;
+  printf(" Path found, please press F1 to start.\n");
   return kErrorCode_Ok;
 }
 
@@ -508,7 +496,7 @@ bool AStar::isNodeInClosedList(const float x, const float y, s32* position)
   s32 idx = 0;
   for (AStarNode* node : closed_list_)
   {
-    if (node->position == Float2(x, y))
+    if (node->position_ == Float2(x, y))
     {
       *position = idx;
       return true;
@@ -524,7 +512,7 @@ bool AStar::isNodeInOpenList(const float x, const float y, s32* position)
   s32 idx = 0;
   for (AStarNode* node : open_list_)
   {
-    if (node->position == Float2(x, y))
+    if (node->position_ == Float2(x, y))
     {
       *position = idx;
       return true;

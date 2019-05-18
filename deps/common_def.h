@@ -1,5 +1,6 @@
 // common_def.h
 // Toni Barella
+// Jose Maria Martinez
 // Artificial Intelligence - 3HND 
 // ESAT 2016 - 2019
 //
@@ -7,6 +8,7 @@
 #define __COMMON_DEF_H__
 
 #define VERBOSE_
+#include "Math/float2.h"
 
 #ifndef ESAT_SDK
 typedef struct {
@@ -29,7 +31,8 @@ typedef enum
   kErrorCode_InvalidOrigin = -7,
   kErrorCode_InvalidDestination= -8,
   kErrorCode_PathNotFound = -9,
-	kErrorCode_Memory = -10,
+  kErrorCode_Timeout = -10,
+	kErrorCode_Memory = -11,
 	kErrorCode_File = -20
 } ErrorCode;
 
