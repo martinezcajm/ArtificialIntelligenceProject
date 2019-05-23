@@ -13,9 +13,32 @@ GameState& g_game_state = GameState::instance();
 bool g_mouse_pressed = false;
 bool g_f1_pressed = false;
 bool g_f2_pressed = false;
-//a_star_->generatePath(Float2{ 416.0f,32.0f }, Float2{ 640.0f,32.0f }, path, current_map_);
-Float2 g_origin = Float2{ 416.0f,32.0f };
-Float2 g_dst = Float2{ 640.0f,32.0f };
+/*
+* TESTS
+*  Not found(trying to go through water
+*  a_star_->generatePath(Float2{ 0.0f,0.0f }, Float2{ 956.0f, 0.0f }, path, current_map_);
+*Found(bording the river)
+*  a_star_->generatePath(Float2{ 0.0f,0.0f }, Float2{ 937.0f,230.0f }, path, current_map_);
+*Found(straight line)
+*  a_star_->generatePath(Float2{ 416.0f,32.0f }, Float2{ 640.0f,32.0f }, path, current_map_);
+*Found(obstacle) - Problem with 60x44 map unreachable position
+*  a_star_->generatePath(Float2{ 416.0f,32.0f }, Float2{ 836.0f,34.0f }, path, current_map_);
+*Found(obstacle) - Fine with both maps
+*  a_star_->generatePath(Float2{ 420.0f,19.0f }, Float2{ 836.0f,34.0f }, path, current_map_);
+*Found(long and hard)
+*  a_star_->generatePath(Float2{ 0.0f,0.0f }, Float2{ 374.0f,448.0f }, path, current_map_);
+*Another long and hard
+*  _star_->generatePath(Float2{ 400.0f,320.0f }, Float2{ 80.0f,320.0f }, path, GameState::instance().map_);
+*Path without result
+*  a_star_->generatePath(Float2{ 0.0f, 0.0f }, Float2{ 810.0f,408.0f }, path, GameState::instance().map_);
+*Path to a wall
+*  a_star_->generatePath(Float2{ 0.0f, 0.0f }, Float2{ 182.0f,51.0f }, path, GameState::instance().map_);
+*
+*/
+Float2 g_origin = Float2{ 0.0f,0.0f };
+Float2 g_dst = Float2{ 374.0f,448.0f };
+
+
 
 /** @brief Init
 *

@@ -16,8 +16,8 @@ bool g_f1_pressed = false;
 Float2 g_origin = Float2{ 0.0f,0.0f };
 Float2 g_dst = Float2{ 374.0f,448.0f };
 
-Float2 g_origin2 = Float2{ 400.0f,320.0f };
-Float2 g_dst2 = Float2{ 712.0f,430.0f };
+Float2 g_origin2 = Float2{ 420.0f,19.0f };
+Float2 g_dst2 = Float2{ 836.0f,34.0f };
 
 /** @brief Init
 *
@@ -43,16 +43,20 @@ void Init() {
   g_game_state.map_.loadMap("../../../data/gfx/maps/map_03_60x44_cost.png",
     "../../../data/gfx/maps/map_03_960x704_layout ABGS.png");
 
+ /* g_game_state.map_.loadMap("../../../data/gfx/maps/map_03_120x88_cost.png",
+    "../../../data/gfx/maps/map_03_960x704_layout ABGS.png");*/
+
 
   g_game_state.pf_agent_ = new PathFinder();
-  g_game_state.num_agents_++;
-  
-
-  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Hero, g_origin.x, g_origin.y, g_game_state.pf_agent_));
   g_game_state.num_agents_++;
 
   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Hero, g_origin2.x, g_origin2.y, g_game_state.pf_agent_));
   g_game_state.num_agents_++;
+  
+  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Hero, g_origin.x, g_origin.y, g_game_state.pf_agent_));
+  g_game_state.num_agents_++;
+
+  
 
   printf("Please press F1, to start to calculate the A* algorithm \n");
 }
@@ -91,9 +95,10 @@ void Update(uint32_t dt)
   if(g_f1_pressed)
   {
     g_f1_pressed = false;
-    g_game_state.agents_[0]->prepareAStarMessage(g_origin, g_dst);
 
-    g_game_state.agents_[1]->prepareAStarMessage(g_origin2, g_dst2);
+    g_game_state.agents_[0]->prepareAStarMessage(g_origin2, g_dst2);
+    g_game_state.agents_[1]->prepareAStarMessage(g_origin, g_dst);
+   
   }
   g_game_state.pf_agent_->update(dt);
   for (Agent* agent : g_game_state.agents_)

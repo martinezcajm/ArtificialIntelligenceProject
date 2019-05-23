@@ -25,26 +25,6 @@ PathFinder::~PathFinder()
 
 s16 PathFinder::generatePath(/*origin, dest, */ Path* path, Float2 origin, Float2 dst, u32 timeout)
 {
-  /*
-   * TESTS
-   *  Not found (trying to go through water
-   *  a_star_->generatePath(Float2{ 0.0f,0.0f }, Float2{ 956.0f, 0.0f }, path, current_map_);
-   *  Found (bording the river)
-   *  a_star_->generatePath(Float2{ 0.0f,0.0f }, Float2{ 937.0f,230.0f }, path, current_map_);
-   *  Found (straight line)
-   *  a_star_->generatePath(Float2{416.0f,32.0f}, Float2{640.0f,32.0f}, path, current_map_);
-   *  Found (obstacle)
-   *  a_star_->generatePath(Float2{ 416.0f,32.0f }, Float2{ 792.0f,32.0f }, path, current_map_);
-   *  Found (long and hard)
-   *  a_star_->generatePath(Float2{ 0.0f,0.0f }, Float2{ 374.0f,448.0f }, path, current_map_);
-   *  Another long and hard
-   *  _star_->generatePath(Float2{ 400.0f,320.0f }, Float2{ 80.0f,320.0f }, path, GameState::instance().map_);
-   *  Path without result
-   *  a_star_->generatePath(Float2{ 0.0f, 0.0f }, Float2{ 810.0f,408.0f}, path, GameState::instance().map_);
-   *  Path to a wall
-   *  a_star_->generatePath(Float2{ 0.0f, 0.0f }, Float2{ 182.0f,51.0f}, path, GameState::instance().map_);
-   *  
-   */
   double t = static_cast<double>(timeout) / 1000;  
   return a_star_->generatePath(origin, dst, path, GameState::instance().map_, t);
 
@@ -109,7 +89,7 @@ void PathFinder::updateMind(const u32 dt)
       msg.path = nullptr;
       GameState::instance().agents_[requestor_ - 1]->sendMessage(msg, id_);
       actual_state_ = PFAgentState::k_Waiting;
-    }else if(status == kErrorCode_PathNotFound)
+    }else if(status != kErrorCode_Timeout)
     {
       AgentMessage msg;
       msg.type = AgentMessageType::k_PathNotFound;
