@@ -1,0 +1,281 @@
+\hypertarget{class_agent}{}\section{Agent Class Reference}
+\label{class_agent}\index{Agent@{Agent}}
+
+
+\mbox{\hyperlink{class_agent}{Agent}} entity.  
+
+
+
+
+{\ttfamily \#include $<$agent.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_agent_a24a60f1d260bf19a4f7f8a5f36881d3f}{Agent}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_agent}{Agent}} constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_agent_a5818e33f8735384a8e74a8be0417636e}{Agent}} (const Agent\+Type agent\+\_\+type, const float \mbox{\hyperlink{class_agent_a51aac7a6281e83d26d4c85475851cbf4}{x}}, const float \mbox{\hyperlink{class_agent_a077acfc535e9ef3b0630beaa818627a4}{y}}, \mbox{\hyperlink{class_path_finder}{Path\+Finder}} $\ast$pf)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_agent}{Agent}} constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_agent_a60d156a1030622542fd9d05d75f1a228}{Agent}} (const Agent\+Type agent\+\_\+type, const float \mbox{\hyperlink{class_agent_a51aac7a6281e83d26d4c85475851cbf4}{x}}, const float \mbox{\hyperlink{class_agent_a077acfc535e9ef3b0630beaa818627a4}{y}})
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_agent}{Agent}} constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_agent_ab8dd8d152605cf1339fed595376e83cb}{$\sim$\+Agent}} ()
+\begin{DoxyCompactList}\small\item\em Destroys the \mbox{\hyperlink{class_agent}{Agent}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_agent_af558d97ffafcfedd4a18c02a8ae2d6e1}{update}} (const u32 dt)
+\begin{DoxyCompactList}\small\item\em Updates the agent. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_agent_a51aac7a6281e83d26d4c85475851cbf4}{x}} () const
+\begin{DoxyCompactList}\small\item\em gets the x position\+\_\+ of the agent \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_agent_a077acfc535e9ef3b0630beaa818627a4}{y}} () const
+\begin{DoxyCompactList}\small\item\em gets the y position\+\_\+ of the agent \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_agent_a6c15063ebfaaf37ba467f2086849dd9d}{prepare\+A\+Star}} (const \mbox{\hyperlink{class_float2}{Float2}} \&origin, const \mbox{\hyperlink{class_float2}{Float2}} \&dst)
+\begin{DoxyCompactList}\small\item\em Calculates a path from origin to dst. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_agent_aa5429086a4b2f6b954aa914f97d92366}{prepare\+A\+Star\+Message}} (const \mbox{\hyperlink{class_float2}{Float2}} \&origin, const \mbox{\hyperlink{class_float2}{Float2}} \&dst)
+\begin{DoxyCompactList}\small\item\em Calculates a path from origin to dst using messages between agents. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_agent_a23ff42a863144f125494340ca48a5755}{start\+A\+Star}} ()
+\begin{DoxyCompactList}\small\item\em sets the agent to follow the path he has \end{DoxyCompactList}\item 
+E\+S\+A\+T\+::\+Sprite\+Handle \mbox{\hyperlink{class_agent_a5ef49d1f2efe42bb70339c30c82789ce}{representation}} () const
+\begin{DoxyCompactList}\small\item\em gets the representation\+\_\+ of the agent \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_agent_a1213f4de6f642d4a0823685ed642068b}{send\+Message}} (const \mbox{\hyperlink{class_agent_message}{Agent\+Message}} \&msg, const u32 id)
+\begin{DoxyCompactList}\small\item\em function to receive a message from another agent \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\mbox{\hyperlink{class_agent}{Agent}} entity. 
+
+This class is the representation of an agent that can move and think 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_agent_a24a60f1d260bf19a4f7f8a5f36881d3f}\label{class_agent_a24a60f1d260bf19a4f7f8a5f36881d3f}} 
+\index{Agent@{Agent}!Agent@{Agent}}
+\index{Agent@{Agent}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{Agent()}{Agent()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Agent\+::\+Agent (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{class_agent}{Agent}} constructor. 
+
+Default agent constructor, initializes the agent as a mindless one at the point 0,0
+
+\begin{DoxyReturn}{Returns}
+$\ast$\+Agent 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_agent_a5818e33f8735384a8e74a8be0417636e}\label{class_agent_a5818e33f8735384a8e74a8be0417636e}} 
+\index{Agent@{Agent}!Agent@{Agent}}
+\index{Agent@{Agent}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{Agent()}{Agent()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Agent\+::\+Agent (\begin{DoxyParamCaption}\item[{const Agent\+Type}]{agent\+\_\+type,  }\item[{const float}]{x,  }\item[{const float}]{y,  }\item[{\mbox{\hyperlink{class_path_finder}{Path\+Finder}} $\ast$}]{pf }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{class_agent}{Agent}} constructor. 
+
+\mbox{\hyperlink{class_agent}{Agent}} constructor. Depending of the rol assigned will have a different movement type by default\+: -\/\+Huge\+: will follow a determinist movement -\/\+Normal\+: will move at random -\/\+Small\+: will follow a pattern
+
+\begin{DoxyReturn}{Returns}
+$\ast$\+Agent 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em agent\+\_\+type} & role of the agent \\
+\hline
+{\em x} & start x coordinate of the agent \\
+\hline
+{\em y} & start y coordinate of the agent \\
+\hline
+{\em pf} & to a pathfinder agent, in case this agent is capable of pathfinding \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_agent_a60d156a1030622542fd9d05d75f1a228}\label{class_agent_a60d156a1030622542fd9d05d75f1a228}} 
+\index{Agent@{Agent}!Agent@{Agent}}
+\index{Agent@{Agent}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{Agent()}{Agent()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Agent\+::\+Agent (\begin{DoxyParamCaption}\item[{const Agent\+Type}]{agent\+\_\+type,  }\item[{const float}]{x,  }\item[{const float}]{y }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{class_agent}{Agent}} constructor. 
+
+\mbox{\hyperlink{class_agent}{Agent}} constructor. Depending of the rol assigned will have a different movement type by default\+: -\/\+Huge\+: will follow a determinist movement -\/\+Normal\+: will move at random -\/\+Small\+: will follow a pattern
+
+
+\begin{DoxyParams}{Parameters}
+{\em agent\+\_\+type} & role of the agent \\
+\hline
+{\em x} & start x coordinate of the agent \\
+\hline
+{\em y} & start y coordinate of the agent \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$\+Agent 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_agent_ab8dd8d152605cf1339fed595376e83cb}\label{class_agent_ab8dd8d152605cf1339fed595376e83cb}} 
+\index{Agent@{Agent}!````~Agent@{$\sim$\+Agent}}
+\index{````~Agent@{$\sim$\+Agent}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{$\sim$\+Agent()}{~Agent()}}
+{\footnotesize\ttfamily Agent\+::$\sim$\+Agent (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destroys the \mbox{\hyperlink{class_agent}{Agent}}. 
+
+Destructor of the agent entity
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_agent_a6c15063ebfaaf37ba467f2086849dd9d}\label{class_agent_a6c15063ebfaaf37ba467f2086849dd9d}} 
+\index{Agent@{Agent}!prepare\+A\+Star@{prepare\+A\+Star}}
+\index{prepare\+A\+Star@{prepare\+A\+Star}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{prepare\+A\+Star()}{prepareAStar()}}
+{\footnotesize\ttfamily void Agent\+::prepare\+A\+Star (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_float2}{Float2}} \&}]{origin,  }\item[{const \mbox{\hyperlink{class_float2}{Float2}} \&}]{dst }\end{DoxyParamCaption})}
+
+
+
+Calculates a path from origin to dst. 
+
+Calculates a path for the agent from origin to dst using the A$\ast$ algorithm taking into account the map loaded at the game state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em origin} & x start point of the path \\
+\hline
+{\em dst} & destination of the path \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_agent_aa5429086a4b2f6b954aa914f97d92366}\label{class_agent_aa5429086a4b2f6b954aa914f97d92366}} 
+\index{Agent@{Agent}!prepare\+A\+Star\+Message@{prepare\+A\+Star\+Message}}
+\index{prepare\+A\+Star\+Message@{prepare\+A\+Star\+Message}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{prepare\+A\+Star\+Message()}{prepareAStarMessage()}}
+{\footnotesize\ttfamily void Agent\+::prepare\+A\+Star\+Message (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_float2}{Float2}} \&}]{origin,  }\item[{const \mbox{\hyperlink{class_float2}{Float2}} \&}]{dst }\end{DoxyParamCaption})}
+
+
+
+Calculates a path from origin to dst using messages between agents. 
+
+Calculates a path for the agent from origin to dst using the A$\ast$ algorithm taking into account the map loaded at the game state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em origin} & x start point of the path \\
+\hline
+{\em dst} & destination of the path \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_agent_a5ef49d1f2efe42bb70339c30c82789ce}\label{class_agent_a5ef49d1f2efe42bb70339c30c82789ce}} 
+\index{Agent@{Agent}!representation@{representation}}
+\index{representation@{representation}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{representation()}{representation()}}
+{\footnotesize\ttfamily E\+S\+A\+T\+::\+Sprite\+Handle Agent\+::representation (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+gets the representation\+\_\+ of the agent 
+
+Returns the representation\+\_\+ of the agent.
+
+\begin{DoxyReturn}{Returns}
+Sprite\+Handle 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_agent_a1213f4de6f642d4a0823685ed642068b}\label{class_agent_a1213f4de6f642d4a0823685ed642068b}} 
+\index{Agent@{Agent}!send\+Message@{send\+Message}}
+\index{send\+Message@{send\+Message}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{send\+Message()}{sendMessage()}}
+{\footnotesize\ttfamily void Agent\+::send\+Message (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_agent_message}{Agent\+Message}} \&}]{msg,  }\item[{const u32}]{id }\end{DoxyParamCaption})}
+
+
+
+function to receive a message from another agent 
+
+Function to send a message to the agent. This message will be treated at the update\+Mind function.
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & content of the message sent \\
+\hline
+{\em id} & of the one who sent the message\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_agent_a23ff42a863144f125494340ca48a5755}\label{class_agent_a23ff42a863144f125494340ca48a5755}} 
+\index{Agent@{Agent}!start\+A\+Star@{start\+A\+Star}}
+\index{start\+A\+Star@{start\+A\+Star}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{start\+A\+Star()}{startAStar()}}
+{\footnotesize\ttfamily void Agent\+::start\+A\+Star (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+sets the agent to follow the path he has 
+
+Sets the agent to follow the path he has. This function must be used after a prepare\+A\+Star call.
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_agent_af558d97ffafcfedd4a18c02a8ae2d6e1}\label{class_agent_af558d97ffafcfedd4a18c02a8ae2d6e1}} 
+\index{Agent@{Agent}!update@{update}}
+\index{update@{update}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily void Agent\+::update (\begin{DoxyParamCaption}\item[{const u32}]{dt }\end{DoxyParamCaption})}
+
+
+
+Updates the agent. 
+
+Updates the body and mind of the agent based on a delta time
+
+
+\begin{DoxyParams}{Parameters}
+{\em dt} & time that has passed in the game world \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_agent_a51aac7a6281e83d26d4c85475851cbf4}\label{class_agent_a51aac7a6281e83d26d4c85475851cbf4}} 
+\index{Agent@{Agent}!x@{x}}
+\index{x@{x}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{x()}{x()}}
+{\footnotesize\ttfamily float Agent\+::x (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+gets the x position\+\_\+ of the agent 
+
+Returns the x position\+\_\+ of the agent.
+
+\begin{DoxyReturn}{Returns}
+float x position\+\_\+ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_agent_a077acfc535e9ef3b0630beaa818627a4}\label{class_agent_a077acfc535e9ef3b0630beaa818627a4}} 
+\index{Agent@{Agent}!y@{y}}
+\index{y@{y}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{y()}{y()}}
+{\footnotesize\ttfamily float Agent\+::y (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+gets the y position\+\_\+ of the agent 
+
+Returns the y position\+\_\+ of the agent.
+
+\begin{DoxyReturn}{Returns}
+float y position\+\_\+ 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/agent.\+h\item 
+src/agent.\+cc\end{DoxyCompactItemize}

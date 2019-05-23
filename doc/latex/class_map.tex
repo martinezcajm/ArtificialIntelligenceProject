@@ -1,0 +1,171 @@
+\hypertarget{class_map}{}\section{Map Class Reference}
+\label{class_map}\index{Map@{Map}}
+
+
+\mbox{\hyperlink{class_map}{Map}} class.  
+
+
+
+
+{\ttfamily \#include $<$map.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_map_a0f5ad0fd4563497b4214038cbca8b582}{Map}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_map}{Map}} constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_map_aa403fbe09394ccf39747588f5168e3b2}{$\sim$\+Map}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_map}{Map}} destructor. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_map_a5b5c0989800c44a2db7a00bbf40c74a6}{is\+Valid\+Position}} (const float x, const float y) const
+\begin{DoxyCompactList}\small\item\em checks if a position is a valid one in the map \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_map_abc5d67212c69d40198e80f66e29cca7a}{is\+Occupied}} (const float x, const float y) const
+\begin{DoxyCompactList}\small\item\em checks if a position is occupied in the map \end{DoxyCompactList}\item 
+s16 \mbox{\hyperlink{class_map_a4070d04487b207e04c47b89b710c95a6}{load\+Map}} (const char $\ast$src, const char $\ast$\mbox{\hyperlink{class_map_ad2be03ca3f10013e1017c0ad4903641b}{background}})
+\begin{DoxyCompactList}\small\item\em Loads the map. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_float2}{Float2}} \mbox{\hyperlink{class_map_ad27c66a5bfffc6aeb8c786b7edb19d22}{ratio}} () const
+\begin{DoxyCompactList}\small\item\em returns the ratio between the original map and the collisions map \end{DoxyCompactList}\item 
+E\+S\+A\+T\+::\+Sprite\+Handle \mbox{\hyperlink{class_map_ad2be03ca3f10013e1017c0ad4903641b}{background}} () const
+\begin{DoxyCompactList}\small\item\em returns the image of the original map \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\mbox{\hyperlink{class_map}{Map}} class. 
+
+Class in charge of storing the background representation of the map and it\textquotesingle{}s collision data 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_map_a0f5ad0fd4563497b4214038cbca8b582}\label{class_map_a0f5ad0fd4563497b4214038cbca8b582}} 
+\index{Map@{Map}!Map@{Map}}
+\index{Map@{Map}!Map@{Map}}
+\subsubsection{\texorpdfstring{Map()}{Map()}}
+{\footnotesize\ttfamily Map\+::\+Map (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{class_map}{Map}} constructor. 
+
+Default \mbox{\hyperlink{class_map}{Map}} constructor
+
+\begin{DoxyReturn}{Returns}
+$\ast$\+Map 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_map_aa403fbe09394ccf39747588f5168e3b2}\label{class_map_aa403fbe09394ccf39747588f5168e3b2}} 
+\index{Map@{Map}!````~Map@{$\sim$\+Map}}
+\index{````~Map@{$\sim$\+Map}!Map@{Map}}
+\subsubsection{\texorpdfstring{$\sim$\+Map()}{~Map()}}
+{\footnotesize\ttfamily Map\+::$\sim$\+Map (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{class_map}{Map}} destructor. 
+
+Default \mbox{\hyperlink{class_map}{Map}} destructor
+
+\begin{DoxyReturn}{Returns}
+$\ast$\+Map 
+\end{DoxyReturn}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_map_ad2be03ca3f10013e1017c0ad4903641b}\label{class_map_ad2be03ca3f10013e1017c0ad4903641b}} 
+\index{Map@{Map}!background@{background}}
+\index{background@{background}!Map@{Map}}
+\subsubsection{\texorpdfstring{background()}{background()}}
+{\footnotesize\ttfamily E\+S\+A\+T\+::\+Sprite\+Handle Map\+::background (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+returns the image of the original map 
+
+Returns the image of the original map
+
+\begin{DoxyReturn}{Returns}
+Sprite\+Handle image of the background 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_map_abc5d67212c69d40198e80f66e29cca7a}\label{class_map_abc5d67212c69d40198e80f66e29cca7a}} 
+\index{Map@{Map}!is\+Occupied@{is\+Occupied}}
+\index{is\+Occupied@{is\+Occupied}!Map@{Map}}
+\subsubsection{\texorpdfstring{is\+Occupied()}{isOccupied()}}
+{\footnotesize\ttfamily bool Map\+::is\+Occupied (\begin{DoxyParamCaption}\item[{const float}]{x,  }\item[{const float}]{y }\end{DoxyParamCaption}) const}
+
+
+
+checks if a position is occupied in the map 
+
+Checks if a position is occupied in the map
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & x coordinate of the position we want to check \\
+\hline
+{\em y} & y coordinate of the position we want to check \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool true if it is valid false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_map_a5b5c0989800c44a2db7a00bbf40c74a6}\label{class_map_a5b5c0989800c44a2db7a00bbf40c74a6}} 
+\index{Map@{Map}!is\+Valid\+Position@{is\+Valid\+Position}}
+\index{is\+Valid\+Position@{is\+Valid\+Position}!Map@{Map}}
+\subsubsection{\texorpdfstring{is\+Valid\+Position()}{isValidPosition()}}
+{\footnotesize\ttfamily bool Map\+::is\+Valid\+Position (\begin{DoxyParamCaption}\item[{const float}]{x,  }\item[{const float}]{y }\end{DoxyParamCaption}) const}
+
+
+
+checks if a position is a valid one in the map 
+
+Checks if a position is a valid one in the map
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & x coordinate of the position we want to check \\
+\hline
+{\em y} & y coordinate of the position we want to check \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool true if it is valid false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_map_a4070d04487b207e04c47b89b710c95a6}\label{class_map_a4070d04487b207e04c47b89b710c95a6}} 
+\index{Map@{Map}!load\+Map@{load\+Map}}
+\index{load\+Map@{load\+Map}!Map@{Map}}
+\subsubsection{\texorpdfstring{load\+Map()}{loadMap()}}
+{\footnotesize\ttfamily s16 Map\+::load\+Map (\begin{DoxyParamCaption}\item[{const char $\ast$}]{src,  }\item[{const char $\ast$}]{background }\end{DoxyParamCaption})}
+
+
+
+Loads the map. 
+
+Tries to load a map with an image source for the background and an image source for the collisions ( white = free, black = occupied). If another map was already loaded it will be freed. The possible results of this operation are\+: k\+Error\+Code\+\_\+\+Invalid\+Pointer -\/$>$ The source or the background were nullptr k\+Error\+Code\+\_\+\+Memory -\/$>$ The program was unable of allocating memory k\+Error\+Code\+\_\+\+Ok -\/$>$ Everything went fine
+
+
+\begin{DoxyParams}{Parameters}
+{\em src} & x coordinate of the position we want to check \\
+\hline
+{\em background} & y coordinate of the position we want to check \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status of the operation 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_map_ad27c66a5bfffc6aeb8c786b7edb19d22}\label{class_map_ad27c66a5bfffc6aeb8c786b7edb19d22}} 
+\index{Map@{Map}!ratio@{ratio}}
+\index{ratio@{ratio}!Map@{Map}}
+\subsubsection{\texorpdfstring{ratio()}{ratio()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_float2}{Float2}} Map\+::ratio (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+returns the ratio between the original map and the collisions map 
+
+Returns the ratio between the original map and the collisions map
+
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{class_float2}{Float2}} ratio 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/map.\+h\item 
+src/map.\+cc\end{DoxyCompactItemize}

@@ -1,0 +1,213 @@
+\hypertarget{class_path_finder}{}\section{Path\+Finder Class Reference}
+\label{class_path_finder}\index{Path\+Finder@{Path\+Finder}}
+
+
+\mbox{\hyperlink{class_path_finder}{Path\+Finder}} agentt.  
+
+
+
+
+{\ttfamily \#include $<$path\+\_\+finder.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_path_finder_a0761f248c1ebaacf3e47a4021ca25256}{Path\+Finder}} ()
+\begin{DoxyCompactList}\small\item\em Pathfinder \mbox{\hyperlink{class_agent}{Agent}} constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_path_finder_acc04bc8bcddfda54da6a2905b256cf90}{$\sim$\+Path\+Finder}} ()
+\begin{DoxyCompactList}\small\item\em Destroys the \mbox{\hyperlink{class_path_finder}{Path\+Finder}}. \end{DoxyCompactList}\item 
+s16 \mbox{\hyperlink{class_path_finder_ae1c25582d9f8c1ee73d5adc780a14e9c}{generate\+Path}} (\mbox{\hyperlink{class_path}{Path}} $\ast$path, \mbox{\hyperlink{class_float2}{Float2}} origin, \mbox{\hyperlink{class_float2}{Float2}} dst, u32 timeout)
+\begin{DoxyCompactList}\small\item\em generates a path from origin to dst within a time \end{DoxyCompactList}\item 
+s16 \mbox{\hyperlink{class_path_finder_a05e232f67bd66be0ef2b56c455dd1425}{generate\+Path}} (\mbox{\hyperlink{class_path}{Path}} $\ast$path, \mbox{\hyperlink{class_float2}{Float2}} origin, \mbox{\hyperlink{class_float2}{Float2}} dst)
+\begin{DoxyCompactList}\small\item\em generates a path from origin to dst \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_path_finder_a45e15457e0f7177c973213cc46722275}{update}} (const u32 dt)
+\begin{DoxyCompactList}\small\item\em Updates the agent. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_path_finder_a611da8a914a8eebf13af130a6436902a}{update\+Mind}} (const u32 dt)
+\begin{DoxyCompactList}\small\item\em Updates the mind of the agent. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_path_finder_a4dc676609f38e4809f4b614b2a414235}{update\+Body}} (const u32 dt)
+\begin{DoxyCompactList}\small\item\em Updates the body of the agent. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_path_finder_afe58142744ff067c1f510efd3478e634}{send\+Message}} (const \mbox{\hyperlink{class_agent_message}{Agent\+Message}} msg, const u32 id)
+\begin{DoxyCompactList}\small\item\em function to receive a message from another agent \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\mbox{\hyperlink{class_path_finder}{Path\+Finder}} agentt. 
+
+This class is an agent that can be asked for paths. He utilizes the A$\ast$ algorithm to calculate them 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_path_finder_a0761f248c1ebaacf3e47a4021ca25256}\label{class_path_finder_a0761f248c1ebaacf3e47a4021ca25256}} 
+\index{Path\+Finder@{Path\+Finder}!Path\+Finder@{Path\+Finder}}
+\index{Path\+Finder@{Path\+Finder}!Path\+Finder@{Path\+Finder}}
+\subsubsection{\texorpdfstring{Path\+Finder()}{PathFinder()}}
+{\footnotesize\ttfamily Path\+Finder\+::\+Path\+Finder (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Pathfinder \mbox{\hyperlink{class_agent}{Agent}} constructor. 
+
+Default pathfinder agent constructor
+
+\begin{DoxyReturn}{Returns}
+$\ast$\+Path\+Finder 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_path_finder_acc04bc8bcddfda54da6a2905b256cf90}\label{class_path_finder_acc04bc8bcddfda54da6a2905b256cf90}} 
+\index{Path\+Finder@{Path\+Finder}!````~Path\+Finder@{$\sim$\+Path\+Finder}}
+\index{````~Path\+Finder@{$\sim$\+Path\+Finder}!Path\+Finder@{Path\+Finder}}
+\subsubsection{\texorpdfstring{$\sim$\+Path\+Finder()}{~PathFinder()}}
+{\footnotesize\ttfamily Path\+Finder\+::$\sim$\+Path\+Finder (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destroys the \mbox{\hyperlink{class_path_finder}{Path\+Finder}}. 
+
+Destructor of the pathfinder agent entity
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_path_finder_ae1c25582d9f8c1ee73d5adc780a14e9c}\label{class_path_finder_ae1c25582d9f8c1ee73d5adc780a14e9c}} 
+\index{Path\+Finder@{Path\+Finder}!generate\+Path@{generate\+Path}}
+\index{generate\+Path@{generate\+Path}!Path\+Finder@{Path\+Finder}}
+\subsubsection{\texorpdfstring{generate\+Path()}{generatePath()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily s16 Path\+Finder\+::generate\+Path (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_path}{Path}} $\ast$}]{path,  }\item[{\mbox{\hyperlink{class_float2}{Float2}}}]{origin,  }\item[{\mbox{\hyperlink{class_float2}{Float2}}}]{dst,  }\item[{u32}]{timeout }\end{DoxyParamCaption})}
+
+
+
+generates a path from origin to dst within a time 
+
+Starts the generation of a path.
+
+The possible values it can return are\+: k\+Error\+Code\+\_\+\+Invalid\+Origin if the origin is not a valid position k\+Error\+Code\+\_\+\+Invalid\+Destination if dst is not a valid position k\+Error\+Code\+\_\+\+Memory in case the function was unable to allocate new memory k\+Error\+Code\+\_\+\+Path\+Not\+Created k\+Error\+Code\+\_\+\+Path\+Not\+Found if there\textquotesingle{}s not a path that connects origin and dst k\+Error\+Code\+\_\+\+Timeout the A$\ast$ did not finish to calculate the path. The next time generate path is called it will continue from the last point. k\+Error\+Code\+\_\+\+Ok the path was correctly calculated
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & \mbox{\hyperlink{class_path}{Path}} in which the result will be stored \\
+\hline
+{\em origin} & origin point from which the path will be calculated \\
+\hline
+{\em dst} & \mbox{\hyperlink{class_path}{Path}} in which the result will be stored \\
+\hline
+{\em timeout} & Total time to calculate the path \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+s16 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_path_finder_a05e232f67bd66be0ef2b56c455dd1425}\label{class_path_finder_a05e232f67bd66be0ef2b56c455dd1425}} 
+\index{Path\+Finder@{Path\+Finder}!generate\+Path@{generate\+Path}}
+\index{generate\+Path@{generate\+Path}!Path\+Finder@{Path\+Finder}}
+\subsubsection{\texorpdfstring{generate\+Path()}{generatePath()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily s16 Path\+Finder\+::generate\+Path (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_path}{Path}} $\ast$}]{path,  }\item[{\mbox{\hyperlink{class_float2}{Float2}}}]{origin,  }\item[{\mbox{\hyperlink{class_float2}{Float2}}}]{dst }\end{DoxyParamCaption})}
+
+
+
+generates a path from origin to dst 
+
+Starts the generation of a path.
+
+The possible values it can return are\+: k\+Error\+Code\+\_\+\+Invalid\+Origin if the origin is not a valid position k\+Error\+Code\+\_\+\+Invalid\+Destination if dst is not a valid position k\+Error\+Code\+\_\+\+Memory in case the function was unable to allocate new memory k\+Error\+Code\+\_\+\+Path\+Not\+Created k\+Error\+Code\+\_\+\+Path\+Not\+Found if there\textquotesingle{}s not a path that connects origin and dst k\+Error\+Code\+\_\+\+Ok the path was correctly calculated
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & \mbox{\hyperlink{class_path}{Path}} in which the result will be stored \\
+\hline
+{\em origin} & origin point from which the path will be calculated \\
+\hline
+{\em dst} & \mbox{\hyperlink{class_path}{Path}} in which the result will be stored \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+s16 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_path_finder_afe58142744ff067c1f510efd3478e634}\label{class_path_finder_afe58142744ff067c1f510efd3478e634}} 
+\index{Path\+Finder@{Path\+Finder}!send\+Message@{send\+Message}}
+\index{send\+Message@{send\+Message}!Path\+Finder@{Path\+Finder}}
+\subsubsection{\texorpdfstring{send\+Message()}{sendMessage()}}
+{\footnotesize\ttfamily void Path\+Finder\+::send\+Message (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_agent_message}{Agent\+Message}}}]{msg,  }\item[{const u32}]{id }\end{DoxyParamCaption})}
+
+
+
+function to receive a message from another agent 
+
+Function to send a message to the agent. This message will be treated at the update\+Mind function.
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & content of the message sent \\
+\hline
+{\em id} & of the one who sent the message\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_path_finder_a45e15457e0f7177c973213cc46722275}\label{class_path_finder_a45e15457e0f7177c973213cc46722275}} 
+\index{Path\+Finder@{Path\+Finder}!update@{update}}
+\index{update@{update}!Path\+Finder@{Path\+Finder}}
+\subsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily void Path\+Finder\+::update (\begin{DoxyParamCaption}\item[{const u32}]{dt }\end{DoxyParamCaption})}
+
+
+
+Updates the agent. 
+
+Updates the body and mind of the agent based on a delta time
+
+
+\begin{DoxyParams}{Parameters}
+{\em dt} & time that has passed in the game world \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_path_finder_a4dc676609f38e4809f4b614b2a414235}\label{class_path_finder_a4dc676609f38e4809f4b614b2a414235}} 
+\index{Path\+Finder@{Path\+Finder}!update\+Body@{update\+Body}}
+\index{update\+Body@{update\+Body}!Path\+Finder@{Path\+Finder}}
+\subsubsection{\texorpdfstring{update\+Body()}{updateBody()}}
+{\footnotesize\ttfamily void Path\+Finder\+::update\+Body (\begin{DoxyParamCaption}\item[{const u32}]{dt }\end{DoxyParamCaption})}
+
+
+
+Updates the body of the agent. 
+
+Updates the physic representation of the agent. Deals with the movement and updates the sensors. This agent does not have representation so this function is empty.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dt} & time that has passed in the game world \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_path_finder_a611da8a914a8eebf13af130a6436902a}\label{class_path_finder_a611da8a914a8eebf13af130a6436902a}} 
+\index{Path\+Finder@{Path\+Finder}!update\+Mind@{update\+Mind}}
+\index{update\+Mind@{update\+Mind}!Path\+Finder@{Path\+Finder}}
+\subsubsection{\texorpdfstring{update\+Mind()}{updateMind()}}
+{\footnotesize\ttfamily void Path\+Finder\+::update\+Mind (\begin{DoxyParamCaption}\item[{const u32}]{dt }\end{DoxyParamCaption})}
+
+
+
+Updates the mind of the agent. 
+
+Method in charge of the decision making of the agent. Calculates the paths requested by the agents.
+
+
+\begin{DoxyParams}{Parameters}
+{\em dt} & time that has passed in the game world \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/path\+\_\+finder.\+h\item 
+src/path\+\_\+finder.\+cc\end{DoxyCompactItemize}

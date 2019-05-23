@@ -1,0 +1,123 @@
+\hypertarget{class_a_star}{}\section{A\+Star Class Reference}
+\label{class_a_star}\index{A\+Star@{A\+Star}}
+
+
+\mbox{\hyperlink{class_a_star}{A\+Star}} class.  
+
+
+
+
+{\ttfamily \#include $<$astar.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_a_star_ab7cfaf9e1662f45f5fdce245d28c4508}{A\+Star}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_a_star}{A\+Star}} constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_a_star_ad246668465621db8818bbe3511fa4ae7}{$\sim$\+A\+Star}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_a_star}{A\+Star}} destructor. \end{DoxyCompactList}\item 
+s16 \mbox{\hyperlink{class_a_star_a1a6c23ad5e565a6ea84904eec5cf3968}{generate\+Path}} (\mbox{\hyperlink{class_float2}{Float2}} origin, \mbox{\hyperlink{class_float2}{Float2}} dst, \mbox{\hyperlink{class_path}{Path}} $\ast$path, const \mbox{\hyperlink{class_map}{Map}} \&collision\+Data)
+\begin{DoxyCompactList}\small\item\em Generates the best path path from origin to destination. \end{DoxyCompactList}\item 
+s16 \mbox{\hyperlink{class_a_star_a8d5afc67e0c5b63370c9af8e4e1e2683}{generate\+Path}} (\mbox{\hyperlink{class_float2}{Float2}} origin, \mbox{\hyperlink{class_float2}{Float2}} dst, \mbox{\hyperlink{class_path}{Path}} $\ast$path, const \mbox{\hyperlink{class_map}{Map}} \&collision\+Data, double timeout)
+\begin{DoxyCompactList}\small\item\em Generates the best path path from origin to destination. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\mbox{\hyperlink{class_a_star}{A\+Star}} class. 
+
+Class that runs the A$\ast$ algorithm to search for the best path between an origin and a destination 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_a_star_ab7cfaf9e1662f45f5fdce245d28c4508}\label{class_a_star_ab7cfaf9e1662f45f5fdce245d28c4508}} 
+\index{A\+Star@{A\+Star}!A\+Star@{A\+Star}}
+\index{A\+Star@{A\+Star}!A\+Star@{A\+Star}}
+\subsubsection{\texorpdfstring{A\+Star()}{AStar()}}
+{\footnotesize\ttfamily A\+Star\+::\+A\+Star (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{class_a_star}{A\+Star}} constructor. 
+
+Default \mbox{\hyperlink{class_a_star}{A\+Star}} constructor
+
+\begin{DoxyReturn}{Returns}
+$\ast$\+A\+Star 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_a_star_ad246668465621db8818bbe3511fa4ae7}\label{class_a_star_ad246668465621db8818bbe3511fa4ae7}} 
+\index{A\+Star@{A\+Star}!````~A\+Star@{$\sim$\+A\+Star}}
+\index{````~A\+Star@{$\sim$\+A\+Star}!A\+Star@{A\+Star}}
+\subsubsection{\texorpdfstring{$\sim$\+A\+Star()}{~AStar()}}
+{\footnotesize\ttfamily A\+Star\+::$\sim$\+A\+Star (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{class_a_star}{A\+Star}} destructor. 
+
+Default \mbox{\hyperlink{class_a_star}{A\+Star}} destructor
+
+\begin{DoxyReturn}{Returns}
+$\ast$\+A\+Star 
+\end{DoxyReturn}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_a_star_a1a6c23ad5e565a6ea84904eec5cf3968}\label{class_a_star_a1a6c23ad5e565a6ea84904eec5cf3968}} 
+\index{A\+Star@{A\+Star}!generate\+Path@{generate\+Path}}
+\index{generate\+Path@{generate\+Path}!A\+Star@{A\+Star}}
+\subsubsection{\texorpdfstring{generate\+Path()}{generatePath()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily s16 A\+Star\+::generate\+Path (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_float2}{Float2}}}]{origin,  }\item[{\mbox{\hyperlink{class_float2}{Float2}}}]{dst,  }\item[{\mbox{\hyperlink{class_path}{Path}} $\ast$}]{path,  }\item[{const \mbox{\hyperlink{class_map}{Map}} \&}]{collision\+Data }\end{DoxyParamCaption})}
+
+
+
+Generates the best path path from origin to destination. 
+
+Generates the best path from origin to destination without interruptions and stores it in path. The results this function can give are the following ones. k\+Error\+Code\+\_\+\+Invalid\+Pointer-\/$>$ The path passed is incorrect k\+Error\+Code\+\_\+\+Invalid\+Origin-\/$>$ The origin passed is incorrect for the map k\+Error\+Code\+\_\+\+Invalid\+Destination-\/$>$ The destination is invalid for the map k\+Error\+Code\+\_\+\+Memory-\/$>$ The program was unable to store more memory k\+Error\+Code\+\_\+\+Path\+Not\+Created-\/$>$ The path could not be created, you should not receive this error. k\+Error\+Code\+\_\+\+Path\+Not\+Found-\/$>$ There is not a path from origin to dst k\+Error\+Code\+\_\+\+Ok-\/$>$ The path was successfully calculated and is stored at path.
+
+
+\begin{DoxyParams}{Parameters}
+{\em origin} & origin point from we want to start the path \\
+\hline
+{\em dst} & destination point at we want to end the path \\
+\hline
+{\em path} & path that will contain the result \\
+\hline
+{\em collision\+Data} & collision information of the map\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+s16 result of the operation 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_a_star_a8d5afc67e0c5b63370c9af8e4e1e2683}\label{class_a_star_a8d5afc67e0c5b63370c9af8e4e1e2683}} 
+\index{A\+Star@{A\+Star}!generate\+Path@{generate\+Path}}
+\index{generate\+Path@{generate\+Path}!A\+Star@{A\+Star}}
+\subsubsection{\texorpdfstring{generate\+Path()}{generatePath()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily s16 A\+Star\+::generate\+Path (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_float2}{Float2}}}]{origin,  }\item[{\mbox{\hyperlink{class_float2}{Float2}}}]{dst,  }\item[{\mbox{\hyperlink{class_path}{Path}} $\ast$}]{path,  }\item[{const \mbox{\hyperlink{class_map}{Map}} \&}]{collision\+Data,  }\item[{double}]{timeout }\end{DoxyParamCaption})}
+
+
+
+Generates the best path path from origin to destination. 
+
+Generates the best path from origin to destination if it has time and stores it in path. The results this function can give are the following ones. k\+Error\+Code\+\_\+\+Invalid\+Pointer-\/$>$ The path passed is incorrect k\+Error\+Code\+\_\+\+Invalid\+Origin-\/$>$ The origin passed is incorrect for the map k\+Error\+Code\+\_\+\+Invalid\+Destination-\/$>$ The destination is invalid for the map k\+Error\+Code\+\_\+\+Memory-\/$>$ The program was unable to store more memory k\+Error\+Code\+\_\+\+Path\+Not\+Created-\/$>$ The path could not be created, you should not receive this error. k\+Error\+Code\+\_\+\+Path\+Not\+Found-\/$>$ There is not a path from origin to dst k\+Error\+Code\+\_\+\+Timeout-\/$>$ The path could not be calculated at this frame, if you call the function again it will continue from the point it ended. k\+Error\+Code\+\_\+\+Ok-\/$>$ The path was successfully calculated and is stored at path.
+
+
+\begin{DoxyParams}{Parameters}
+{\em origin} & origin point from we want to start the path \\
+\hline
+{\em dst} & destination point at we want to end the path \\
+\hline
+{\em path} & path that will contain the result \\
+\hline
+{\em collision\+Data} & collision information of the map \\
+\hline
+{\em timeout} & time the algorithm has to find the path\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+s16 result of the operation 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/astar.\+h\item 
+src/astar.\+cpp\end{DoxyCompactItemize}

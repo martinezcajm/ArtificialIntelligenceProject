@@ -1,0 +1,43 @@
+\hypertarget{path_8h}{}\section{include/path.h File Reference}
+\label{path_8h}\index{include/path.\+h@{include/path.\+h}}
+
+
+Class to construct and walk trough a path.  
+
+
+{\ttfamily \#include \char`\"{}platform\+\_\+types.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common\+\_\+def.\+h\char`\"{}}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_path}{Path}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_path}{Path}} class. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{path_8h_a224b9163917ac32fc95a60d8c1eec3aa}\label{path_8h_a224b9163917ac32fc95a60d8c1eec3aa}} 
+enum {\bfseries Direction} \{ {\bfseries k\+Dir\+None} = -\/1, 
+{\bfseries k\+Dir\+Forward} = 0
+ \}
+\item 
+\mbox{\Hypertarget{path_8h_a8bb1ef53467e4f61410d12822d922498}\label{path_8h_a8bb1ef53467e4f61410d12822d922498}} 
+enum {\bfseries Action} \{ {\bfseries k\+Action\+None} = -\/1, 
+{\bfseries k\+Action\+Straight} = 0, 
+{\bfseries k\+Action\+Loop\+N\+Times}, 
+{\bfseries k\+Action\+Loop\+Infinite}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{path_8h_a11cfdf40d0579a3998ee9d89ac253d56}\label{path_8h_a11cfdf40d0579a3998ee9d89ac253d56}} 
+const int {\bfseries k\+Max\+Points} = 500
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class to construct and walk trough a path. 
+
+Toni Barella Artificial Intelligence -\/ 3\+H\+ND E\+S\+AT 2016 -\/ 2019
+
+Jose Maria Martinez 

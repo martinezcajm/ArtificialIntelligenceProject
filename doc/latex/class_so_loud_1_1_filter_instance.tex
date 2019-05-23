@@ -1,0 +1,55 @@
+\hypertarget{class_so_loud_1_1_filter_instance}{}\section{So\+Loud\+:\+:Filter\+Instance Class Reference}
+\label{class_so_loud_1_1_filter_instance}\index{So\+Loud\+::\+Filter\+Instance@{So\+Loud\+::\+Filter\+Instance}}
+Inheritance diagram for So\+Loud\+:\+:Filter\+Instance\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.191489cm]{class_so_loud_1_1_filter_instance}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_filter_instance_a3546d0b3c87e4a44cea482fa3c1ce2ef}\label{class_so_loud_1_1_filter_instance_a3546d0b3c87e4a44cea482fa3c1ce2ef}} 
+virtual result {\bfseries init\+Params} (int a\+Num\+Params)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_filter_instance_ac2b293594bd3aed7bc70bb1fe1e8da95}\label{class_so_loud_1_1_filter_instance_ac2b293594bd3aed7bc70bb1fe1e8da95}} 
+virtual void {\bfseries update\+Params} (time a\+Time)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_filter_instance_a65d38ac0562733c195898018b6c3ff47}\label{class_so_loud_1_1_filter_instance_a65d38ac0562733c195898018b6c3ff47}} 
+virtual void {\bfseries filter} (float $\ast$a\+Buffer, unsigned int a\+Samples, unsigned int a\+Channels, float a\+Samplerate, time a\+Time)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_filter_instance_aa4ad1fcd3c9f37262cbdf4467109a12f}\label{class_so_loud_1_1_filter_instance_aa4ad1fcd3c9f37262cbdf4467109a12f}} 
+virtual void {\bfseries filter\+Channel} (float $\ast$a\+Buffer, unsigned int a\+Samples, float a\+Samplerate, time a\+Time, unsigned int a\+Channel, unsigned int a\+Channels)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_filter_instance_a8d709cb743fc9a80eed830adafa399a4}\label{class_so_loud_1_1_filter_instance_a8d709cb743fc9a80eed830adafa399a4}} 
+virtual float {\bfseries get\+Filter\+Parameter} (unsigned int a\+Attribute\+Id)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_filter_instance_aa4ee94f287006e35a0f1582ff471a62a}\label{class_so_loud_1_1_filter_instance_aa4ee94f287006e35a0f1582ff471a62a}} 
+virtual void {\bfseries set\+Filter\+Parameter} (unsigned int a\+Attribute\+Id, float a\+Value)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_filter_instance_a9a3f9f37aac5e782e2f3c1260bdc15f4}\label{class_so_loud_1_1_filter_instance_a9a3f9f37aac5e782e2f3c1260bdc15f4}} 
+virtual void {\bfseries fade\+Filter\+Parameter} (unsigned int a\+Attribute\+Id, float a\+To, time a\+Time, time a\+Start\+Time)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_filter_instance_a219b1fb211b5599bf70f0d6403522978}\label{class_so_loud_1_1_filter_instance_a219b1fb211b5599bf70f0d6403522978}} 
+virtual void {\bfseries oscillate\+Filter\+Parameter} (unsigned int a\+Attribute\+Id, float a\+From, float a\+To, time a\+Time, time a\+Start\+Time)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_filter_instance_a3543039db3c00cd19b7d01b82c29d824}\label{class_so_loud_1_1_filter_instance_a3543039db3c00cd19b7d01b82c29d824}} 
+unsigned int {\bfseries m\+Num\+Params}
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_filter_instance_a4ed9e55584ed2ae59e3de878dfa8c506}\label{class_so_loud_1_1_filter_instance_a4ed9e55584ed2ae59e3de878dfa8c506}} 
+unsigned int {\bfseries m\+Param\+Changed}
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_filter_instance_ab60599cfa1fcdf09e1a5753399e04048}\label{class_so_loud_1_1_filter_instance_ab60599cfa1fcdf09e1a5753399e04048}} 
+float $\ast$ {\bfseries m\+Param}
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_filter_instance_ab30e49b98d87f106fc1202793120cac7}\label{class_so_loud_1_1_filter_instance_ab30e49b98d87f106fc1202793120cac7}} 
+\mbox{\hyperlink{class_so_loud_1_1_fader}{Fader}} $\ast$ {\bfseries m\+Param\+Fader}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+deps/\+E\+S\+A\+T/include/\+E\+S\+A\+T\+\_\+extra/soloud/soloud\+\_\+filter.\+h\end{DoxyCompactItemize}

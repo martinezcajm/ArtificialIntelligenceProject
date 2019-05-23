@@ -1,0 +1,65 @@
+\hypertarget{class_so_loud_1_1_bus}{}\section{So\+Loud\+:\+:Bus Class Reference}
+\label{class_so_loud_1_1_bus}\index{So\+Loud\+::\+Bus@{So\+Loud\+::\+Bus}}
+Inheritance diagram for So\+Loud\+:\+:Bus\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_so_loud_1_1_bus}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_a46f89ce122e732a105382d01415dcf15}\label{class_so_loud_1_1_bus_a46f89ce122e732a105382d01415dcf15}} 
+virtual \mbox{\hyperlink{class_so_loud_1_1_bus_instance}{Bus\+Instance}} $\ast$ {\bfseries create\+Instance} ()
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_adc155188e09e9d5bebe0b151815b3ac0}\label{class_so_loud_1_1_bus_adc155188e09e9d5bebe0b151815b3ac0}} 
+virtual void {\bfseries set\+Filter} (unsigned int a\+Filter\+Id, \mbox{\hyperlink{class_so_loud_1_1_filter}{Filter}} $\ast$a\+Filter)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_a9fed9a7b746fda44b9212471c9a2f4d4}\label{class_so_loud_1_1_bus_a9fed9a7b746fda44b9212471c9a2f4d4}} 
+handle {\bfseries play} (\mbox{\hyperlink{class_so_loud_1_1_audio_source}{Audio\+Source}} \&a\+Sound, float a\+Volume=1.\+0f, float a\+Pan=0.\+0f, bool a\+Paused=0)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_ad42e5cb151a2eececa8fb5e7d14a7669}\label{class_so_loud_1_1_bus_ad42e5cb151a2eececa8fb5e7d14a7669}} 
+handle {\bfseries play\+Clocked} (time a\+Sound\+Time, \mbox{\hyperlink{class_so_loud_1_1_audio_source}{Audio\+Source}} \&a\+Sound, float a\+Volume=1.\+0f, float a\+Pan=0.\+0f)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_a3469af79377fcf6d803351f81a3c9e58}\label{class_so_loud_1_1_bus_a3469af79377fcf6d803351f81a3c9e58}} 
+handle {\bfseries play3d} (\mbox{\hyperlink{class_so_loud_1_1_audio_source}{Audio\+Source}} \&a\+Sound, float a\+PosX, float a\+PosY, float a\+PosZ, float a\+VelX=0.\+0f, float a\+Vel\+Y=0.\+0f, float a\+Vel\+Z=0.\+0f, float a\+Volume=1.\+0f, bool a\+Paused=0)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_ab660cf763eb4a68be97d7539d6893952}\label{class_so_loud_1_1_bus_ab660cf763eb4a68be97d7539d6893952}} 
+handle {\bfseries play3d\+Clocked} (time a\+Sound\+Time, \mbox{\hyperlink{class_so_loud_1_1_audio_source}{Audio\+Source}} \&a\+Sound, float a\+PosX, float a\+PosY, float a\+PosZ, float a\+VelX=0.\+0f, float a\+Vel\+Y=0.\+0f, float a\+Vel\+Z=0.\+0f, float a\+Volume=1.\+0f)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_a3981391bb38f3356fdb329124c398750}\label{class_so_loud_1_1_bus_a3981391bb38f3356fdb329124c398750}} 
+result {\bfseries set\+Channels} (unsigned int a\+Channels)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_a4367e7475af9b3bd5959dc103fd30e21}\label{class_so_loud_1_1_bus_a4367e7475af9b3bd5959dc103fd30e21}} 
+void {\bfseries set\+Visualization\+Enable} (bool a\+Enable)
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_a22ff3334affcd26edb50d899da24224c}\label{class_so_loud_1_1_bus_a22ff3334affcd26edb50d899da24224c}} 
+float $\ast$ {\bfseries calc\+F\+FT} ()
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_a77dae82a61fcf934cb46572bda01f34f}\label{class_so_loud_1_1_bus_a77dae82a61fcf934cb46572bda01f34f}} 
+float $\ast$ {\bfseries get\+Wave} ()
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_a171589a229eab854123bf6f88086a5d1}\label{class_so_loud_1_1_bus_a171589a229eab854123bf6f88086a5d1}} 
+void {\bfseries find\+Bus\+Handle} ()
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_aa4b3c29a794cfe468d6871f69a1f8e92}\label{class_so_loud_1_1_bus_aa4b3c29a794cfe468d6871f69a1f8e92}} 
+\mbox{\hyperlink{class_so_loud_1_1_bus_instance}{Bus\+Instance}} $\ast$ {\bfseries m\+Instance}
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_a0e5ce0894c817cdd158922989bde0387}\label{class_so_loud_1_1_bus_a0e5ce0894c817cdd158922989bde0387}} 
+unsigned int {\bfseries m\+Channel\+Handle}
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_a38a6d2c789a33659f07dd911b93327e3}\label{class_so_loud_1_1_bus_a38a6d2c789a33659f07dd911b93327e3}} 
+float {\bfseries m\+F\+F\+T\+Data} \mbox{[}256\mbox{]}
+\item 
+\mbox{\Hypertarget{class_so_loud_1_1_bus_a722292f1f9cb03c851497a5e9cd9f551}\label{class_so_loud_1_1_bus_a722292f1f9cb03c851497a5e9cd9f551}} 
+float {\bfseries m\+Wave\+Data} \mbox{[}256\mbox{]}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+deps/\+E\+S\+A\+T/include/\+E\+S\+A\+T\+\_\+extra/soloud/soloud\+\_\+bus.\+h\end{DoxyCompactItemize}

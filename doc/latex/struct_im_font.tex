@@ -1,0 +1,87 @@
+\hypertarget{struct_im_font}{}\section{Im\+Font Struct Reference}
+\label{struct_im_font}\index{Im\+Font@{Im\+Font}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_im_font_1_1_glyph}{Glyph}}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_im_font_a46a541529464d023b38cdc3df231e314}\label{struct_im_font_a46a541529464d023b38cdc3df231e314}} 
+I\+M\+G\+U\+I\+\_\+\+A\+PI void {\bfseries Clear} ()
+\item 
+\mbox{\Hypertarget{struct_im_font_a739a4ff457badbd8ac392745b79cfda5}\label{struct_im_font_a739a4ff457badbd8ac392745b79cfda5}} 
+I\+M\+G\+U\+I\+\_\+\+A\+PI void {\bfseries Build\+Lookup\+Table} ()
+\item 
+\mbox{\Hypertarget{struct_im_font_af126b40cf2fffe7c4392d0ca4b26533e}\label{struct_im_font_af126b40cf2fffe7c4392d0ca4b26533e}} 
+I\+M\+G\+U\+I\+\_\+\+A\+PI const \mbox{\hyperlink{struct_im_font_1_1_glyph}{Glyph}} $\ast$ {\bfseries Find\+Glyph} (unsigned short c) const
+\item 
+\mbox{\Hypertarget{struct_im_font_a3733e80209e6ea3289f2528392187c2e}\label{struct_im_font_a3733e80209e6ea3289f2528392187c2e}} 
+I\+M\+G\+U\+I\+\_\+\+A\+PI void {\bfseries Set\+Fallback\+Char} (Im\+Wchar c)
+\item 
+\mbox{\Hypertarget{struct_im_font_af7e0a40a425df9234b74c6066af653d6}\label{struct_im_font_af7e0a40a425df9234b74c6066af653d6}} 
+float {\bfseries Get\+Char\+Advance} (unsigned short c) const
+\item 
+\mbox{\Hypertarget{struct_im_font_a97dafa61cc94e84be396d69b0d42b1ce}\label{struct_im_font_a97dafa61cc94e84be396d69b0d42b1ce}} 
+bool {\bfseries Is\+Loaded} () const
+\item 
+\mbox{\Hypertarget{struct_im_font_a3d055742e5632ff0a96dbd7a46726d42}\label{struct_im_font_a3d055742e5632ff0a96dbd7a46726d42}} 
+I\+M\+G\+U\+I\+\_\+\+A\+PI \mbox{\hyperlink{struct_im_vec2}{Im\+Vec2}} {\bfseries Calc\+Text\+SizeA} (float size, float max\+\_\+width, float wrap\+\_\+width, const char $\ast$text\+\_\+begin, const char $\ast$text\+\_\+end=N\+U\+LL, const char $\ast$$\ast$remaining=N\+U\+LL) const
+\item 
+\mbox{\Hypertarget{struct_im_font_a10a4d3d09ef7e3773bc8a6a77e8d2a55}\label{struct_im_font_a10a4d3d09ef7e3773bc8a6a77e8d2a55}} 
+I\+M\+G\+U\+I\+\_\+\+A\+PI const char $\ast$ {\bfseries Calc\+Word\+Wrap\+PositionA} (float scale, const char $\ast$text, const char $\ast$text\+\_\+end, float wrap\+\_\+width) const
+\item 
+\mbox{\Hypertarget{struct_im_font_ac56ca9bc5f1c1bafcdd900095bdd0b4a}\label{struct_im_font_ac56ca9bc5f1c1bafcdd900095bdd0b4a}} 
+I\+M\+G\+U\+I\+\_\+\+A\+PI void {\bfseries Render\+Text} (float size, \mbox{\hyperlink{struct_im_vec2}{Im\+Vec2}} pos, Im\+U32 col, const \mbox{\hyperlink{struct_im_vec4}{Im\+Vec4}} \&clip\+\_\+rect, const char $\ast$text\+\_\+begin, const char $\ast$text\+\_\+end, \mbox{\hyperlink{struct_im_draw_list}{Im\+Draw\+List}} $\ast$draw\+\_\+list, float wrap\+\_\+width=0.\+0f, bool cpu\+\_\+fine\+\_\+clip=false) const
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_im_font_a423e36d1594281f1a5a537e5b0d0a3d4}\label{struct_im_font_a423e36d1594281f1a5a537e5b0d0a3d4}} 
+float {\bfseries Font\+Size}
+\item 
+\mbox{\Hypertarget{struct_im_font_ae98fb07fd8862a7243d77b11f38bba19}\label{struct_im_font_ae98fb07fd8862a7243d77b11f38bba19}} 
+float {\bfseries Scale}
+\item 
+\mbox{\Hypertarget{struct_im_font_af9b95f3df0b6d45f45903d82301d7f84}\label{struct_im_font_af9b95f3df0b6d45f45903d82301d7f84}} 
+\mbox{\hyperlink{struct_im_vec2}{Im\+Vec2}} {\bfseries Display\+Offset}
+\item 
+\mbox{\Hypertarget{struct_im_font_ae54c2c4184bfcbc7b8f6da9cbc4f93c0}\label{struct_im_font_ae54c2c4184bfcbc7b8f6da9cbc4f93c0}} 
+Im\+Wchar {\bfseries Fallback\+Char}
+\item 
+\mbox{\Hypertarget{struct_im_font_afa4eb6cfb979ffa120e9795f328623a1}\label{struct_im_font_afa4eb6cfb979ffa120e9795f328623a1}} 
+\mbox{\hyperlink{struct_im_font_config}{Im\+Font\+Config}} $\ast$ {\bfseries Config\+Data}
+\item 
+\mbox{\Hypertarget{struct_im_font_a3cd6e89183102438abe2e04cd14b5ce5}\label{struct_im_font_a3cd6e89183102438abe2e04cd14b5ce5}} 
+int {\bfseries Config\+Data\+Count}
+\item 
+\mbox{\Hypertarget{struct_im_font_a5238ef18f8ad02b783fb8b3a195b708e}\label{struct_im_font_a5238ef18f8ad02b783fb8b3a195b708e}} 
+float {\bfseries Ascent}
+\item 
+\mbox{\Hypertarget{struct_im_font_abcca12aa908bf7105433e7db6088a5e5}\label{struct_im_font_abcca12aa908bf7105433e7db6088a5e5}} 
+float {\bfseries Descent}
+\item 
+\mbox{\Hypertarget{struct_im_font_a8a5e0df6be5e3cabe91ae830524db960}\label{struct_im_font_a8a5e0df6be5e3cabe91ae830524db960}} 
+\mbox{\hyperlink{struct_im_font_atlas}{Im\+Font\+Atlas}} $\ast$ {\bfseries Container\+Atlas}
+\item 
+\mbox{\Hypertarget{struct_im_font_ae3cbb0fcbd8a4cf8b31f0e75f70c0677}\label{struct_im_font_ae3cbb0fcbd8a4cf8b31f0e75f70c0677}} 
+\mbox{\hyperlink{class_im_vector}{Im\+Vector}}$<$ \mbox{\hyperlink{struct_im_font_1_1_glyph}{Glyph}} $>$ {\bfseries Glyphs}
+\item 
+\mbox{\Hypertarget{struct_im_font_a05bd8c0b3f7c815d419bf8e15f67ea5c}\label{struct_im_font_a05bd8c0b3f7c815d419bf8e15f67ea5c}} 
+const \mbox{\hyperlink{struct_im_font_1_1_glyph}{Glyph}} $\ast$ {\bfseries Fallback\+Glyph}
+\item 
+\mbox{\Hypertarget{struct_im_font_a882786c01a146b8ece8fa47c72bc6219}\label{struct_im_font_a882786c01a146b8ece8fa47c72bc6219}} 
+float {\bfseries Fallback\+X\+Advance}
+\item 
+\mbox{\Hypertarget{struct_im_font_a4baad09b18ee11199cac0b31dd40d80d}\label{struct_im_font_a4baad09b18ee11199cac0b31dd40d80d}} 
+\mbox{\hyperlink{class_im_vector}{Im\+Vector}}$<$ float $>$ {\bfseries Index\+X\+Advance}
+\item 
+\mbox{\Hypertarget{struct_im_font_a5a2119c834cc4d81defd9f9c830de570}\label{struct_im_font_a5a2119c834cc4d81defd9f9c830de570}} 
+\mbox{\hyperlink{class_im_vector}{Im\+Vector}}$<$ int $>$ {\bfseries Index\+Lookup}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+deps/\+E\+S\+A\+T/include/\+E\+S\+A\+T\+\_\+extra/imgui.\+h\end{DoxyCompactItemize}

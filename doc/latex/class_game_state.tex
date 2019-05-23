@@ -1,0 +1,72 @@
+\hypertarget{class_game_state}{}\section{Game\+State Class Reference}
+\label{class_game_state}\index{Game\+State@{Game\+State}}
+
+
+\mbox{\hyperlink{class_game_state}{Game\+State}} entity.  
+
+
+
+
+{\ttfamily \#include $<$gamestate.\+h$>$}
+
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_game_state}{Game\+State}} \& \mbox{\hyperlink{class_game_state_a1429b5b681e581c11a11f19e28968cd9}{instance}} ()
+\begin{DoxyCompactList}\small\item\em Gets the instance of our \mbox{\hyperlink{class_game_state}{Game\+State}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_game_state_a17236a9e4ddb53287504198a88c97c59}\label{class_game_state_a17236a9e4ddb53287504198a88c97c59}} 
+bool {\bfseries quit\+\_\+game\+\_\+}
+\item 
+\mbox{\Hypertarget{class_game_state_ac9369dd597cc6276eb96f79c6ebc9ad9}\label{class_game_state_ac9369dd597cc6276eb96f79c6ebc9ad9}} 
+uint32\+\_\+t {\bfseries time\+\_\+step\+\_\+}
+\item 
+\mbox{\Hypertarget{class_game_state_acc35df1f7209e70cbaf971c5128f80cf}\label{class_game_state_acc35df1f7209e70cbaf971c5128f80cf}} 
+bool {\bfseries should\+\_\+game\+\_\+end\+\_\+}
+\item 
+\mbox{\Hypertarget{class_game_state_a6fc6e976bb05ff22a8a74eb9f2686685}\label{class_game_state_a6fc6e976bb05ff22a8a74eb9f2686685}} 
+uint32\+\_\+t {\bfseries num\+\_\+agents\+\_\+}
+\item 
+\mbox{\Hypertarget{class_game_state_a25827355b9612be2b489fc41005ea507}\label{class_game_state_a25827355b9612be2b489fc41005ea507}} 
+std\+::vector$<$ \mbox{\hyperlink{class_agent}{Agent}} $\ast$ $>$ {\bfseries agents\+\_\+}
+\item 
+\mbox{\Hypertarget{class_game_state_a150f360e36f3cdf05f2e152d2bd5794f}\label{class_game_state_a150f360e36f3cdf05f2e152d2bd5794f}} 
+\mbox{\hyperlink{class_path_finder}{Path\+Finder}} $\ast$ {\bfseries pf\+\_\+agent\+\_\+}
+\item 
+\mbox{\Hypertarget{class_game_state_afd22b13f977d8a6d7ff498c1a38b7845}\label{class_game_state_afd22b13f977d8a6d7ff498c1a38b7845}} 
+uint32\+\_\+t {\bfseries frequency\+\_\+}
+\item 
+\mbox{\Hypertarget{class_game_state_aefad3dbb84fd867356a4948be3ce44ba}\label{class_game_state_aefad3dbb84fd867356a4948be3ce44ba}} 
+\mbox{\hyperlink{class_map}{Map}} {\bfseries map\+\_\+}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\mbox{\hyperlink{class_game_state}{Game\+State}} entity. 
+
+Game State of our game based in a Singleton pattern. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_game_state_a1429b5b681e581c11a11f19e28968cd9}\label{class_game_state_a1429b5b681e581c11a11f19e28968cd9}} 
+\index{Game\+State@{Game\+State}!instance@{instance}}
+\index{instance@{instance}!Game\+State@{Game\+State}}
+\subsubsection{\texorpdfstring{instance()}{instance()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_game_state}{Game\+State}} \& Game\+State\+::instance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Gets the instance of our \mbox{\hyperlink{class_game_state}{Game\+State}}. 
+
+In charge of creating our \mbox{\hyperlink{class_game_state}{Game\+State}} singleton in case it does not exist or return its instance if it exists.
+
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{class_game_state}{Game\+State}}\& instance 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/gamestate.\+h\item 
+src/gamestate.\+cc\end{DoxyCompactItemize}
