@@ -60,20 +60,13 @@ public:
   *
   * Allocates the memory that the path will have. Note that passing 0 points ore more than the
   * kMaxPoints will result in a kErrorCode_IncorrectPointsNumber. Otherwise if all went correct
-  * a kErrorCode_Ok will be returned
+  * a kErrorCode_Ok will be returned. This function clears and initializes any data that was stored
+  * in the path previously if any.
   *
   * @param points number of points that will have the path
   * @return s16 result of the operation
   */
   s16 create(u16 points = 50);
-  /** @brief clears the allocated memory
-  *
-  * Clears the allocated memory. After this operation the path won't be ready anymore, so a setToReady
-  * will be needed again.
-  *
-  * @return s16 result of the operation
-  */
-  s16 clear();
   /** @brief sets the path to a ready state
   *
   * Checks that everything was correctly initialized, if that's the case sets the path to ready and
@@ -182,6 +175,7 @@ public:
   */
   Float2 const* lastPoint();
 
+  u16 total_points_;
 private:
   Float2 *points_;
 
@@ -192,7 +186,7 @@ private:
 
   s16 cp_index_; // current point index_
   s16 lp_index_; // last point index
-  u16 total_points_;
+  
 
   s16 num_loops_; // -1 = infinite, 0 = no loops, n = n loops
   u16 current_loop_;
@@ -211,6 +205,21 @@ private:
   * @return *Path
   */
   Path operator=(const Path& p) = delete;
+  /** @brief initializes the path
+  *
+  * Sets the path to an initialized state ready for reuse
+  *
+  * @return s16 result of the operation
+  */
+  s16 init();
+  /** @brief clears the allocated memory
+  *
+  * Clears the allocated memory. After this operation the path won't be ready anymore, so a setToReady
+  * will be needed again.
+  *
+  * @return s16 result of the operation
+  */
+  s16 clear();
 };
 
 #endif

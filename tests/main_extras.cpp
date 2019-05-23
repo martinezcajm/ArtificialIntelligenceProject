@@ -12,8 +12,12 @@
 GameState& g_game_state = GameState::instance();
 bool g_mouse_pressed = false;
 bool g_f1_pressed = false;
+
 Float2 g_origin = Float2{ 0.0f,0.0f };
 Float2 g_dst = Float2{ 374.0f,448.0f };
+
+Float2 g_origin2 = Float2{ 400.0f,320.0f };
+Float2 g_dst2 = Float2{ 712.0f,430.0f };
 
 /** @brief Init
 *
@@ -22,7 +26,6 @@ Float2 g_dst = Float2{ 374.0f,448.0f };
 * @return void
 */
 void Init() {
-  printf("Press F1, to start to calculate the A* algorithm \n");
   g_mouse_pressed = false;
   g_game_state.quit_game_ = false;
   g_game_state.should_game_end_ = false;
@@ -47,6 +50,11 @@ void Init() {
 
   g_game_state.agents_.emplace_back(new Agent(AgentType::k_Hero, g_origin.x, g_origin.y, g_game_state.pf_agent_));
   g_game_state.num_agents_++;
+
+  g_game_state.agents_.emplace_back(new Agent(AgentType::k_Hero, g_origin2.x, g_origin2.y, g_game_state.pf_agent_));
+  g_game_state.num_agents_++;
+
+  printf("Please press F1, to start to calculate the A* algorithm \n");
 }
 
 /** @brief InputService
@@ -84,6 +92,8 @@ void Update(uint32_t dt)
   {
     g_f1_pressed = false;
     g_game_state.agents_[0]->prepareAStarMessage(g_origin, g_dst);
+
+    g_game_state.agents_[1]->prepareAStarMessage(g_origin2, g_dst2);
   }
   g_game_state.pf_agent_->update(dt);
   for (Agent* agent : g_game_state.agents_)

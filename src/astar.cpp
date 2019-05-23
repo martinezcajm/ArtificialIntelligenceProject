@@ -79,7 +79,7 @@ s16 AStar::generatePath(Float2 origin, Float2 dst,Path* path, const Map& collisi
     printf("Trying to reach an invalid position \n");
     return kErrorCode_PathNotFound;
   }
-  path->clear();
+  //path->clear();
 
   //Create a node containing the goal state: node_goal
   AStarNode* node_goal = new AStarNode(dst_ratio, nullptr, base_step_cost_);
@@ -288,7 +288,7 @@ s16 AStar::generatePath(Float2 origin, Float2 dst, Path* path, const Map& collis
       printf("Trying to reach an invalid position \n");
       return kErrorCode_PathNotFound;
     }
-    path->clear();
+    //path->clear();
 
     //Create a node containing the goal state: node_goal
     node_goal = new AStarNode(dst_ratio, nullptr, base_step_cost_);

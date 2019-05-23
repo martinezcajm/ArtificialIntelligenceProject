@@ -9,6 +9,16 @@
 
 Path::Path()
 {
+  init();
+}
+
+Path::~Path()
+{
+  clear();
+}
+
+int_least16_t Path::init()
+{
   ready_ = false;
   direction_ = Direction::kDirNone;
   action_ = Action::kActionNone;
@@ -18,19 +28,17 @@ Path::Path()
   points_ = nullptr;
   num_loops_ = 0;
   current_loop_ = 0;
-}
-
-Path::~Path()
-{
-  clear();
+  return kErrorCode_Ok;
 }
 
 s16 Path::create(u16 points)
 {
   if (points == 0 || points > kMaxPoints) return kErrorCode_IncorrectPointsNumber;
+  clear();
+  init();
   total_points_ = points;
   //points_ = static_cast<Vector3*>( malloc(total_points_ * sizeof(Vector3)));
-  points_ = static_cast<Float2*>(malloc(total_points_ * sizeof(Vector3)));
+  points_ = static_cast<Float2*>(malloc(total_points_ * sizeof(Float2)));
   return kErrorCode_Ok;
 }
 

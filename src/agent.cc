@@ -30,6 +30,11 @@ Agent::Agent(const AgentType agent_type, const float x, const float y) : type_ag
 
 Agent::~Agent()
 {
+  if(path_)
+  {
+    delete path_;
+    path_ = nullptr;
+  }
   if(representation_)
   {
     ESAT::SpriteRelease(representation_);
@@ -45,6 +50,7 @@ void Agent::init(const float x, const float y)
   total_agents++;
   initialized_ = false;
   representation_ = nullptr;
+  path_ = new Path();
 }
 
 ESAT::SpriteHandle Agent::representation() const
@@ -122,17 +128,18 @@ void Agent::updateMind(const u32 dt)
       move_type_ = MovementType::k_MovStop;
       speed_ *= 20.0f;
       epsilon_ = kEpsilonFactor * speed_;
+      //mind_time_ = 1000;
       representation_ = ESAT::SpriteFromFile("../../../data/gfx/agents/allied_soldier.bmp");
       break;
     case AgentType::k_Huge:
       ////
-      path_.create(2);
-      path_.addPoint(1000.0f, 0.0f);
-      path_.addPoint(0.0f, 0.0f);
-      path_.set_direction(Direction::kDirForward);
-      path_.set_action(Action::kActionLoopInfinite);
-      path_.setToReady();
-      ////
+      path_->create(2);
+      path_->addPoint(1000.0f, 0.0f);
+      path_->addPoint(0.0f, 0.0f);
+      path_->set_direction(Direction::kDirForward);
+      path_->set_action(Action::kActionLoopInfinite);
+      path_->setToReady();
+      //
       move_type_ = MovementType::k_MovDeterminist;
 
       tracking_retarget_time_ = 3000; //3s
@@ -180,6 +187,7 @@ void Agent::updateMind(const u32 dt)
     if ((mail_box_ + i)->type == AgentMessageType::k_PathIsReady)
     {
       move_type_ = MovementType::k_MovAStar;
+      target_reached_ = true;
       (mail_box_ + i)->type = AgentMessageType::k_Nothing;
       break;
     }
@@ -267,7 +275,7 @@ void Agent::FSM_Working(u32 dt) {
       return;
     }
     //We check if the agent is in flee range and is smaller
-    if(agent != this && !isBigger(agent) && d <= flee_distance_)
+    if(agent != this && isSmaller(agent) && d <= flee_distance_)
     {
 #ifdef DEBUG
       printf("Changing to flee \n");
@@ -375,6 +383,9 @@ void Agent::FSM_Resting(const u32 dt) {
     case AgentType::k_Huge:
       move_type_ = MovementType::k_MovDeterminist;
       break;
+    default:
+      move_type_ = MovementType::k_MovAStar;
+      break;
     }
   }
 
@@ -383,7 +394,7 @@ void Agent::FSM_Resting(const u32 dt) {
     Float2 distance = agent->position_ - this->position_;
     const float d = distance.Length();
     //We check if the agent is in flee range and is smaller
-    if (agent != this && !isBigger(agent) && d <= flee_distance_)
+    if (agent != this && isSmaller(agent) && d <= flee_distance_)
     {
       actual_state_ = FSMStates::k_Fleeing;
       objective_ = agent;
@@ -407,13 +418,28 @@ bool Agent::isBigger(Agent* a)
   return bigger_if_huge || bigger_if_medium;
 }
 
+bool Agent::isSmaller(Agent* a)
+{
+  //If we are small and the other agent is not small, we are smaller
+  bool smaller_if_small = (type_agent_ == AgentType::k_Small) &&
+                          (a->type_agent_ != AgentType::k_Small);
+
+  //If we are normal and the other agent is huge, we are smaller
+  bool smaller_if_normal = (type_agent_ == AgentType::k_Normal) &&
+    (a->type_agent_ == AgentType::k_Huge);
+
+  //If one of the previous conditions is true we are bigger
+  return smaller_if_small || smaller_if_normal;
+}
+
+
 
 void Agent::MOV_Determinist(const u32 dt)
 {
   if (!positionReached()) return;
   target_reached_ = true;
 
-  const Float2* p = path_.nextPoint();
+  const Float2* p = path_->nextPoint();
   setNextPosition(p->x, p->y);
 }
 
@@ -484,15 +510,14 @@ void Agent::MOV_Stop()
 void Agent::MOV_AStar(const u32 dt) {
   if (target_reached_)
   {
-    if (path_.isLast())
+    if (path_->isLast())
     {
       move_type_ = MovementType::k_MovStop;
     }else
     {
       if (!positionReached()) return;
       target_reached_ = true;
-
-      const Float2* p = path_.nextPoint();
+      const Float2* p = path_->nextPoint();
       setNextPosition(p->x, p->y);
     }
   }
@@ -500,13 +525,13 @@ void Agent::MOV_AStar(const u32 dt) {
 
 void Agent::prepareAStarMessage(const Float2& origin, const Float2& dst)
 {
-  if(path_finder_agent_ && !path_.isReady())
+  if(path_finder_agent_ && !path_->isReady())
   {
     AgentMessage msg;
     msg.type = AgentMessageType::k_AskForPath;
     msg.position = origin;
     msg.dst = dst;
-    msg.path = &path_;
+    msg.path = path_;
     path_finder_agent_->sendMessage(msg, id_);
     //path_finder_agent_->generatePath(&path_, origin, dst);
   }
@@ -514,11 +539,13 @@ void Agent::prepareAStarMessage(const Float2& origin, const Float2& dst)
 
 void Agent::prepareAStar(const Float2& origin, const Float2& dst)
 {
-  path_finder_agent_->generatePath(&path_, origin, dst);
+  //if (path_->isReady()) return;
+  path_finder_agent_->generatePath(path_, origin, dst);
 }
 
 void Agent::startAStar()
 {
+  target_reached_ = true;
   move_type_ = MovementType::k_MovAStar;
 }
 

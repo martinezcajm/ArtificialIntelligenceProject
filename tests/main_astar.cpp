@@ -13,8 +13,9 @@ GameState& g_game_state = GameState::instance();
 bool g_mouse_pressed = false;
 bool g_f1_pressed = false;
 bool g_f2_pressed = false;
-Float2 g_origin = Float2{ 0.0f,0.0f };
-Float2 g_dst = Float2{ 374.0f,448.0f };
+//a_star_->generatePath(Float2{ 416.0f,32.0f }, Float2{ 640.0f,32.0f }, path, current_map_);
+Float2 g_origin = Float2{ 416.0f,32.0f };
+Float2 g_dst = Float2{ 640.0f,32.0f };
 
 /** @brief Init
 *

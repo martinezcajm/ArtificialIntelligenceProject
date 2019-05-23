@@ -190,7 +190,7 @@ private:
   MovementType move_type_;
   PatternToken actual_pattern_;
   AgentType type_agent_;
-  bool target_reached_;
+  bool target_reached_ = true;
 
 
   ESAT::SpriteHandle representation_;
@@ -237,7 +237,7 @@ private:
   u32 resting_time_ = 4000; //4s
   u32 time_rested_ = 0;
 
-  Path path_;
+  Path* path_ = nullptr;
   PathFinder* path_finder_agent_ = nullptr;
 
   //Message variables
@@ -401,14 +401,26 @@ private:
   * @return void
   */
   void setNextPosition(float new_target_x, float new_target_y);
-  /** @brief checks if another agent is bigger than himself
+  /** @brief checks if the agent is bigger than another agent
   *
-  * checks if another agent is bigger than himself
+  * checks if the agent is bigger than another agent. Take into account that a false 
+  * return does not mean that the other agent is smaller, it could be the same size.
+  * If an agent needs to know if he is smaller please use the isSmaller function.
   *
   * @param a agent to compare with
-  * @return bool true in case the agent is bigger false otherwise
+  * @return bool true in case we are bigger than the other agent, false otherwise
   */
   bool isBigger(Agent* a);
+  /** @brief checks if the agent is smaller than another agent
+  *
+  * checks if the agent is smaller than another agent. Take into account that a false
+  * return does not mean that the other agent is bigger, it could be the same size.
+  * If an agent needs to know if he is bigger please use the isBigger function.
+  *
+  * @param a agent to compare with
+  * @return bool true in case we are smaller than the other agent, false otherwise
+  */
+  bool isSmaller(Agent* a);
 
 };
 

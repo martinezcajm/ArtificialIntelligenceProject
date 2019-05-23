@@ -38,7 +38,7 @@ s16 PathFinder::generatePath(/*origin, dest, */ Path* path, Float2 origin, Float
    *  Found (long and hard)
    *  a_star_->generatePath(Float2{ 0.0f,0.0f }, Float2{ 374.0f,448.0f }, path, current_map_);
    *  Another long and hard
-   *  _star_->generatePath(Float2{ 50.0f * 8,40.0f * 8 }, Float2{ 80.0f,40.0f * 8 }, path, GameState::instance().map_);
+   *  _star_->generatePath(Float2{ 400.0f,320.0f }, Float2{ 80.0f,320.0f }, path, GameState::instance().map_);
    *  Path without result
    *  a_star_->generatePath(Float2{ 0.0f, 0.0f }, Float2{ 810.0f,408.0f}, path, GameState::instance().map_);
    *  Path to a wall
