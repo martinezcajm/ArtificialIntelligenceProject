@@ -47,6 +47,8 @@ Float2 g_dst = Float2{ 374.0f,448.0f };
 * @return void
 */
 void Init() {
+  printf("Environment initialized destiny is {374.0f,448.0}\n");
+  printf("If you wish to change the destination press the left click mouse button\n");
   printf("Press F1 to calculate the A* \n");
   g_mouse_pressed = false;
   //game_state_.actual_command_ = kNothing;
@@ -109,7 +111,8 @@ void Update(uint32_t dt)
   if (g_game_state.should_game_end_) g_game_state.quit_game_ = true;
   if (g_mouse_pressed) {
     g_mouse_pressed = false;
-    printf("mouse pressed at {%f,%f} \n", ESAT::MousePositionX(), ESAT::MousePositionY());
+    printf("mouse pressed at {%f,%f}, destination updated \n", ESAT::MousePositionX(), ESAT::MousePositionY());
+    g_dst = Float2(ESAT::MousePositionX(), ESAT::MousePositionY());
   }
   if(g_f1_pressed)
   {
@@ -120,6 +123,7 @@ void Update(uint32_t dt)
   {
     g_f2_pressed = false;
     g_game_state.agents_[0]->startAStar();
+    
   }
   for (Agent* agent : g_game_state.agents_)
   {

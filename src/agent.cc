@@ -27,7 +27,6 @@ Agent::Agent(const AgentType agent_type, const float x, const float y) : type_ag
   init(x, y);
 }
 
-
 Agent::~Agent()
 {
   if(path_)
@@ -144,7 +143,7 @@ void Agent::updateMind(const u32 dt)
 
       tracking_retarget_time_ = 3000; //3s
 
-      speed_ *= 0.75f;
+      speed_ *= 4.75f;
       epsilon_ = kEpsilonFactor * speed_;
       representation_ = ESAT::SpriteFromFile("../../../data/gfx/agents/big_agent.png");
       break;
@@ -155,7 +154,7 @@ void Agent::updateMind(const u32 dt)
 
       tracking_retarget_time_ = 1500; //1.5s
 
-      speed_ *= 1.0f;
+      speed_ *= 5.0f;
       epsilon_ = kEpsilonFactor * speed_;
       representation_ = ESAT::SpriteFromFile("../../../data/gfx/agents/normal_agent.png");
       break;
@@ -171,7 +170,7 @@ void Agent::updateMind(const u32 dt)
 
       accum_time_pattern_ = 0;
       pattern_step_ = 50;
-      speed_ *= 1.25f;
+      speed_ *= 5.25f;
       epsilon_ = kEpsilonFactor * speed_;
       representation_ = ESAT::SpriteFromFile("../../../data/gfx/agents/small_agent.png");
       break;
@@ -259,7 +258,7 @@ void Agent::FSM_Working(u32 dt) {
 #ifdef DEBUG
     if (accum_time_ >= time_for_print_)
     {
-      printf("I'm at a distance of: %f \n", d);
+      //printf("I'm at a distance of: %f \n", d);
       accum_time_ = 0;
     }
 #endif
